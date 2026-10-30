@@ -85,8 +85,8 @@ La revisión del 30-oct sustituye el calendario/alcance anterior sin alterar los
 | H-01 | 2026-10-29 | 23:49 | Línea base en la PC de escritorio | Release x64 compila con 0 errores (64 warnings); P09-2 corre desde la raíz con skybox, piso texturizado, holocron y cohete. Se generó `AGENTS.md` y se reinició el repo. | `docs/capturas/fase0_p09.png` · commit `362f19b` · tag `v0.1-base` | 1.0 | hecho |
 | H-01B | 2026-10-30 | 08:30 | Estructura del repo para el equipo | Motor movido a `src/engine/`, esqueleto de `src/scene`, `src/game` y `src/ui`, `ItemGroups` por dueño y reglas B/C en `PLAN_MAESTRO.md` §16; build Release x64 y P09-2 verificados. | `docs/capturas/refactor_src_01.png` · commits `c895008` y `26dce1d` | — | hecho |
 | H-01C | 2026-10-30 | por confirmar | Plan y preparación compartida con asistencia IA | Plan alineado a propuesta/lineamientos; README, scripts, PDFs y ramas preparados. Rebuild Release x64 sin errores, con warnings heredados; ZIP de 753 archivos verificado. Sin nueva prueba visual. | README · docs/PREPARAR_PUSH.md · docs/VALIDACION_PREPARACION.md | por confirmar | hecho |
-| H-A0 | 2026-10-30 | — | Arranque y distribución del paquete | Ver PLAN §6.1; recepción por compañeros pendiente. | README/scripts | — | pendiente |
-| H-A1 | 2026-10-30 | — | Contratos de escena/cámara | Headers compilables y ejemplo jerárquico. | por generar | — | pendiente |
+| H-A0 | 2026-10-30 | por confirmar | Arranque y distribución del paquete | Release x64 y README/scripts verificados; cinco ramas publicadas en `origin` y ZIP enviado a B/C. Recepción por compañeros pendiente de confirmar. | RAMAS en `f446f81` · tag `v0.1-base` · ZIP SHA-256 `E813…4097` | por confirmar | hecho |
+| H-A1 | 2026-10-30 | 10:20 | Contratos de escena/cámara | `SceneNode`, `Scene`, `CameraRig` y `CameraDirector` compilan; prueba jerárquica OK (hijo en 1,2,2; ocultar padre oculta hijo; `find` correcto). | commit `8e0d889` · `docs/capturas/ha1_jerarquia.txt` · `docs/capturas/ha1_jerarquia_01.png` | por confirmar | hecho |
 | H-A2 | 2026-10-30 | — | Bloqueantes de motor | Materiales, texturas, FOV y contrato de rutas. | por generar | — | pendiente |
 | H-A3 | 2026-10-30 | — | Escena y FollowXZ | Render Model/Mesh y seguimiento de avatar. | por generar | — | pendiente |
 | H-E0 | 2026-10-30 | — | Integración común | Avatar camina en P1; develop compilable. | por generar | — | pendiente |
@@ -98,7 +98,7 @@ La revisión del 30-oct sustituye el calendario/alcance anterior sin alterar los
 | Fecha | Qué me propuse | Qué hice | Horas |
 |---|---|---|---:|
 | 2026-10-29 | Analizar lineamientos, definir arquitectura y cerrar la línea base | Análisis del PDF, plan maestro, bitácora y reparto; Fase 0: build Release x64, P09-2 ejecutado, `AGENTS.md`, captura y repo nuevo | 4.0 |
-| 2026-10-30 | Organizar repo, actualizar plan y preparar H-A0 a H-A3 | Motor movido a `src/engine/`, esqueleto de `src/`, `ItemGroups` por dueño, reglas B/C en §16, bitácoras B/C y docs locales fuera de git; build Release 0 errores y P09-2 ejecutado | 0 |
+| 2026-10-30 | Organizar repo, actualizar plan y preparar H-A0 a H-A3 | Motor movido a `src/engine/`, esqueleto de `src/`, `ItemGroups` por dueño, reglas B/C en §16, bitácoras B/C y docs locales fuera de git; H-A0: ramas publicadas y ZIP enviado; H-A1: contratos `SceneNode/Scene/CameraRig/CameraDirector` con prueba OK y build sin errores | por confirmar |
 | 2026-10-31 | Cámaras restantes, ambos mapas/modos y paquete en otra PC |  | — |
 | 2026-11-01 | Día/noche, spots, skyboxes e integración |  | — |
 | 2026-11-02 | Integración, rendimiento, bugs |  | 0 |
