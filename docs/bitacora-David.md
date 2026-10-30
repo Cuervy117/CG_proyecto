@@ -38,83 +38,24 @@ estado: en curso
 | Equipo | 3 integrantes |
 | Mi rol | **A — motor y cámaras** |
 | Stack | C++17 · OpenGL 4.3 (contexto actual; objetivo 3.3) · GLFW · GLEW · GLM · Assimp · Visual Studio 2022 |
-| Repositorio | Nuevo repo local en `C:\UNAM\CGICH` (sin remoto; David lo agrega). Repo anterior: `https://github.com/Cuervy117/CGeIHC.git`, rama `practica_9`, commit `843ab2f`. |
+| Repositorio | Repo local en `C:\UNAM\CGICH`; origin `https://github.com/Cuervy117/CG_proyecto.git` (base preparada para publicar). Repo anterior: `https://github.com/Cuervy117/CGeIHC.git`, rama `practica_9`, commit `843ab2f`. |
 | Entrega | sábado 7-nov-2026, 12:00, Google Classroom |
 | Herramientas | Visual Studio 2022, Git, IA como apoyo de planificación y revisión |
 
 ---
 
-## 2. Planeación
+## 2. Planeación vigente — 30-oct-2026
 
-### 2.1 Objetivo
+La revisión del 30-oct sustituye el calendario/alcance anterior sin alterar los hitos realizados. Fuentes: lineamientos originales y Propuesta_Proyecto_Final_Grafica.pdf. El detalle operativo vive en PLAN_MAESTRO §5/§6/§8/§10/§16.
 
-Construir un escenario 3D interactivo con:
-
-- Un **avatar jerárquico no humanoide** con caminata y material reactivo a la luz.
-- **Cuatro recorridos**: planeta en tercera persona sobre XZ, nave de carrera, nave entre planetas y vista del lanzamiento.
-- **Dos planetas** con etapas de evolución de especies distintas.
-- **Pista de carreras**, **plataforma de lanzamiento**, **estación espacial**, **NPCs**, **satélites, lunas y asteroides**.
-- **Ciclo día/noche** de 120 s, luces puntuales, spotlights por teclado y **skybox por planeta**.
-- **Tres animaciones por teclado** y **tres animaciones continuas**.
-- Ejecutable Release `.exe`, manuales, video, videoblog y bitácoras.
-
-### 2.2 Estrategia técnica
-
-| Decisión | Motivo |
-|---|---|
-| Reutilizar el motor de las prácticas | Ya funciona; reescribirlo costaría 4–5 días |
-| Añadir solo 3 abstracciones: `SceneNode`, `CameraRig`, `Experience` | Cubren jerarquía, cámaras y modos sin refactor masivo |
-| Un solo `main` + experiencias | Evita la explosión de clases por objeto |
-| Avatar procedural, sin skinning | Menor riesgo en 9 días |
-| Un mundo con zonas, no 4 escenas | Comparte assets y facilita el cambio de cámara |
-| Rehacer pista, nave y sátelite | La regla del PDF excluye los ejercicios de clase |
-
-La comparación "reescribir vs. reutilizar" y la selección de las tres abstracciones se discutieron con apoyo de IA a partir del análisis del PDF y del código heredado.
-
-### 2.3 Hitos y sprints
-
-| Sprint | Fechas | Objetivo | Responsable | Estado |
-|---|---|---|---|---|
-| S0 | 29–30 oct | Línea base: el proyecto de escritorio compila y corre; `AGENTS.md`; bitácora | A | hecho |
-| S1 | 30–31 oct | `SceneNode`, cámaras 1 y 4, avatar caminando | A + C | pendiente |
-| S2 | 31 oct–1 nov | Día/noche, spots, skybox, planeta 2, 2 recorridos | A + B + C | pendiente |
-| S3 | 1–2 nov | Cámaras 2 y 3, estación, 3 animaciones por teclado | A + B + C | pendiente |
-| S4 | 2–3 nov | Integración, NPCs, 3 continuas, texturizado | todos | pendiente |
-| S5 | 3–4 nov | QA, feature freeze, Release en máquina limpia | A + B + C | pendiente |
-| S6 | 4–5 nov | Manuales, video, videoblog, bitácoras | C + todos | pendiente |
-| S7 | 6–7 nov | Buffer y entrega | todos | pendiente |
-
-La descomposición de la rúbrica en hitos y la estimación de esfuerzo (~24 persona-días frente a 27 disponibles) se realizaron **con ayuda de IA, dada la falta de experiencia previa en un proyecto de esta escala**. La IA se usó como apoyo de planificación, análisis y revisión; la implementación y la validación son propias.
-
-### 2.4 Reparto del equipo
-
-| Rol | Responsabilidad |
-|---|---|
-| **A (David)** | Motor, escena, cámaras, iluminación, build y release |
-| **B** | Mundo: pista, planetas, plataforma, cohete, estación, NPCs, texturas |
-| **C** | Avatar, animaciones, `Experience`, HUD, manuales y video |
-
-### 2.5 Riesgos y recortes
-
-- **Riesgo principal:** que el proyecto de escritorio no sea el que realmente corre. Se resuelve en la Fase 0 de descubrimiento.
-- **Riesgo de contenido:** que la pista o el sátelite se reconozcan como práctica. Se rehacen geometría y disposición.
-- **Riesgo de tiempo:** otras materias y el sábado con poca disponibilidad. Se compensa con trabajo adelantado y buffer el viernes.
-
-**Orden de sacrificio:** sombras → PBR → colisión de cámara → audio → variedad de NPCs → crossfade de skybox → cámara 4 cinematográfica.
-**Nunca se sacrifica:** 2 planetas, 6 animaciones, 4 recorridos, avatar caminando, ciclo día/noche y `.exe`.
-
-La priorización por peso de rúbrica y el orden de sacrificio se definieron con apoyo de IA para optimizar el tiempo disponible.
-
-### 2.6 Apoyo de IA
-
-Se utilizó IA para:
-
-- Analizar el PDF de lineamientos y descomponer la rúbrica en requisitos verificables.
-- Estimar esfuerzo por bloque y detectar el camino crítico.
-- Revisar riesgos técnicos del código heredado (Assimp, OpenGL, build, rutas).
-- Generar el plan maestro y esta bitácora.
-
-La IA **no** sustituye la implementación, las pruebas ni la validación en la máquina de entrega.
+- A David: motor, escena, cámaras, luces, build/Release y coordinación de merges.
+- B Jonhatan: mundo, infraestructura y sus cinco animaciones.
+- C Venancio: avatar Rek’Sai, criatura N5, entrada/experiencias/main/HUD.
+- Hoy: H-A0 a H-A3 y coordinación H-E0 (§6.1). Primero headers y una escena integrada.
+- 31-oct ambos mapas, cuatro modos básicos y prueba en otra PC; 2-nov demo completa; 3-nov freeze 18:00; 4–5 nov documentos/videos; 6-nov reserva.
+- Tres ubicaciones lógicas: espacio, Vacío y Shinobi. Propuesta conserva universos y Rek’Sai; sin skinning, interiores ni aterrizaje continuo.
+- La estimación antigua de 24/27 persona-días no acredita capacidad; confirmar horas efectivas de todos.
+- La IA se utilizó en esta revisión para contrastar documentos, actualizar planificación y preparar Git/scripts. No equivale a implementación final ni aprobación del profesor; declarar ayuda real y aclarar límites de uso.
 
 ---
 
@@ -143,15 +84,12 @@ La IA **no** sustituye la implementación, las pruebas ni la validación en la m
 | H-00 | 2026-10-29 | 23:22 | Planificación y plan maestro | Análisis del PDF, rúbrica, arquitectura, riesgos y calendario. Se generó `PLAN_MAESTRO.md` y esta bitácora. | `PLAN_MAESTRO.md` · commit | 3.0 | hecho |
 | H-01 | 2026-10-29 | 23:49 | Línea base en la PC de escritorio | Release x64 compila con 0 errores (64 warnings); P09-2 corre desde la raíz con skybox, piso texturizado, holocron y cohete. Se generó `AGENTS.md` y se reinició el repo. | `docs/capturas/fase0_p09.png` · commit `362f19b` · tag `v0.1-base` | 1.0 | hecho |
 | H-01B | 2026-10-30 | 08:30 | Estructura del repo para el equipo | Motor movido a `src/engine/`, esqueleto de `src/scene`, `src/game` y `src/ui`, `ItemGroups` por dueño y reglas B/C en `PLAN_MAESTRO.md` §16; build Release x64 y P09-2 verificados. | `docs/capturas/refactor_src_01.png` · commits `c895008` y `26dce1d` | — | hecho |
-| H-02 | 2026-10-30 | — | `SceneNode` + `Scene` | Grafo de escena con transformaciones de mundo; un hijo se mueve sin mover al padre. | captura · commit | — | pendiente |
-| H-03 | 2026-10-30 | — | Cámaras 1 y 4 + director | `FollowXZ` sigue al avatar en el plano XZ; `Orbit` gira alrededor del objetivo; transición suave. | video corto · commit | — | pendiente |
-| H-04 | 2026-10-31 | — | Ciclo día/noche + spots + skybox | Sol de 120 s, puntuales automáticas, spots con `F` y cambio de cubemap por zona. | video · commit | — | pendiente |
-| H-05 | 2026-11-01 | — | Cámaras 2 y 3 | Cámara de persecución de la nave de carrera y cámara de vuelo entre planetas. | video · commit | — | pendiente |
-| H-06 | 2026-11-02 | — | Integración de los 4 recorridos | Cambio entre modos con `1`–`4`, HUD y sin glitches de cámara. | video · commit | — | pendiente |
-| H-07 | 2026-11-03 | 18:00 | Feature freeze | No se agregan features; solo bugs y pulido. | tag `v1.0-rc` | — | pendiente |
-| H-08 | 2026-11-04 | — | Release en máquina limpia | `.exe` Release x64 con DLLs y assets corre sin Visual Studio. | zip · captura | — | pendiente |
-| H-09 | 2026-11-05 | — | Manuales, video y videoblog | Manual de usuario, manual técnico, video demo sin voz y videoblog. | PDFs · video | — | pendiente |
-| H-10 | 2026-11-07 | 12:00 | Entrega | Proyecto subido a Classroom antes del mediodía. | comprobante | — | pendiente |
+| H-01C | 2026-10-30 | por confirmar | Plan y preparación compartida con asistencia IA | Plan alineado a propuesta/lineamientos; README, scripts, PDFs y ramas preparados. Rebuild Release x64 sin errores, con warnings heredados; ZIP de 753 archivos verificado. Sin nueva prueba visual. | README · docs/PREPARAR_PUSH.md · docs/VALIDACION_PREPARACION.md | por confirmar | hecho |
+| H-A0 | 2026-10-30 | — | Arranque y distribución del paquete | Ver PLAN §6.1; recepción por compañeros pendiente. | README/scripts | — | pendiente |
+| H-A1 | 2026-10-30 | — | Contratos de escena/cámara | Headers compilables y ejemplo jerárquico. | por generar | — | pendiente |
+| H-A2 | 2026-10-30 | — | Bloqueantes de motor | Materiales, texturas, FOV y contrato de rutas. | por generar | — | pendiente |
+| H-A3 | 2026-10-30 | — | Escena y FollowXZ | Render Model/Mesh y seguimiento de avatar. | por generar | — | pendiente |
+| H-E0 | 2026-10-30 | — | Integración común | Avatar camina en P1; develop compilable. | por generar | — | pendiente |
 
 ---
 
@@ -160,12 +98,12 @@ La IA **no** sustituye la implementación, las pruebas ni la validación en la m
 | Fecha | Qué me propuse | Qué hice | Horas |
 |---|---|---|---:|
 | 2026-10-29 | Analizar lineamientos, definir arquitectura y cerrar la línea base | Análisis del PDF, plan maestro, bitácora y reparto; Fase 0: build Release x64, P09-2 ejecutado, `AGENTS.md`, captura y repo nuevo | 4.0 |
-| 2026-10-30 | Organizar el repo para B y C; empezar `SceneNode` y cámaras 1 y 4 | Motor movido a `src/engine/`, esqueleto de `src/`, `ItemGroups` por dueño, reglas B/C en §16, bitácoras B/C y docs locales fuera de git; build Release 0 errores y P09-2 ejecutado | 0 |
-| 2026-10-31 | Día/noche, spots, skybox, integración con B y C |  | 0 |
-| 2026-11-01 | Cámaras 2 y 3, director, pruebas de los 4 recorridos |  | 0 |
+| 2026-10-30 | Organizar repo, actualizar plan y preparar H-A0 a H-A3 | Motor movido a `src/engine/`, esqueleto de `src/`, `ItemGroups` por dueño, reglas B/C en §16, bitácoras B/C y docs locales fuera de git; build Release 0 errores y P09-2 ejecutado | 0 |
+| 2026-10-31 | Cámaras restantes, ambos mapas/modos y paquete en otra PC |  | — |
+| 2026-11-01 | Día/noche, spots, skyboxes e integración |  | — |
 | 2026-11-02 | Integración, rendimiento, bugs |  | 0 |
-| 2026-11-03 | QA y feature freeze |  | 0 |
-| 2026-11-04 | Release y prueba en máquina limpia |  | 0 |
+| 2026-11-03 | Release en otra PC, QA y freeze 18:00 |  | — |
+| 2026-11-04 | Documentación motor/build/Git y correcciones |  | — |
 | 2026-11-05 | Capturas técnicas y manual técnico |  | 0 |
 | 2026-11-06 | Buffer e imprevistos |  | 0 |
 | 2026-11-07 | Entrega |  | 0 |
@@ -194,4 +132,4 @@ La IA **no** sustituye la implementación, las pruebas ni la validación en la m
 - Plan maestro: `PLAN_MAESTRO.md`
 - Contratos y arquitectura: `PLAN_MAESTRO.md`, secciones 5 y 8.
 - Rúbrica: `PLAN_MAESTRO.md`, sección 2.
-- Repositorio: nuevo repo local en `C:\UNAM\CGICH` (sin remoto; David lo agrega)
+- Repositorio: `https://github.com/Cuervy117/CG_proyecto.git` (base preparada para publicar)

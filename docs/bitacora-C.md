@@ -1,6 +1,6 @@
 ---
-title: Bitácora individual — C
-autor: C (completar nombre)
+title: Bitácora individual — Venancio (C)
+autor: Venancio Miguel Tapia Verastegui
 materia: Computación Gráfica e Interacción Humano-Computadora
 semestre: 2027-1
 proyecto: Proyecto final CGICH
@@ -9,7 +9,7 @@ entrega: 2026-11-07
 estado: en curso
 ---
 
-# Bitácora individual — C
+# Bitácora individual — Venancio Miguel Tapia Verastegui (C)
 
 > [!info] Propósito
 > Registro individual del trabajo en el proyecto final. Cumple el requisito del PDF: **qué me propuse hacer, qué hice y cuántas horas trabajé**, por día.
@@ -36,53 +36,40 @@ estado: en curso
 |---|---|
 | Proyecto | Ambiente virtual interactivo: viajes espaciales y evolución de especies intergalácticas |
 | Equipo | 3 integrantes |
-| Mi rol | **C — avatar, animación, experiencias, HUD y docs** |
+| Mi rol | **C — avatar, criatura, entrada, experiencias, HUD e integración** |
 | Rutas que edito | `src/game/avatar/`, `src/game/anim/`, `src/game/Experience.*`, `src/game/main.cpp`, `src/ui/`, `Input.*`, `docs/` |
 | Stack | C++17 · OpenGL 4.3 (contexto actual; objetivo 3.3) · GLFW · GLEW · GLM · Assimp · Visual Studio 2022 |
 | Rama | `feat/c-avatar` |
-| Repositorio | Local en `C:\UNAM\CGICH` (remoto pendiente de que A lo suba) |
+| Repositorio | `https://github.com/Cuervy117/CG_proyecto.git` (publicación de base preparada; verificar push) |
 | Entrega | sábado 7-nov-2026, 12:00, Google Classroom |
 | Herramientas | Visual Studio 2022, Git, IA como apoyo de planificación y revisión |
 
 ---
 
-## 2. Planeación
+## 2. Planeación vigente — 30-oct-2026
 
-### 2.1 Objetivo
+Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación sustituye objetivos anteriores; no registra trabajo ejecutado ni horas de compañeros.
 
-Construir el avatar, las animaciones y la interfaz:
+- Rol: **C — avatar e integración**.
+- Objetivo: Rek’Sai articulada, criatura N5, entrada unificada, cuatro modos y tres ubicaciones, main y HUD.
+- Rutas: `src/game/avatar/, src/game/anim/, src/game/Experience.*, src/game/main.cpp, src/ui/, Input.*`. Excepciones de vcxproj en PLAN_MAESTRO §10/§16.
+- Hoy: **H-C0, H-C1, H-C2 y H-C3**, criterios y dependencias en PLAN_MAESTRO §6.1.
+- Contratos §5: esperar headers compartidos antes de integrar; preparar datos/piezas mientras tanto.
+- Rúbrica y aceptación §2/§7; controles únicos §8; no conservar controles de prácticas.
+- Recursos: modelos en subcarpetas propias; texturas importadas temporalmente `Textures/c_nombre.ext` hasta validar el cargador.
+- No usar rover/holocron/satélite de prácticas como contenido final.
+- Documentación repartida según §10: cada uno redacta su sección y conclusión, no todo recae en C.
 
-- Avatar jerárquico no humanoide (3 patas, 2 brazos, cresta, ojo) con caminata.
-- Textura y material del avatar (specular/shininess, emisivo en cresta/ojos).
-- Tres animaciones por teclado y tres continuas.
-- Cuatro recorridos y cambio correcto de cámaras (con A).
-- HUD, `Experience`, `main.cpp`.
-- Manual de usuario, manual técnico, video y videoblog.
-
-### 2.2 Reglas que aplican a mi rol
-
-- Reglas compartidas: **`PLAN_MAESTRO.md` §5, §6, §8 y §16**.
-- No toco `src/engine/`, `src/scene/`, `src/game/cameras/`, `src/game/world/`, `Load.*` ni `P09-*.cpp`.
-- Assets nuevos en `Models/c/` y `Textures/c/`; nunca commiteo binarios.
-- `.vcxproj`: solo agrego archivos en el bloque `C-avatar`; no commitear `.vcxproj.filters`.
-- Cuando cree `src/game/main.cpp`, en el mismo commit excluyo `P09-2-424104230.cpp` del build.
-
-### 2.3 Hitos y sprints
-
-| Sprint | Fechas | Objetivo de mi rol | Estado |
-|---|---|---|---|
-| S1 | 30–31 oct | Avatar + caminata | pendiente |
-| S2 | 31 oct–1 nov | Experiencias 1 y 4 | pendiente |
-| S3 | 1–2 nov | 3 animaciones por teclado | pendiente |
-| S4 | 2–3 nov | 3 animaciones continuas + partículas | pendiente |
-| S5 | 3–4 nov | QA de cámaras y HUD | pendiente |
-| S6 | 4–7 nov | Manuales, video, videoblog | pendiente |
-
-### 2.4 Riesgos y recortes
-
-- **Riesgo de tiempo:** el avatar puede llevar más de dos días. Plan B: 4 extremidades y piezas del rover.
-- **Riesgo de integración:** dos `main` en el build; se resuelve en el commit de `src/game/main.cpp`.
-- **Orden de sacrificio:** colisión de cámara → cámara 4 cinematográfica → variedad de animaciones.
+| Fecha | Resultado conjunto que debo apoyar | Estado |
+|---|---|---|
+| 30-oct | Avatar en P1 con cámara dentro de ejecutable común | pendiente |
+| 31-oct | Ambos planetas y cuatro modos básicos; paquete en otra PC | pendiente |
+| 1-nov | Animaciones, iluminación y contenido real | pendiente |
+| 2-nov | Demo completa de requisitos | pendiente |
+| 3-nov | QA, Release externo y freeze 18:00 | pendiente |
+| 4–5 nov | Manuales, videos, plano/propuesta finales | pendiente |
+| 6-nov | Reserva de incidencias | pendiente |
+| 7-nov | Acuse antes de 12:00 | pendiente |
 
 ---
 
@@ -97,18 +84,18 @@ Construir el avatar, las animaciones y la interfaz:
 ## 4. Registro diario (formato del PDF)
 
 | Fecha | Qué me propuse | Qué hice | Horas |
-|---|---|---|---:|
-| 2026-10-30 | Primer arranque: clonar, copiar assets, compilar y correr; avatar + caminata |  | 0 |
-| 2026-10-31 | Experiencias 1 y 4 |  | 0 |
-| 2026-11-01 | 3 animaciones por teclado |  | 0 |
-| 2026-11-02 | 3 animaciones continuas y partículas |  | 0 |
-| 2026-11-03 | QA de cámaras y HUD |  | 0 |
-| 2026-11-04 | Manual de usuario |  | 0 |
-| 2026-11-05 | Manual técnico y video |  | 0 |
-| 2026-11-06 | Buffer / videoblog |  | 0 |
-| 2026-11-07 | Entrega |  | 0 |
+|---|---|---|---|
+| 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | | — |
+| 2026-10-31 | Ambos mapas y cuatro modos | | — |
+| 2026-11-01 | Animaciones y contenido según rol | | — |
+| 2026-11-02 | Demo completa | | — |
+| 2026-11-03 | QA y freeze | | — |
+| 2026-11-04 | Documentación de mi módulo | | — |
+| 2026-11-05 | Videos y entrega preparada | | — |
+| 2026-11-06 | Incidencias | | — |
+| 2026-11-07 | Acuse de entrega | | — |
 
-> Las horas de días futuros se llenan al cerrar cada día. No se estiman: se anotan las reales.
+Las horas se anotan al trabajar; — significa sin registrar, no cero horas realizadas.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
-title: Bitácora individual — B
-autor: B (completar nombre)
+title: Bitácora individual — Jonhatan (B)
+autor: Jonhatan Alexis Martínez Ojeda
 materia: Computación Gráfica e Interacción Humano-Computadora
 semestre: 2027-1
 proyecto: Proyecto final CGICH
@@ -9,7 +9,7 @@ entrega: 2026-11-07
 estado: en curso
 ---
 
-# Bitácora individual — B
+# Bitácora individual — Jonhatan Alexis Martínez Ojeda (B)
 
 > [!info] Propósito
 > Registro individual del trabajo en el proyecto final. Cumple el requisito del PDF: **qué me propuse hacer, qué hice y cuántas horas trabajé**, por día.
@@ -40,50 +40,36 @@ estado: en curso
 | Rutas que edito | `src/game/world/`, `src/engine/Load.*`, `Models/`, `Textures/` |
 | Stack | C++17 · OpenGL 4.3 (contexto actual; objetivo 3.3) · GLFW · GLEW · GLM · Assimp · Visual Studio 2022 |
 | Rama | `feat/b-mundo` |
-| Repositorio | Local en `C:\UNAM\CGICH` (remoto pendiente de que A lo suba) |
+| Repositorio | `https://github.com/Cuervy117/CG_proyecto.git` (publicación de base preparada; verificar push) |
 | Entrega | sábado 7-nov-2026, 12:00, Google Classroom |
 | Herramientas | Visual Studio 2022, Git, IA como apoyo de planificación y revisión |
 
 ---
 
-## 2. Planeación
+## 2. Planeación vigente — 30-oct-2026
 
-### 2.1 Objetivo
+Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación sustituye objetivos anteriores; no registra trabajo ejecutado ni horas de compañeros.
 
-Construir el mundo del escenario:
+- Rol: **B — mundo e infraestructura**.
+- Objetivo: Dos superficies Vacío/Shinobi con spawns, límites y bindings; infraestructura espacial y cinco animaciones de mundo.
+- Rutas: `src/game/world/, src/engine/Load.*, recursos del mundo`. Excepciones de vcxproj en PLAN_MAESTRO §10/§16.
+- Hoy: **H-B0, H-B1 y H-B2**, criterios y dependencias en PLAN_MAESTRO §6.1.
+- Contratos §5: esperar headers compartidos antes de integrar; preparar datos/piezas mientras tanto.
+- Rúbrica y aceptación §2/§7; controles únicos §8; no conservar controles de prácticas.
+- Recursos: modelos en subcarpetas propias; texturas importadas temporalmente `Textures/b_nombre.ext` hasta validar el cargador.
+- No usar rover/holocron/satélite de prácticas como contenido final.
+- Documentación repartida según §10: cada uno redacta su sección y conclusión, no todo recae en C.
 
-- Pista de carreras nueva (óvalo irregular, subida y peralte) en el Planeta 1.
-- Dos planetas con tres etapas de evolución de especies cada uno.
-- Plataforma de lanzamiento, cohete y torre.
-- Estación espacial, satélites, lunas y asteroides.
-- NPCs (2–3 especies, 3–5 instancias).
-- Texturizado de las zonas y material de los objetos del mundo.
-
-### 2.2 Reglas que aplican a mi rol
-
-- Reglas compartidas: **`PLAN_MAESTRO.md` §5, §6, §8 y §16**.
-- No toco `src/engine/` (salvo `Load.*`), `src/scene/`, `src/game/cameras/`, `src/ui/`, `Input.*` ni el main.
-- Assets nuevos en `Models/b/` y `Textures/b/`; nunca commiteo binarios.
-- `.vcxproj`: solo agrego archivos en el bloque `B-world`.
-- No commitear `.vcxproj.filters`.
-- `Load.*` es mío, pero un cambio de firma requiere avisar a A y C.
-
-### 2.3 Hitos y sprints
-
-| Sprint | Fechas | Objetivo de mi rol | Estado |
-|---|---|---|---|
-| S1 | 30–31 oct | Pista nueva + Planeta 1 | pendiente |
-| S2 | 31 oct–1 nov | Planeta 2 + plataforma + cohete | pendiente |
-| S3 | 1–2 nov | Estación + satélites/lunas/asteroides | pendiente |
-| S4 | 2–3 nov | NPCs + texturizado | pendiente |
-| S5 | 3–4 nov | QA visual y correcciones | pendiente |
-| S6 | 4–7 nov | Capturas para manuales/video | pendiente |
-
-### 2.4 Riesgos y recortes
-
-- **Riesgo de contenido:** que la pista o el satélite se reconozcan como práctica. Se rehacen geometría y disposición.
-- **Riesgo de assets:** rutas relativas al CWD; ejecutar siempre desde la raíz.
-- **Orden de sacrificio:** variedad de NPCs → detalle de texturas → asteroides extra.
+| Fecha | Resultado conjunto que debo apoyar | Estado |
+|---|---|---|
+| 30-oct | Avatar en P1 con cámara dentro de ejecutable común | pendiente |
+| 31-oct | Ambos planetas y cuatro modos básicos; paquete en otra PC | pendiente |
+| 1-nov | Animaciones, iluminación y contenido real | pendiente |
+| 2-nov | Demo completa de requisitos | pendiente |
+| 3-nov | QA, Release externo y freeze 18:00 | pendiente |
+| 4–5 nov | Manuales, videos, plano/propuesta finales | pendiente |
+| 6-nov | Reserva de incidencias | pendiente |
+| 7-nov | Acuse antes de 12:00 | pendiente |
 
 ---
 
@@ -98,18 +84,18 @@ Construir el mundo del escenario:
 ## 4. Registro diario (formato del PDF)
 
 | Fecha | Qué me propuse | Qué hice | Horas |
-|---|---|---|---:|
-| 2026-10-30 | Primer arranque: clonar, copiar assets, compilar y correr; pista nueva + Planeta 1 |  | 0 |
-| 2026-10-31 | Planeta 2 + plataforma + cohete |  | 0 |
-| 2026-11-01 | Estación + celestes |  | 0 |
-| 2026-11-02 | NPCs + texturizado |  | 0 |
-| 2026-11-03 | QA visual |  | 0 |
-| 2026-11-04 | Correcciones y capturas |  | 0 |
-| 2026-11-05 | Apoyo a manuales (capturas) |  | 0 |
-| 2026-11-06 | Buffer |  | 0 |
-| 2026-11-07 | Entrega |  | 0 |
+|---|---|---|---|
+| 2026-10-30 | H-B0, H-B1 y H-B2 | | — |
+| 2026-10-31 | Ambos mapas y cuatro modos | | — |
+| 2026-11-01 | Animaciones y contenido según rol | | — |
+| 2026-11-02 | Demo completa | | — |
+| 2026-11-03 | QA y freeze | | — |
+| 2026-11-04 | Documentación de mi módulo | | — |
+| 2026-11-05 | Videos y entrega preparada | | — |
+| 2026-11-06 | Incidencias | | — |
+| 2026-11-07 | Acuse de entrega | | — |
 
-> Las horas de días futuros se llenan al cerrar cada día. No se estiman: se anotan las reales.
+Las horas se anotan al trabajar; — significa sin registrar, no cero horas realizadas.
 
 ---
 
