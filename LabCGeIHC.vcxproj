@@ -18,45 +18,61 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Create.hpp" />
-    <ClInclude Include="definition.h" />
-    <ClInclude Include="Load.hpp" />
-    <ClInclude Include="Input.hpp" />
-    <ClInclude Include="Mesh_tn.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Skybox.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Window.h" />
-    <ClInclude Include="CommonValues.h" />
-    <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="Shader_light.h" />
-    <ClInclude Include="SpotLight.h" />
+  <ItemGroup Label="A-engine">
+    <ClInclude Include="src\engine\Camera.h" />
+    <ClInclude Include="src\engine\CommonValues.h" />
+    <ClInclude Include="src\engine\Create.hpp" />
+    <ClInclude Include="src\engine\definition.h" />
+    <ClInclude Include="src\engine\DirectionalLight.h" />
+    <ClInclude Include="src\engine\Light.h" />
+    <ClInclude Include="src\engine\Load.hpp" />
+    <ClInclude Include="src\engine\Material.h" />
+    <ClInclude Include="src\engine\Mesh_tn.h" />
+    <ClInclude Include="src\engine\Model.h" />
+    <ClInclude Include="src\engine\PointLight.h" />
+    <ClInclude Include="src\engine\Shader_light.h" />
+    <ClInclude Include="src\engine\Skybox.h" />
+    <ClInclude Include="src\engine\Sphere.h" />
+    <ClInclude Include="src\engine\SpotLight.h" />
+    <ClInclude Include="src\engine\stb_image.h" />
+    <ClInclude Include="src\engine\Texture.h" />
+    <ClInclude Include="src\engine\Window.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Load.cpp" />
-    <ClCompile Include="Create.cpp" />
+  <ItemGroup Label="A-engine-compile">
+    <ClCompile Include="src\engine\Camera.cpp" />
+    <ClCompile Include="src\engine\Create.cpp" />
+    <ClCompile Include="src\engine\DirectionalLight.cpp" />
+    <ClCompile Include="src\engine\Light.cpp" />
+    <ClCompile Include="src\engine\Load.cpp" />
+    <ClCompile Include="src\engine\Material.cpp" />
+    <ClCompile Include="src\engine\Mesh_tn.cpp" />
+    <ClCompile Include="src\engine\Model.cpp" />
+    <ClCompile Include="src\engine\PointLight.cpp" />
+    <ClCompile Include="src\engine\Shader_light.cpp" />
+    <ClCompile Include="src\engine\Skybox.cpp" />
+    <ClCompile Include="src\engine\Sphere.cpp" />
+    <ClCompile Include="src\engine\SpotLight.cpp" />
+    <ClCompile Include="src\engine\Texture.cpp" />
+    <ClCompile Include="src\engine\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup Label="A-scene">
+    <None Include="src\scene\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup Label="A-cameras">
+    <None Include="src\game\cameras\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup Label="B-world">
+    <None Include="src\game\world\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup Label="C-avatar">
+    <None Include="src\game\avatar\.gitkeep" />
+    <None Include="src\game\anim\.gitkeep" />
+    <None Include="src\ui\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup Label="main-test">
+    <ClInclude Include="Input.hpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Mesh_tn.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="P09-2-424104230.cpp" />
-    <ClCompile Include="Skybox.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Window.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="Shader_light.cpp" />
-    <ClCompile Include="SpotLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.frag" />
@@ -156,7 +172,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include;glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);src\engine;src\scene;src\game;src\game\cameras;src\game\world;src\game\avatar;src\game\anim;src\ui;include;glm;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -173,7 +189,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include;glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);src\engine;src\scene;src\game;src\game\cameras;src\game\world;src\game\avatar;src\game\anim;src\ui;include;glm;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
