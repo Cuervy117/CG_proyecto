@@ -53,7 +53,7 @@ No toques archivos de B ni de C salvo que la tarea lo diga.
 | Campo | Estado |
 |---|---|
 | Compila | **SÍ**: Release x64, **0 errores**, **64 warnings**. |
-| Último commit | `PENDIENTE_DE_COMMIT` (se actualiza al cerrar la sesión; ver `git log -1`). |
+| Último commit | Línea base: `362f19b` (tag `v0.1-base`). Cierre de sesión: ver `git log -1 --oneline`. |
 | Funciona | P09-2 corre desde la raíz: ventana `Practica 09: Animacion`, skybox cupertin-lake, piso con textura de ladrillo, holocron jerárquico animado, cohete con despegue/caída y llama billboard, cámara libre y pausa con `P`. |
 | Stub / roto | No existe `SceneNode`/`Scene`/`CameraRig`/`Experience`. No hay ciclo día/noche, spots, avatar, HUD ni los 4 recorridos. `P09-424104230.cpp` (pista/nave/satélite) no está compilado. |
 | Siguiente tarea | Esperando OK para `SceneNode` + `Scene` (plan de 5 bullets en la sección 7). |
