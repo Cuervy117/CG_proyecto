@@ -1,0 +1,40 @@
+# Build / IDE
+.vs/
+x64/
+Debug/
+Release/
+build/
+LabCGeIHC/
+*.exe
+*.pdb
+*.ilk
+*.tlog
+*.user
+*.suo
+
+# Backups de trabajo
+*.bak
+*.bak2
+*.bak3
+*.bak_refactor
+
+# Assets y dependencias locales (no se versionan; viven en la PC)
+Models/
+Textures/
+include/
+lib/
+glm/
+*.dll
+*.obj
+*.fbx
+*.glb
+*.blend
+
+# Capturas de trabajo y bundle de traspaso
+capturas_*/
+artefactos/
+
+# Herramientas / editor
+.processed_tasks.json
+.vscode/
+reksai_referencia.jpg
