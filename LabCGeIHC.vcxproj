@@ -56,7 +56,14 @@
     <ClCompile Include="src\engine\Window.cpp" />
   </ItemGroup>
   <ItemGroup Label="A-scene">
-    <None Include="src\scene\.gitkeep" />
+    <ClInclude Include="src\scene\CameraDirector.h" />
+    <ClInclude Include="src\scene\CameraRig.h" />
+    <ClInclude Include="src\scene\Scene.h" />
+    <ClInclude Include="src\scene\SceneNode.h" />
+    <ClCompile Include="src\scene\CameraDirector.cpp" />
+    <ClCompile Include="src\scene\CameraRig.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\scene\SceneNode.cpp" />
   </ItemGroup>
   <ItemGroup Label="A-cameras">
     <None Include="src\game\cameras\.gitkeep" />

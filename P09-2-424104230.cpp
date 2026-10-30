@@ -31,6 +31,11 @@
 #include "Load.hpp"
 #include "Input.hpp"
 
+#include "CameraDirector.h"
+#include "CameraRig.h"
+#include "Scene.h"
+#include "SceneNode.h"
+
 static const float pi = 3.14159265358979323846f;
 static const float aRad = pi / 180.0f;
 
@@ -379,8 +384,41 @@ static void dibujarLlama(GLuint uniformModel, GLuint uniformColor,
 	glDisable(GL_BLEND);
 }
 
+static bool probarJerarquiaEscena()
+{
+	Scene escena;
+	SceneNode* padre = escena.root.add(std::make_unique<SceneNode>("padre"));
+	padre->position = glm::vec3(1.0f, 2.0f, 3.0f);
+	padre->rotationEuler.y = glm::radians(90.0f);
+
+	SceneNode* hijo = padre->add(std::make_unique<SceneNode>("hijo"));
+	hijo->position = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	escena.updateWorld();
+
+	const glm::vec4 columnaHijo = hijo->world[3];
+	const glm::vec3 posicionHijo(columnaHijo.x, columnaHijo.y, columnaHijo.z);
+	const glm::vec3 posicionEsperada(1.0f, 2.0f, 2.0f);
+	const bool transformacionOk = glm::length(posicionHijo - posicionEsperada) < 1e-4f;
+
+	const bool visibleOk = hijo->visibleInHierarchy();
+	padre->visible = false;
+	const bool ocultoOk = !hijo->visibleInHierarchy();
+	padre->visible = true;
+
+	const bool busquedaOk = escena.find("hijo") == hijo;
+
+	const bool ok = transformacionOk && visibleOk && ocultoOk && busquedaOk;
+	printf("H-A1 jerarquia: %s (hijo %.3f, %.3f, %.3f)\n",
+		ok ? "OK" : "FALLO", posicionHijo.x, posicionHijo.y, posicionHijo.z);
+	fflush(stdout);
+	return ok;
+}
+
 int main()
 {
+	probarJerarquiaEscena();
+
 	Window mainWindow(1366, 768);
 	mainWindow.Initialise();
 
