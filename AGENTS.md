@@ -69,7 +69,7 @@ No toques archivos de B ni de C salvo que la tarea lo diga.
 | 1 | ¿Ruta absoluta del proyecto? | `C:\UNAM\CGICH` |
 | 2 | ¿Qué `.sln`/`.vcxproj` es el vigente? | `LabCGeIHC.sln` / `LabCGeIHC.vcxproj` (únicos; `.vcxproj` modificado 2026-10-29 19:41) |
 | 3 | ¿Qué `.cpp` tiene el `main` que corre? | `P09-2-424104230.cpp` (línea 382), incluido en el `.vcxproj` |
-| 4 | ¿Qué otros `main` existen y están excluidos? | Se retiraron del árbol `E02`, `E06` (+3 `.bak`), `E09`, `E09-2`, `mainbase`, `P01`, `P05`, `P06`, `P07`, `P08` (+`.bak_refactor`), `practica4_sinjerarqu\u00eda`, `Previo06`, `Previo07`, `T03`, `T04`. Respaldo en `C:\Users\David\AppData\Local\Temp\opencode\cgich_backup_2026-10-29\mains_eliminados`. Solo quedan `P09-2` (compilado) y `P09-424104230.cpp` (referencia, excluido). |
+| 4 | ¿Qué otros `main` existen y están excluidos? | Se retiraron del árbol `E02`, `E06` (+3 `.bak`), `E09`, `E09-2`, `mainbase`, `P01`, `P05`, `P06`, `P07`, `P08` (+`.bak_refactor`), `practica4_sinjerarquía`, `Previo06`, `Previo07`, `T03`, `T04`. Respaldo en `C:\Users\David\AppData\Local\Temp\opencode\cgich_backup_2026-10-29\mains_eliminados`. Solo quedan `P09-2` (compilado) y `P09-424104230.cpp` (referencia, excluido). |
 | 5 | ¿Release x64 compila sin errores? | **SÍ** (MSBuild exit 0) |
 | 6 | ¿Cuántos warnings? ¿Cuáles son críticos? | 64 warnings; 0 errores. Crítico: C4715; formatos C4474/C4477; C4804. El resto son conversiones C4244/C4267. |
 | 7 | ¿El `.exe` corre y desde qué directorio? | **SÍ**, `.\x64\Release\LabCGeIHC.exe` con CWD `C:\UNAM\CGICH`; ventana `Practica 09: Animacion`, responde; sin salida de error en consola. |
