@@ -38,3 +38,9 @@ artefactos/
 .processed_tasks.json
 .vscode/
 reksai_referencia.jpg
+
+# Documentos locales (cada integrante genera su AGENTS.md; ver PLAN §16.6-16.7)
+/AGENTS.md
+/README.md
+/CAPTURAS_P09.md
+/P09_ANIMACION_BASICA.md

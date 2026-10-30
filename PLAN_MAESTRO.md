@@ -128,7 +128,7 @@
 - **No** se reconstruye la unión de los snapshots. Ese trabajo era para el escenario de "solo tengo los artefactos"; ya no aplica.
 - Los artefactos siguen sirviendo como **inventario de assets** y como **referencia de patrones** (pista, sátelite, partículas). Ver Anexo A.
 - El repo de GitHub del equipo es `https://github.com/Cuervy117/CG_proyecto`. Verificar si la carpeta local ya está conectada; si no, inicializar git y subir la línea base.
-- La bóveda de Obsidian se queda en Linux. En Windows se trabaja con `PLAN_MAESTRO.md` + `AGENTS.md` + un `docs/bitacora-David.md`.
+- La bóveda de Obsidian se queda en Linux. En Windows se trabaja con `PLAN_MAESTRO.md` (compartido y versionado) + un `AGENTS.md` local por integrante (no versionado) + la bitácora individual de cada quien (`docs/bitacora-David.md`, `bitacora-B.md`, `bitacora-C.md`; ver §16).
 
 **Riesgo principal del estado de partida:** que la carpeta de escritorio sea la carpeta de prácticas (varios `main`, varios `.vcxproj`, assets mezclados). La Fase 0 debe identificar **el main y el proyecto que realmente corren**, y no tocar el resto.
 
@@ -177,7 +177,7 @@ git status; git branch -a; git remote -v; git log --oneline -5
 
 - [ ] Un comando reproducible compila **Release x64** sin errores.
 - [ ] Un comando reproducible ejecuta el `.exe` desde la raíz del proyecto.
-- [ ] `AGENTS.md` creado con datos reales (sección 14).
+- [ ] `AGENTS.md` creado con datos reales (sección 14), **local y no versionado** (§16.7).
 - [ ] `docs/bitacora-David.md` creada, con la planeación y la regla de registro por hito.
 - [ ] `PLAN_MAESTRO.md` copiado al repo.
 - [ ] `git status` limpio; commit `chore: línea base del proyecto` + tag `v0.1-base`.
@@ -199,7 +199,7 @@ Si tras 90 minutos no compila, **no se escribe código nuevo**. Se documenta el 
 
 ### 4.5 Bitácora de David
 
-Archivo: `docs/bitacora-David.md`.
+Archivos (versionados, uno por integrante): `docs/bitacora-David.md` (A), `docs/bitacora-B.md`, `docs/bitacora-C.md`. Cada uno edita solo la suya (ver §16.6).
 
 - Se escribe **al cerrar cada hito**, no al final del proyecto.
 - Cada entrada lleva **fecha y hora**, una descripción de **1–3 líneas**, evidencia y **horas reales**.
@@ -221,31 +221,42 @@ Archivo: `docs/bitacora-David.md`.
 - Un solo `main`.
 - OpenGL solo en `src/engine` y `Load.cpp`.
 
-### 5.2 Estructura de carpetas
+### 5.2 Estructura de carpetas (estado real tras el movimiento a `src/`)
 
 ```
-CG/
+C:\UNAM\CGICH\
 ├─ src/
-│  ├─ main.cpp
-│  ├─ engine/     Window, Camera, Shader, Shader_light, Texture,
-│  │              Mesh, Model, Skybox, luces, Material, Create
-│  ├─ scene/      SceneNode, Scene, CameraRig, CameraDirector, DayNight
-│  ├─ game/       Experience, cameras/, world/, avatar/, anim/
-│  └─ ui/         Hud
-├─ Models/
-├─ Textures/
+│  ├─ engine/     Window, Camera, Shader, Shader_light, Shader_m,
+│  │              Texture, Mesh, Mesh_tn, Model, Skybox, Sphere,
+│  │              Material, DirectionalLight, PointLight, SpotLight,
+│  │              Light, Create, Load (de B), CommonValues.h,
+│  │              definition.h, stb_image.h
+│  ├─ scene/      SceneNode, Scene, CameraRig, CameraDirector, DayNight (A)
+│  ├─ game/
+│  │  ├─ main.cpp          (C; sustituye a P09-2)
+│  │  ├─ Experience.*      (C)
+│  │  ├─ cameras/          (A: FollowXZ, Chase, Flight, Orbit)
+│  │  ├─ world/            (B)
+│  │  ├─ avatar/           (C)
+│  │  └─ anim/             (C)
+│  └─ ui/         Hud (C)
+├─ Input.*        (C; excepción en la raíz hasta integrar Experience)
+├─ Models/  Textures/     (B; fuera de git, ver §16)
 ├─ shaders/
-├─ include/  lib/  glm/  *.dll
+├─ include/  lib/  glm/  *.dll   (necesarios para compilar; fuera de git)
 ├─ docs/
-│  ├─ bitacora-David.md
+│  ├─ bitacora-David.md  bitacora-B.md  bitacora-C.md
 │  └─ capturas/
-├─ reference/     prácticas antiguas, NO compila
-├─ AGENTS.md
+├─ artefactos/    (ignorado por git)
+├─ AGENTS.md      (local de cada integrante; NO se versiona)
+├─ README.md      (local; NO se versiona)
 ├─ PLAN_MAESTRO.md
-└─ build.bat
+├─ P09-2-424104230.cpp   (main de prueba de A; se excluye cuando exista src\game\main.cpp)
+└─ P09-424104230.cpp     (referencia; excluido del build)
 ```
 
 > Los assets se quedan en `Models/`, `Textures/` y `shaders/` en la raíz. Moverlos obliga a tocar todas las rutas y no da puntos.
+> Include dirs de los configs **x64** (`Debug|x64` y `Release|x64`): `$(ProjectDir);src\engine;src\scene;src\game;src\game\cameras;src\game\world;src\game\avatar;src\game\anim;src\ui;include;glm`. Por eso todo `#include "Nombre.h"` funciona sin rutas relativas.
 
 ### 5.3 Las tres abstracciones
 
@@ -577,8 +588,10 @@ cresta->rotationEuler.y = 0.15f * sinf(0.7f * w);
 | Rol | Dueño de | Entrega |
 |---|---|---|
 | **A** | `src/engine`, `src/scene`, `src/game/cameras`, build, release | escena, cámaras, luces, `.exe` |
-| **B** | `src/game/world`, `Load.cpp`, `assets` | pista, planetas, plataforma, estación, NPCs, texturas |
-| **C** | `src/game/avatar`, `anim`, `Experience`, `ui`, `Input`, `docs` | avatar, 6 animaciones, HUD, manuales/video |
+| **B** | `src/game/world`, `src/engine/Load.*`, `Models/`, `Textures/` | pista, planetas, plataforma, estación, NPCs, texturas |
+| **C** | `src/game/avatar`, `src/game/anim`, `src/game/Experience.*`, `src/game/main.cpp`, `src/ui`, `Input.*`, `docs/` | avatar, 6 animaciones, HUD, manuales/video |
+
+> `Load.*` vive en `src/engine/` pero **es de B** (A no lo modifica; B no cambia su firma sin avisar).
 
 **Git:**
 - Ramas: `main`, `develop`, `feat/a-motor`, `feat/b-mundo`, `feat/c-avatar`.
@@ -589,10 +602,14 @@ cresta->rotationEuler.y = 0.15f * sinf(0.7f * w);
 
 **Anti-colisión:**
 1. Un dueño por ruta; nadie más edita.
-2. `main.cpp` y `Experience` son de C.
-3. `config/input` es de C.
-4. Assets por subcarpeta de dueño.
+2. `src/game/main.cpp` y `Experience` son de C.
+3. `Input.*` es de C (hoy en la raíz).
+4. Assets por subcarpeta de dueño (`Models/b/`, `Textures/b/`, etc.).
 5. Bitácora individual; nadie más la edita.
+6. `.vcxproj`: cada uno agrega archivos solo en su `ItemGroup` etiquetado; no commitear `.vcxproj.filters`.
+7. `AGENTS.md` es local; no se versiona ni se copia entre integrantes.
+
+> El detalle operativo de estas reglas está en **§16**.
 
 ---
 
@@ -639,8 +656,9 @@ cresta->rotationEuler.y = 0.15f * sinf(0.7f * w);
 - [ ] `.exe` Release + DLLs + assets + código comentado.
 - [ ] Manual de usuario con capturas de teclado/mouse.
 - [ ] Manual técnico: capturas + bloques de código por rubro + conclusiones + bibliografía.
-- [ ] Bitácoras individuales (qué me propuse / qué hice / horas).
+- [ ] Bitácoras individuales (qué me propuse / qué hice / horas): `docs/bitacora-David.md`, `docs/bitacora-B.md`, `docs/bitacora-C.md`.
 - [ ] Bitácora de David con hitos fechados y evidencia (`docs/bitacora-David.md`).
+- [ ] `AGENTS.md` local de cada integrante (NO versionado; ver §16).
 - [ ] Video demo sin narración, mostrando **todos** los elementos.
 - [ ] Videoblog.
 - [ ] Documento del repositorio: ramas, capturas, organización, carpeta de almacenamiento.
@@ -652,6 +670,7 @@ cresta->rotationEuler.y = 0.15f * sinf(0.7f * w);
 ## 14. Plantilla de `AGENTS.md`
 
 > El agente debe **llenar los `<>` con datos reales** de la Fase 0. No dejar placeholders.
+> **`AGENTS.md` es local y no se versiona** (está en `.gitignore`). Cada integrante genera el suyo con §15 en su máquina; **no copiar el de otro** (traería rutas, rol y rama ajenos). Las reglas compartidas viven en este plan, sobre todo §5, §10 y §16.
 
 ```markdown
 # AGENTS.md — Proyecto final CGICH
@@ -730,12 +749,14 @@ No hacer: <...>
 
 ## 15. Prompt de arranque para el agente de escritorio
 
+> **Uso por integrante.** Este prompt **genera un `AGENTS.md` nuevo desde cero** con los datos reales de la máquina donde corre; no reutiliza el de otro integrante. Antes de ejecutarlo: clonar, copiar `Models/`, `Textures/`, `include/`, `lib/`, `glm/` y los DLLs desde la carpeta compartida (§16), y comprobar que Release x64 compila y corre. Sustituir `<RUTA>`, `<RAMA>`, `<ROL>` y `<CARPETAS>`. El `AGENTS.md` resultante es local: no se commitea.
+
 ```text
-Eres un ingeniero C++/OpenGL. Ayudas a A en el proyecto final CGICH.
+Eres un ingeniero C++/OpenGL. Ayudas a <ROL> en el proyecto final CGICH.
 Trabajas en <RUTA>, rama <RAMA>. El proyecto ya compila y corre: no lo reescribas.
 
 Antes de escribir código:
-1. Lee PLAN_MAESTRO.md completo.
+1. Lee PLAN_MAESTRO.md completo (mínimo §5, §6, §8, §10 y §16).
 2. Ejecuta la FASE 0 (sección 4) y responde la tabla de 12 preguntas.
 3. Genera AGENTS.md con la plantilla de la sección 14, con datos reales.
 4. Muéstrame el AGENTS.md y un plan de 5 bullets para la tarea de hoy.
@@ -743,10 +764,118 @@ Antes de escribir código:
 
 Reglas: no CMake, no ECS, no PBR; OpenGL solo en src/engine; un dueño por archivo;
 no inventes rutas ni APIs; no digas "listo" sin haber compilado.
+Solo edito <CARPETAS>; no toco src/engine, src/scene, P09-2-424104230.cpp ni archivos de otro rol.
 
 Al terminar cada sesión: actualiza en AGENTS.md "Estado actual"
 (compila, último commit, funciona, stub, siguiente tarea).
 ```
+
+### 15.1 Prompt corto para B y C (Fase 0 reducida)
+
+> Ahorra la Fase 0 completa (A ya la respondió). Solo verifica que el entorno de ese integrante compila y corre.
+
+```text
+Eres un ingeniero C++/OpenGL del proyecto CGICH. Ayudas a <B|C>.
+Trabajas en <RUTA>, rama feat/<b-mundo|c-avatar>.
+
+1. Lee PLAN_MAESTRO.md (§5, §6, §8, §10 y §16) y tu docs/bitacora-<B|C>.md.
+2. Verifica el entorno y responde solo: proyecto, si Release x64 compila (0 errores),
+   warnings, si el .exe corre desde la raíz, assets faltantes y estado de git.
+3. Genera tu AGENTS.md local con la plantilla §14 usando TUS datos; NO lo commitees.
+4. Propón un plan de ≤5 bullets para el hito de hoy y espera OK.
+
+No toques src/engine, src/scene, P09-2-424104230.cpp, Load.* ni carpetas de otro rol.
+No CMake/ECS/PBR/ImGui. No digas "listo" sin compilar y correr.
+```
+
+---
+
+## 16. Reglas de trabajo por rol (B y C)
+
+> Esta sección sustituye cualquier acuerdo verbal: es el contrato operativo del equipo. Aplica a A, B y C.
+
+### 16.1 Dueño por ruta
+
+| Rol | Rutas que edita | Rutas prohibidas |
+|---|---|---|
+| **A** | `src/engine/` (excepto `Load.*`), `src/scene/`, `src/game/cameras/`, `LabCGeIHC.*`, `P09-2-424104230.cpp` | `src/game/world/`, `src/game/avatar/`, `src/game/anim/`, `src/game/Experience.*`, `src/game/main.cpp`, `src/ui/`, `Input.*`, `Load.*` |
+| **B** | `src/game/world/`, `src/engine/Load.*`, `Models/`, `Textures/` | `src/engine/` (salvo `Load.*`), `src/scene/`, `src/game/cameras/`, `src/game/avatar/`, `src/game/anim/`, `src/ui/`, `Input.*`, `src/game/main.cpp` |
+| **C** | `src/game/avatar/`, `src/game/anim/`, `src/game/Experience.*`, `src/game/main.cpp`, `src/ui/`, `Input.*`, `docs/` | `src/engine/`, `src/scene/`, `src/game/cameras/`, `src/game/world/`, `Load.*`, `P09-*.cpp` |
+
+Reglas:
+
+1. Nadie fuera del dueño edita una ruta. Si hace falta un cambio, se pide al dueño.
+2. `Load.*` vive en `src/engine/` pero es de B: A no lo modifica y B no cambia su firma sin avisar a A y C.
+3. `Input.*` está en la raíz como excepción temporal; C lo reubica al integrar `Experience` y avisa.
+4. Los `.bak`, `.bak_refactor`, `artefactos/` y `capturas_*/` están ignorados: no se commitean.
+
+### 16.2 Ramas y merges
+
+- `main`: solo releases y la línea base. Nada de trabajo directo.
+- `develop`: integración; **siempre compila**.
+- Cada quien trabaja en `feat/a-motor`, `feat/b-mundo`, `feat/c-avatar`.
+- Merges a `develop` en las ventanas **13:00 y 19:00**; antes de pedirlo, cumplir §16.8.
+- Commits convencionales (`feat:`, `fix:`, `docs:`, `refactor:`), push diario.
+- Tags: `v0.1-base` (hecho), `v0.5-alpha`, `v1.0-entrega`.
+
+### 16.3 `.vcxproj` y `.filters`
+
+- El `.vcxproj` tiene `ItemGroup` etiquetados por dueño: `A-engine`, `A-scene`, `A-cameras`, `B-world`, `C-avatar`, `main-test`.
+- Cada quien agrega sus archivos **solo en su bloque**, editando el XML a mano si es necesario (VS puede borrar el `Label` al usar "Agregar nuevo elemento"; si eso pasa, avisar a A).
+- **No commitear `.vcxproj.filters`**: es cosmético y genera conflictos; se resuelve en la ventana de merge.
+- No crear archivos fuera de `src/`; no mover ni renombrar archivos del motor.
+- Los include dirs ya cubren `src/*`; usar siempre `#include "Nombre.h"`.
+
+### 16.4 Assets y librerías (fuera de git)
+
+- `.gitignore` excluye `Models/`, `Textures/`, `include/`, `lib/`, `glm/` y `*.dll`. Un clon **no compila ni se ve nada** hasta copiarlos.
+- Carpeta compartida del equipo (Drive/USB, la define el grupo): `Models/`, `Textures/`, `include/`, `lib/`, `glm/`, `glew32.dll`, `glfw3.dll`, `assimp-vc143-mt.dll`.
+- Copiar a la raíz del repo, respetando los nombres. Es requisito de planeación ("carpeta de almacenamiento").
+- Assets nuevos: `Models/b/`, `Textures/b/`, `Models/c/`, `Textures/c/` según dueño. Prohibido commitear binarios, ZIPs o `.blend`.
+- `.exe`, `.pdb`, `x64/`, `.vs/` también están ignorados.
+
+### 16.5 Un solo `main`
+
+- Hoy el main de build es `P09-2-424104230.cpp` (A, prueba).
+- C crea `src/game/main.cpp`; en **ese mismo commit** excluye `P09-2-424104230.cpp` del build.
+- Nadie más crea `main()`. `P09-424104230.cpp` es referencia y sigue excluido.
+
+### 16.6 Documentos versionados
+
+- Se versionan **solo**: `PLAN_MAESTRO.md` y las bitácoras `docs/bitacora-David.md`, `docs/bitacora-B.md`, `docs/bitacora-C.md` (más evidencias en `docs/capturas/`).
+- Cada bitácora la edita **solo su dueño**; entrada por hito con fecha, descripción de 1–3 líneas, evidencia y horas reales (no estimadas).
+- `AGENTS.md` y `README.md` son locales: están en `.gitignore` y **no se commitean**.
+- Notas sueltas de prácticas (`CAPTURAS_P09.md`, `P09_ANIMACION_BASICA.md`) quedan locales en `artefactos/`.
+
+### 16.7 `AGENTS.md` local
+
+- Cada integrante lo genera con §14 + §15 en su máquina, con su ruta, rama y rol.
+- No se copia el de otro integrante.
+- Debe apuntar a este plan (§16) para las reglas compartidas.
+
+### 16.8 DoD antes de pedir merge
+
+- [ ] Release x64 con **0 errores** y sin warnings nuevos.
+- [ ] `.exe` corre desde la raíz (`C:\UNAM\CGICH`) con assets visibles.
+- [ ] Probado con el main vigente y sin `main()` propio.
+- [ ] Cambios limitados a las rutas propias (§16.1).
+- [ ] Bitácora actualizada con el hito.
+
+### 16.9 Prohibiciones (heredadas de §5.5 y §11)
+
+- No CMake, ECS, PBR, ImGui, vcpkg ni física.
+- No reescribir el motor ni refactorizar `Recursos`, `Mesh` o `Load.cpp` "por limpieza".
+- No cambiar firmas sin actualizar este plan y avisar a A y C.
+- No tocar la bóveda de Obsidian ni `docs/` ajeno salvo la bitácora propia.
+- No inventar rutas, versiones, APIs ni resultados de build.
+
+### 16.10 Primer arranque de B y C
+
+1. Clonar el repo y crear/usar su rama `feat/*`.
+2. Copiar assets y librerías de la carpeta compartida a la raíz.
+3. Compilar Release x64 y correr el `.exe` desde la raíz.
+4. Ejecutar el prompt §15.1 en su máquina para generar su `AGENTS.md` local.
+5. Leer §5, §6, §8, §10 y esta §16; escribir su plan de ≤5 bullets y esperar OK.
 
 ---
 
