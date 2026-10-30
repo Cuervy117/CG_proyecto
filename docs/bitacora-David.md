@@ -75,7 +75,7 @@ La comparación "reescribir vs. reutilizar" y la selección de las tres abstracc
 
 | Sprint | Fechas | Objetivo | Responsable | Estado |
 |---|---|---|---|---|
-| S0 | 29–30 oct | Línea base: el proyecto de escritorio compila y corre; `AGENTS.md`; bitácora | A | en curso |
+| S0 | 29–30 oct | Línea base: el proyecto de escritorio compila y corre; `AGENTS.md`; bitácora | A | hecho |
 | S1 | 30–31 oct | `SceneNode`, cámaras 1 y 4, avatar caminando | A + C | pendiente |
 | S2 | 31 oct–1 nov | Día/noche, spots, skybox, planeta 2, 2 recorridos | A + B + C | pendiente |
 | S3 | 1–2 nov | Cámaras 2 y 3, estación, 3 animaciones por teclado | A + B + C | pendiente |
@@ -142,6 +142,7 @@ La IA **no** sustituye la implementación, las pruebas ni la validación en la m
 |---|---|---|---|---|---|---|---|
 | H-00 | 2026-10-29 | 23:22 | Planificación y plan maestro | Análisis del PDF, rúbrica, arquitectura, riesgos y calendario. Se generó `PLAN_MAESTRO.md` y esta bitácora. | `PLAN_MAESTRO.md` · commit | 3.0 | hecho |
 | H-01 | 2026-10-29 | 23:49 | Línea base en la PC de escritorio | Release x64 compila con 0 errores (64 warnings); P09-2 corre desde la raíz con skybox, piso texturizado, holocron y cohete. Se generó `AGENTS.md` y se reinició el repo. | `docs/capturas/fase0_p09.png` · commit `362f19b` · tag `v0.1-base` | 1.0 | hecho |
+| H-01B | 2026-10-30 | 08:30 | Estructura del repo para el equipo | Motor movido a `src/engine/`, esqueleto de `src/scene`, `src/game` y `src/ui`, `ItemGroups` por dueño y reglas B/C en `PLAN_MAESTRO.md` §16; build Release x64 y P09-2 verificados. | `docs/capturas/refactor_src_01.png` · commits `c895008` y `26dce1d` | — | hecho |
 | H-02 | 2026-10-30 | — | `SceneNode` + `Scene` | Grafo de escena con transformaciones de mundo; un hijo se mueve sin mover al padre. | captura · commit | — | pendiente |
 | H-03 | 2026-10-30 | — | Cámaras 1 y 4 + director | `FollowXZ` sigue al avatar en el plano XZ; `Orbit` gira alrededor del objetivo; transición suave. | video corto · commit | — | pendiente |
 | H-04 | 2026-10-31 | — | Ciclo día/noche + spots + skybox | Sol de 120 s, puntuales automáticas, spots con `F` y cambio de cubemap por zona. | video · commit | — | pendiente |
@@ -159,7 +160,7 @@ La IA **no** sustituye la implementación, las pruebas ni la validación en la m
 | Fecha | Qué me propuse | Qué hice | Horas |
 |---|---|---|---:|
 | 2026-10-29 | Analizar lineamientos, definir arquitectura y cerrar la línea base | Análisis del PDF, plan maestro, bitácora y reparto; Fase 0: build Release x64, P09-2 ejecutado, `AGENTS.md`, captura y repo nuevo | 4.0 |
-| 2026-10-30 | Línea base, `AGENTS.md`, `SceneNode`, cámaras 1 y 4 |  | 0 |
+| 2026-10-30 | Organizar el repo para B y C; empezar `SceneNode` y cámaras 1 y 4 | Motor movido a `src/engine/`, esqueleto de `src/`, `ItemGroups` por dueño, reglas B/C en §16, bitácoras B/C y docs locales fuera de git; build Release 0 errores y P09-2 ejecutado | 0 |
 | 2026-10-31 | Día/noche, spots, skybox, integración con B y C |  | 0 |
 | 2026-11-01 | Cámaras 2 y 3, director, pruebas de los 4 recorridos |  | 0 |
 | 2026-11-02 | Integración, rendimiento, bugs |  | 0 |
