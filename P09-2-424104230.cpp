@@ -15,7 +15,6 @@
 #include "Window.h"
 #include "Mesh_tn.h"
 #include "Shader_light.h"
-#include "Camera.h"
 #include "Texture.h"
 #include "Sphere.h"
 #include "Model.h"
@@ -25,7 +24,6 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-#include "Material.h"
 
 #include "Create.hpp"
 #include "Load.hpp"
@@ -33,17 +31,25 @@
 
 #include "CameraDirector.h"
 #include "CameraRig.h"
+#include "FollowXZ.h"
 #include "Scene.h"
 #include "SceneNode.h"
 
 static const float pi = 3.14159265358979323846f;
 static const float aRad = pi / 180.0f;
 
-std::vector<Shader> shaderList;
-Camera camera;
+static glm::vec3 posicionNodo(const SceneNode& nodo)
+{
+	const glm::vec4 columna = nodo.world[3];
+	return glm::vec3(columna.x, columna.y, columna.z);
+}
 
-Material materialBrillante;
-Material materialOpaco;
+static bool cerca(const glm::vec3& a, const glm::vec3& b)
+{
+	return glm::length(a - b) < 1e-4f;
+}
+
+std::vector<Shader> shaderList;
 
 DirectionalLight mainLight;
 PointLight luzHolocron;
@@ -56,7 +62,7 @@ static const float PISO_ESCALA = 10.0f;
 
 static const glm::vec3 REKSAI_POS(0.0f, PISO_Y + 0.12f, 0.0f);
 static const float REKSAI_ESCALA = 2.2f;
-static const float REKSAI_GIRO_Y = 180.0f;
+static const float REKSAI_GIRO_Y = 0.0f;
 static Model rekSaiModel;
 static bool rekSaiCargado = false;
 
@@ -76,30 +82,6 @@ static void cargarAvatar()
 	printf("RekSai: %d mallas cargadas\n", rekSaiModel.getMeshCount());
 	fflush(stdout);
 }
-
-static glm::mat4 transformacionAvatar()
-{
-	return glm::translate(glm::mat4(1.0f), REKSAI_POS)
-		* glm::rotate(glm::mat4(1.0f), glm::radians(REKSAI_GIRO_Y),
-			glm::vec3(0.0f, 1.0f, 0.0f))
-		* glm::scale(glm::mat4(1.0f), glm::vec3(REKSAI_ESCALA));
-}
-
-static void dibujarAvatar(GLuint uniformModel, GLuint uniformColor,
-	GLuint uniformSpecularIntensity, GLuint uniformShininess)
-{
-	if (!rekSaiCargado)
-		return;
-
-	glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
-	materialBrillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-	recursos.plainTexture.UseTexture();
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE,
-		glm::value_ptr(transformacionAvatar()));
-	rekSaiModel.RenderModel();
-}
-
-
 
 static bool probarJerarquiaEscena()
 {
@@ -132,9 +114,99 @@ static bool probarJerarquiaEscena()
 	return ok;
 }
 
+static bool probarFollowXZ()
+{
+	Scene escena;
+	SceneNode* objetivo = escena.root.add(std::make_unique<SceneNode>("objetivo"));
+	objetivo->position = glm::vec3(3.0f, 0.0f, -2.0f);
+	escena.updateWorld();
+
+	FollowXZ rig(4.0f, 10.0f, 2.0f);
+	rig.update(0.016f, *objetivo);
+
+	const glm::vec3 posicionEsperada(3.0f, 4.0f, -12.0f);
+	const glm::vec3 objetivoEsperado(3.0f, 2.0f, -2.0f);
+	const bool posicionOk = glm::length(rig.posicion() - posicionEsperada) < 1e-4f;
+	const bool objetivoOk = glm::length(rig.objetivo() - objetivoEsperado) < 1e-4f;
+	const bool ok = posicionOk && objetivoOk;
+
+	printf("A3.2 FollowXZ: %s (camara %.3f, %.3f, %.3f; objetivo %.3f, %.3f, %.3f)\n",
+		ok ? "OK" : "FALLO",
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		rig.objetivo().x, rig.objetivo().y, rig.objetivo().z);
+	fflush(stdout);
+	return ok;
+}
+
+static bool probarPivotes()
+{
+	Scene escena;
+	SceneNode* raiz = escena.root.add(std::make_unique<SceneNode>("raiz_avatar"));
+	raiz->position = glm::vec3(2.0f, 0.0f, 3.0f);
+	raiz->rotationEuler.y = glm::radians(90.0f);
+
+	SceneNode* pivote = raiz->add(std::make_unique<SceneNode>("pivote"));
+	pivote->position = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	SceneNode* hoja = pivote->add(std::make_unique<SceneNode>("hoja"));
+	hoja->position = glm::vec3(1.0f, 0.0f, 1.0f);
+
+	escena.updateWorld();
+
+	const glm::vec3 pivoteInicial = posicionNodo(*pivote);
+	const glm::vec3 hojaInicial = posicionNodo(*hoja);
+	const bool transformacionOk =
+		cerca(pivoteInicial, glm::vec3(2.0f, 0.0f, 2.0f)) &&
+		cerca(hojaInicial, glm::vec3(3.0f, 0.0f, 1.0f));
+
+	pivote->rotationEuler.y = glm::radians(90.0f);
+	escena.updateWorld();
+
+	const glm::vec3 raizRotada = posicionNodo(*raiz);
+	const glm::vec3 hojaRotada = posicionNodo(*hoja);
+	const bool rotacionOk =
+		cerca(hojaRotada, glm::vec3(1.0f, 0.0f, 1.0f)) &&
+		cerca(raizRotada, glm::vec3(2.0f, 0.0f, 3.0f));
+
+	const bool visibleOk = hoja->visibleInHierarchy();
+	pivote->visible = false;
+	const bool ocultoOk = !hoja->visibleInHierarchy();
+	pivote->visible = true;
+
+	const bool busquedaOk = escena.find("hoja") == hoja;
+	const bool pivotesOk = transformacionOk && rotacionOk && visibleOk &&
+		ocultoOk && busquedaOk;
+
+	printf("A3.3 pivotes: %s (pivote %.3f, %.3f, %.3f; hoja %.3f, %.3f, %.3f)\n",
+		pivotesOk ? "OK" : "FALLO",
+		pivoteInicial.x, pivoteInicial.y, pivoteInicial.z,
+		hojaRotada.x, hojaRotada.y, hojaRotada.z);
+	fflush(stdout);
+
+	raiz->position.x = 5.0f;
+	escena.updateWorld();
+
+	FollowXZ rig;
+	rig.update(0.016f, *raiz);
+
+	const bool camaraOk =
+		cerca(rig.posicion(), glm::vec3(5.0f, 6.0f, -9.0f)) &&
+		cerca(rig.objetivo(), glm::vec3(5.0f, 2.0f, 3.0f));
+
+	printf("A3.3 camara-raiz: %s (camara %.3f, %.3f, %.3f; objetivo %.3f, %.3f, %.3f)\n",
+		camaraOk ? "OK" : "FALLO",
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		rig.objetivo().x, rig.objetivo().y, rig.objetivo().z);
+	fflush(stdout);
+
+	return pivotesOk && camaraOk;
+}
+
 int main()
 {
 	probarJerarquiaEscena();
+	probarFollowXZ();
+	probarPivotes();
 
 	Window mainWindow(1366, 768);
 	mainWindow.Initialise();
@@ -142,32 +214,54 @@ int main()
 	CreateObjects();
 	crearShaders();
 
-	camera = Camera(glm::vec3(0.0f, 6.0f, -14.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -14.0f, 25.0f, 0.25f);
-
 	LoadTextures();
 	LoadLlamas();
 	LoadSkyboxCupertin();
 	cargarAvatar();
 
-	materialBrillante = Material(4.0f, 256);
-	materialOpaco = Material(0.3f, 4);
-
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.45f, 0.85f,
 		0.35f, 0.75f, 0.40f);
 
-	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0,
-		uniformEyePosition = 0, uniformSpecularIntensity = 0,
-		uniformShininess = 0, uniformColor = 0, uniformTextureOffset = 0;
+	Scene escena;
+	escena.setFallbackTexture(&recursos.plainTexture);
 
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-		(GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(),
-		0.1f, 1000.0f);
+	SceneNode* nodoPiso = escena.root.add(std::make_unique<SceneNode>("piso"));
+	nodoPiso->setMesh(geometria.pisoMesh);
+	nodoPiso->setTexture(&recursos.pisoTexture);
+	nodoPiso->position = glm::vec3(0.0f, PISO_Y, 0.0f);
+	nodoPiso->scale = glm::vec3(PISO_ESCALA, 1.0f, PISO_ESCALA);
+
+	SceneNode* nodoAvatar = escena.root.add(std::make_unique<SceneNode>("avatar"));
+	nodoAvatar->position = REKSAI_POS;
+	nodoAvatar->rotationEuler.y = glm::radians(REKSAI_GIRO_Y);
+	nodoAvatar->scale = glm::vec3(REKSAI_ESCALA);
+	nodoAvatar->specular = 4.0f;
+	nodoAvatar->shininess = 256.0f;
+	if (rekSaiCargado)
+	{
+		nodoAvatar->setModel(&rekSaiModel);
+	}
+
+	SceneNode* pivotePrueba = nodoAvatar->add(std::make_unique<SceneNode>("pivote_prueba"));
+	pivotePrueba->position = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	SceneNode* marcadorPrueba = pivotePrueba->add(std::make_unique<SceneNode>("marcador_prueba"));
+	marcadorPrueba->position = glm::vec3(0.0f, 0.0f, 0.8f);
+	marcadorPrueba->scale = glm::vec3(0.35f);
+	marcadorPrueba->tint = glm::vec3(1.0f, 0.0f, 1.0f);
+	marcadorPrueba->setMesh(geometria.vegetacionMesh);
+	marcadorPrueba->setTexture(&recursos.plainTexture);
+
+	escena.updateWorld();
+
+	CameraDirector director;
+	director.setRig(std::make_unique<FollowXZ>());
+
+	const float aspecto = (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight();
+	const glm::mat4 projection = director.projection(aspecto);
 
 	GLfloat lastTime = 0.0f;
-	bool pausado = false;
-	bool pAntes = false;
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -179,58 +273,34 @@ int main()
 
 		glfwPollEvents();
 
-		bool* teclas = mainWindow.getsKeys();
-		bool pAhora = teclas[GLFW_KEY_P];
-		if (pAhora && !pAntes)
-			pausado = !pausado;
-		pAntes = pAhora;
+		const float t = (float)glfwGetTime();
+		nodoAvatar->position.x = 4.0f * sinf(t * 0.5f);
+		nodoAvatar->position.z = 4.0f * cosf(t * 0.5f);
+		nodoAvatar->rotationEuler.y = glm::radians(REKSAI_GIRO_Y) + 0.5f * sinf(t * 0.25f);
+		pivotePrueba->rotationEuler.y = 1.2f * sinf(t * 1.5f);
 
-		camera.keyControl(teclas, dt);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		escena.updateWorld();
+		director.update(dt, *nodoAvatar);
 
-		float dtAnim = pausado ? 0.0f : dt;
+		const glm::mat4 vista = director.view();
+		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		recursos.skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		recursos.skybox.DrawSkybox(vista, projection);
 
 		shaderList[0].UseShader();
-		uniformModel = shaderList[0].GetModelLocation();
-		uniformProjection = shaderList[0].GetProjectionLocation();
-		uniformView = shaderList[0].GetViewLocation();
-		uniformEyePosition = shaderList[0].GetEyePositionLocation();
-		uniformColor = shaderList[0].getColorLocation();
-		uniformTextureOffset = shaderList[0].getOffsetLocation();
-		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
-		uniformShininess = shaderList[0].GetShininessLocation();
+		const GLuint uniformEyePosition = shaderList[0].GetEyePositionLocation();
+		const GLuint uniformTextureOffset = shaderList[0].getOffsetLocation();
 
-		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE,
-			glm::value_ptr(projection));
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE,
-			glm::value_ptr(camera.calculateViewMatrix()));
-		glUniform3f(uniformEyePosition,
-			camera.getCameraPosition().x,
-			camera.getCameraPosition().y,
-			camera.getCameraPosition().z);
+		glUniform3f(uniformEyePosition, ojo.x, ojo.y, ojo.z);
 		glUniform2f(uniformTextureOffset, 0.0f, 0.0f);
 
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(&luzHolocron, 1);
 		shaderList[0].SetSpotLights(nullptr, 0);
 
-		glm::mat4 pisoModelo = glm::translate(glm::mat4(1.0f),
-			glm::vec3(0.0f, PISO_Y, 0.0f))
-			* glm::scale(glm::mat4(1.0f),
-				glm::vec3(PISO_ESCALA, 1.0f, PISO_ESCALA));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE,
-			glm::value_ptr(pisoModelo));
-		glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
-		recursos.pisoTexture.UseTexture();
-		materialOpaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		geometria.pisoMesh->RenderMeshModel();
-
-		dibujarAvatar(uniformModel, uniformColor,
-			uniformSpecularIntensity, uniformShininess);
+		escena.render(shaderList[0], vista, projection);
 
 		glUseProgram(0);
 

@@ -78,6 +78,9 @@
     <ClInclude Include="src\scene\CameraRig.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\scene\FollowXZ.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
     <ClInclude Include="src\scene\Scene.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -141,6 +144,9 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\CameraRig.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\FollowXZ.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\Scene.cpp">

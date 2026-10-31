@@ -14,6 +14,7 @@ public:
 	void update(float dt, const SceneNode& target);
 
 	glm::mat4 view() const;
+	glm::mat4 projection(float aspect) const;
 	bool transitioning() const;
 	CameraRig* rig() const;
 

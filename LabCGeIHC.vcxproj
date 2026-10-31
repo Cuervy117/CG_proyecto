@@ -58,10 +58,12 @@
   <ItemGroup Label="A-scene">
     <ClInclude Include="src\scene\CameraDirector.h" />
     <ClInclude Include="src\scene\CameraRig.h" />
+    <ClInclude Include="src\scene\FollowXZ.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneNode.h" />
     <ClCompile Include="src\scene\CameraDirector.cpp" />
     <ClCompile Include="src\scene\CameraRig.cpp" />
+    <ClCompile Include="src\scene\FollowXZ.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneNode.cpp" />
   </ItemGroup>
