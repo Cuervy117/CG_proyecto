@@ -29,5 +29,6 @@ private:
 	std::vector<MeshModel*>MeshList;
 	std::vector<Texture*>TextureList;
 	std::vector<unsigned int>meshTotex;
+	std::string modelDirectory;
 };
 

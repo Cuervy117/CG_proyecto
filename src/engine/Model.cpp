@@ -1,6 +1,69 @@
 #include "Model.h"
 #include <unordered_map>
+#include <algorithm>
+#include <fstream>
 
+static std::string normalizarRuta(std::string ruta)
+{
+	for (char& c : ruta)
+	{
+		if (c == '\\')
+			c = '/';
+	}
+	while (ruta.rfind("./", 0) == 0)
+		ruta.erase(0, 2);
+	return ruta;
+}
+
+static std::string nombreArchivo(const std::string& ruta)
+{
+	const std::size_t idx = ruta.find_last_of('/');
+	return (idx == std::string::npos) ? ruta : ruta.substr(idx + 1);
+}
+
+static bool existeArchivo(const std::string& ruta)
+{
+	std::ifstream archivo(ruta, std::ios::binary);
+	return archivo.good();
+}
+
+static std::string resolverRutaTextura(const std::string& rutaImportada,
+	const std::string& directorioModelo)
+{
+	const std::string ruta = normalizarRuta(rutaImportada);
+	const std::string archivo = nombreArchivo(ruta);
+	std::vector<std::string> candidatos;
+
+	auto agregar = [&candidatos](const std::string& candidato)
+	{
+		if (candidato.empty())
+			return;
+		if (std::find(candidatos.begin(), candidatos.end(), candidato) == candidatos.end())
+			candidatos.push_back(candidato);
+	};
+
+	if (ruta.size() > 1 && ruta[1] == ':')
+		agregar(ruta);
+
+	const std::size_t texturas = ruta.find("Textures/");
+	if (texturas != std::string::npos)
+		agregar(ruta.substr(texturas));
+	else if (!ruta.empty() && ruta[0] != '/')
+		agregar("Textures/" + ruta);
+
+	agregar("Textures/" + archivo);
+	agregar(directorioModelo + "/" + ruta);
+	agregar(directorioModelo + "/" + archivo);
+	agregar(ruta);
+
+	for (const std::string& candidato : candidatos)
+	{
+		if (existeArchivo(candidato))
+			return candidato;
+	}
+
+	return "Textures/" + archivo;
+}
 
 Model::Model()
 {
@@ -8,17 +71,21 @@ Model::Model()
 
 void Model::LoadModel(const std::string & fileName)
 {
-	Assimp::Importer importer;//					Pasa de Polygons y Quads a triangulos, modifica orden para el origen, generar normales si el  objeto no tiene, trata vértices iguales como 1 solo
-	//const aiScene *scene=importer.ReadFile(fileName,aiProcess_Triangulate |aiProcess_FlipUVs|aiProcess_GenSmoothNormals|aiProcess_JoinIdenticalVertices);
+	const std::string rutaModelo = normalizarRuta(fileName);
+	const std::size_t barra = rutaModelo.find_last_of('/');
+	modelDirectory = (barra == std::string::npos || barra == 0)
+		? "." : rutaModelo.substr(0, barra);
+
+	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 	if (!scene)
-	{	
-		printf("Falló en cargar el modelo: %s \n", fileName.c_str(), importer.GetErrorString());
+	{
+		printf("Fallo en cargar el modelo: %s (%s)\n", fileName.c_str(), importer.GetErrorString());
 		return;
 	}
 	LoadNode(scene->mRootNode, scene);
 	LoadMaterials(scene);
-	}
+}
 
 void Model::ClearModel()
 {
@@ -28,7 +95,6 @@ void Model::ClearModel()
 		{
 			delete MeshList[i];
 			MeshList[i] = nullptr;
-
 		}
 	}
 
@@ -40,7 +106,6 @@ void Model::ClearModel()
 			TextureList[i] = nullptr;
 		}
 	}
-
 }
 
 void Model::RenderModel()
@@ -48,17 +113,13 @@ void Model::RenderModel()
 	for (unsigned int i = 0; i < MeshList.size(); i++)
 	{
 		unsigned int materialIndex = meshTotex[i];
-		if (!materialIndex< TextureList.size()&& TextureList[materialIndex])
+		if (materialIndex < TextureList.size() && TextureList[materialIndex])
 		{
 			TextureList[materialIndex]->UseTexture();
 		}
 		MeshList[i]->RenderMeshModel();
-
 	}
-
-
 }
-
 
 Model::~Model()
 {
@@ -66,7 +127,7 @@ Model::~Model()
 
 void Model::LoadNode(aiNode * node, const aiScene * scene)
 {
-	for (unsigned int i = 0; i <node->mNumMeshes; i++)
+	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		LoadMesh(scene->mMeshes[node->mMeshes[i]], scene);
 	}
@@ -78,24 +139,20 @@ void Model::LoadNode(aiNode * node, const aiScene * scene)
 
 void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 {
-
 	std::vector<GLfloat> vertices;
 	std::vector<unsigned int> indices;
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
-		vertices.insert(vertices.end(), { mesh->mVertices[i].x,mesh->mVertices[i].y ,mesh->mVertices[i].z });
-		//UV
-		if (mesh->mTextureCoords[0])//si tiene coordenadas de texturizado
+		vertices.insert(vertices.end(), { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z });
+		if (mesh->mTextureCoords[0])
 		{
-			vertices.insert(vertices.end(), { mesh->mTextureCoords[0][i].x,mesh->mTextureCoords[0][i].y});
+			vertices.insert(vertices.end(), { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y });
 		}
 		else
 		{
-			vertices.insert(vertices.end(), { 0.0f,0.0f });
+			vertices.insert(vertices.end(), { 0.0f, 0.0f });
 		}
-		//Normals importante, las normales son negativas porque la luz interactúa con ellas de esa forma, cómo se vio con el dado/cubo
-		
-		vertices.insert(vertices.end(), { -mesh->mNormals[i].x,-mesh->mNormals[i].y ,-mesh->mNormals[i].z });
+		vertices.insert(vertices.end(), { -mesh->mNormals[i].x, -mesh->mNormals[i].y, -mesh->mNormals[i].z });
 	}
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
@@ -114,48 +171,34 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 
 void Model::LoadMaterials(const aiScene * scene)
 {
-	std::unordered_map<std::string, Texture*> loadedTextures; // Mapa para evitar duplicados
+	std::unordered_map<std::string, Texture*> loadedTextures;
 	TextureList.resize(scene->mNumMaterials);
-	for (unsigned int i = 0; i < scene ->mNumMaterials; i++)
+	for (unsigned int i = 0; i < scene->mNumMaterials; i++)
 	{
 		aiMaterial* material = scene->mMaterials[i];
 		TextureList[i] = nullptr;
-		if (material->GetTextureCount(aiTextureType_DIFFUSE	))
+		if (material->GetTextureCount(aiTextureType_DIFFUSE))
 		{
 			aiString path;
-			if (material->GetTexture(aiTextureType_DIFFUSE,0,&path)==AI_SUCCESS)
+			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
 			{
-				std::string fullPath = std::string(path.data);
-				std::size_t idx = fullPath.rfind("\\");
-				if (idx == std::string::npos)
-					idx = fullPath.rfind("/"); // algunos exportadores usan / como separador
-				std::string filename = (idx == std::string::npos) ? fullPath : fullPath.substr(idx + 1);
-				/*else if(std::string(path.data).rfind("\\"))
-				{
-					printf(" entre a 2 \\  \n");
-					idx = std::string(path.data).rfind("\\");
-					filename = std::string(path.data).substr(idx + 1);
-				}*/
-				
-				
-				std::string tga ="tga";
-				std::string png = "png";
-				std::size_t existetga = filename.find(tga);
-				std::size_t existepng= filename.find(png);
-				std::string texPath = std::string("Textures/") + filename;
-				// Verifica si ya se cargó esta textura antes
+				const std::string texPath = resolverRutaTextura(path.data, modelDirectory);
+				const std::string filename = nombreArchivo(texPath);
+
 				auto it = loadedTextures.find(texPath);
 				if (it != loadedTextures.end())
 				{
-					TextureList[i] = it->second; // Reutiliza la textura ya cargada
+					TextureList[i] = it->second;
 				}
 				else
 				{
 					Texture* newTex = new Texture(texPath.c_str());
-					std::string ext = filename.substr(filename.find_last_of('.') + 1);
+					const std::size_t punto = filename.find_last_of('.');
+					const std::string ext = (punto == std::string::npos)
+						? "" : filename.substr(punto + 1);
 
 					bool loaded = false;
-					if (ext == "tga" || ext=="png")
+					if (ext == "tga" || ext == "png")
 					{
 						loaded = newTex->LoadTextureA();
 					}
@@ -167,42 +210,29 @@ void Model::LoadMaterials(const aiScene * scene)
 					if (loaded)
 					{
 						TextureList[i] = newTex;
-						loadedTextures[texPath] = newTex; // Almacena para reutilizarla
+						loadedTextures[texPath] = newTex;
 					}
 					else
 					{
-						printf("Falló en cargar la Textura :%s\n", texPath.c_str());
+						printf("Fallo al cargar la textura: %s\n", texPath.c_str());
 						delete newTex;
 					}
 				}
-
-			/*	TextureList[i] = new Texture(texPath.c_str());
-				if (existetga != std::string::npos || existepng != std::string::npos)
-				{
-					if (!TextureList[i]->LoadTextureA())
-					{
-						printf("Falló en cargar la Textura :%s\n", texPath);
-						delete TextureList[i];
-						TextureList[i] = nullptr;
-					}
-				}
-				else
-				{
-					if (!TextureList[i]->LoadTexture())
-					{
-						printf("Falló en cargar la Textura :%s\n", texPath);
-						delete TextureList[i];
-						TextureList[i] = nullptr;
-					}
-				}*/
 			}
 		}
-		//Si no se pudo cargar la textura o no tiene una textura asignada, asignar una textura por defecto
+
 		if (!TextureList[i])
 		{
-			TextureList[i] = new Texture("Textures/plain.png"); //textura que se aplicará a los modelos si no tienen textura o la textura no se puede cargar
-			TextureList[i]->LoadTextureA();
+			Texture* fallback = new Texture("Textures/plain.png");
+			if (fallback->LoadTextureA())
+			{
+				TextureList[i] = fallback;
+			}
+			else
+			{
+				printf("Material %u sin textura de respaldo\n", i);
+				delete fallback;
+			}
 		}
-
 	}
 }

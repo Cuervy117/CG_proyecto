@@ -1,5 +1,6 @@
 #pragma once
 #include<glew.h>
+#include<string>
 class Texture
 {
 public:
@@ -13,7 +14,7 @@ public:
 private: 
 	GLuint textureID;
 	int width, height, bitDepth;
-	const char *fileLocation;
+	std::string fileLocation;
 
 };
 
