@@ -150,6 +150,24 @@ Duraciones orientativas, no horas realizadas ni garantía de capacidad. Confirma
 
 H-A1 desbloquea a B/C. Preparar assets/datos mientras llega. Si hoy solo alcanza un mapa integrado, cerrar P1 y preparar bindings P2 para mañana. No esperar arte terminado para integrar. R4 elaborado, partículas y pulido no son tareas de hoy.
 
+### 6.2 Hitos del 31-oct
+
+Derivados de la fila del 31-oct en §6. H-A3 se cerró hoy (commit `bb65911`). Duraciones y capacidad siguen sin confirmarse. Resultado del día: ambos mapas explorables y cuatro modos básicos.
+
+| ID | Dueño | Trabajo | Dependencia | Terminado cuando |
+|---|---|---|---|---|
+| H-A4 | David | Chase/Flight/Orbit básicos; F1–F4 en CameraDirector | H-A3 | Cuatro rigs devuelven view válida; cambio directo sin mezclar matrices |
+| H-A5 | David | Paquete/Release probado en otra PC | H-A0 | Exe corre desde raíz en otra máquina sin compilar |
+| H-B3 | Jonhatan | Espacio básico: E1, E5–E8 y skybox provisional | H-A1 | Espacio dibujable; celestes visibles; bindings espacio.* |
+| H-B4 | Jonhatan | Circuito/estación básicos: E2, E3, E4 | H-B3 | Pista y hangar visibles; sin animación aún |
+| H-B5 | Jonhatan | Plataforma/cohete D1 y anclas N6/E8 | H-B4 | D1 presente con pivotes para B1/B2/B3 |
+| H-C4 | Venancio | E entre mapas | H-C3, H-B2 | Entrada/salida con objetivo válido; E prioriza sobre ascenso |
+| H-C5 | Venancio | F1–F4 y objetivos | H-A4 | Cuatro modos sin objetivos nulos ni recargas |
+| H-C6 | Venancio | HUD mínimo | H-C5 | Modo, ubicación y acción contextual visibles |
+| H-E1 | Todos; A coordina | Integración y prueba | Anteriores | develop compila; ambos mapas; cuatro modos; evidencia y pendientes |
+
+Orden sugerido: H-A4 → H-B3 → H-C4/H-C5 → H-B4/H-B5 → H-C6 → H-A5 → H-E1, con merges 13:00/19:00. Carga alta: aplicar recortes de §11 y no declarar hecho sin criterio.
+
 ## 7. Matriz de aceptación
 
 Estado inicial de todas las filas: **pendiente de implementación final**. Progresión: implementado → integrado → demostrado; cada estado con commit/evidencia. Contenido de prácticas no acredita cumplimiento.
@@ -302,7 +320,7 @@ Usar el mismo prompt con rol correcto. Verificar entorno propio, no repetir Fase
 
 ### 16.1 Ramas
 
-Remoto: https://github.com/Cuervy117/CG_proyecto.git. main = base/releases; develop = integración compilable; feat/a-motor, feat/b-mundo, feat/c-avatar = trabajo individual. Conservar rama david e historial existente. Preparación inicial une main remoto y base local; nunca push forzado ni recrear tags. Preparado localmente no significa publicado.
+Remoto: https://github.com/Cuervy117/CG_proyecto.git. main = base/releases; develop = integración compilable; feat/a-motor, feat/b-mundo, feat/c-avatar = trabajo individual. Conservar rama david e historial existente. Preparación inicial une main remoto y base local; nunca push forzado ni recrear tags. Preparado localmente no significa publicado. Excepción: commits docs-only de planeación compartida pueden ir directo a main; el código sigue el flujo rama → develop → main.
 
 ### 16.2 Merges
 
