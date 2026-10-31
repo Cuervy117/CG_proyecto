@@ -1,0 +1,5 @@
+H-A1 jerarquia: OK (hijo 1.000, 2.000, 2.000)
+A3.2 FollowXZ: OK (camara 3.000, 4.000, -12.000; objetivo 3.000, 2.000, -2.000)
+A3.3 pivotes: OK (pivote 2.000, 0.000, 2.000; hoja 1.000, 0.000, 1.000)
+A3.3 camara-raiz: OK (camara 5.000, 6.000, -9.000; objetivo 5.000, 2.000, 3.000)
+RekSai: 758 mallas cargadas

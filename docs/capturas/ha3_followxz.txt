@@ -1,0 +1,3 @@
+H-A1 jerarquia: OK (hijo 1.000, 2.000, 2.000)
+A3.2 FollowXZ: OK (camara 3.000, 4.000, -12.000; objetivo 3.000, 2.000, -2.000)
+RekSai: 758 mallas cargadas

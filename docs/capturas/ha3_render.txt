@@ -1,0 +1,2 @@
+H-A1 jerarquia: OK (hijo 1.000, 2.000, 2.000)
+RekSai: 758 mallas cargadas
