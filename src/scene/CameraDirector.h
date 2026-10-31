@@ -7,10 +7,21 @@
 class CameraRig;
 class SceneNode;
 
+enum class CameraMode
+{
+	Planeta,
+	Carrera,
+	Vuelo,
+	Observacion
+};
+
 class CameraDirector
 {
 public:
-	void setRig(std::unique_ptr<CameraRig> rig);
+	bool setMode(CameraMode mode);
+	CameraMode mode() const;
+	bool setModeForKey(int key);
+
 	void update(float dt, const SceneNode& target);
 
 	glm::mat4 view() const;
@@ -20,5 +31,6 @@ public:
 
 private:
 	std::unique_ptr<CameraRig> m_rig;
+	CameraMode m_mode = CameraMode::Planeta;
 	bool m_transitioning = false;
 };

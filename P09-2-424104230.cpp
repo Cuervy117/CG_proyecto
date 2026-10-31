@@ -31,7 +31,10 @@
 
 #include "CameraDirector.h"
 #include "CameraRig.h"
+#include "Chase.h"
+#include "Flight.h"
 #include "FollowXZ.h"
+#include "Orbit.h"
 #include "Scene.h"
 #include "SceneNode.h"
 
@@ -138,6 +141,293 @@ static bool probarFollowXZ()
 	return ok;
 }
 
+static bool probarChase()
+{
+	Scene escena;
+	SceneNode* objetivo = escena.root.add(std::make_unique<SceneNode>("objetivo"));
+	objetivo->position = glm::vec3(3.0f, 0.0f, -2.0f);
+	objetivo->rotationEuler.y = glm::radians(90.0f);
+	escena.updateWorld();
+
+	Chase rig(10.0f, 5.0f, 2.0f, 2.0f);
+	rig.update(0.016f, *objetivo);
+
+	const glm::vec3 posicionEsperada(-7.0f, 5.0f, -2.0f);
+	const glm::vec3 objetivoEsperado(5.0f, 2.0f, -2.0f);
+	const bool posicionOk = cerca(rig.posicion(), posicionEsperada);
+	const bool objetivoOk = cerca(rig.objetivo(), objetivoEsperado);
+	const bool ok = posicionOk && objetivoOk;
+
+	printf("A4.1 Chase: %s (camara %.3f, %.3f, %.3f; objetivo %.3f, %.3f, %.3f)\n",
+		ok ? "OK" : "FALLO",
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		rig.objetivo().x, rig.objetivo().y, rig.objetivo().z);
+	fflush(stdout);
+	return ok;
+}
+
+static bool probarChaseRekSai(const SceneNode& avatar)
+{
+	Chase rig(10.0f, 5.0f, 2.0f, 2.0f);
+	rig.update(0.016f, avatar);
+
+	const glm::vec4 columna = avatar.world[3];
+	const glm::vec3 base(columna.x, columna.y, columna.z);
+	glm::vec3 frente(avatar.world[2]);
+	frente.y = 0.0f;
+	frente = glm::normalize(frente);
+
+	const glm::vec3 desplazamiento = rig.posicion() - base;
+	const bool detras = glm::dot(glm::vec3(desplazamiento.x, 0.0f, desplazamiento.z), frente) < 0.0f;
+	const bool separada = glm::length(rig.objetivo() - rig.posicion()) > 1e-3f;
+	const bool finita =
+		std::isfinite(rig.posicion().x) && std::isfinite(rig.posicion().y) &&
+		std::isfinite(rig.posicion().z) && std::isfinite(rig.objetivo().x) &&
+		std::isfinite(rig.objetivo().y) && std::isfinite(rig.objetivo().z);
+	const bool ok = detras && separada && finita;
+
+	printf("A4.1 Chase RekSai: %s (avatar %.3f, %.3f, %.3f; camara %.3f, %.3f, %.3f; mallas %d)\n",
+		ok ? "OK" : "FALLO",
+		base.x, base.y, base.z,
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		rekSaiModel.getMeshCount());
+	fflush(stdout);
+	return ok;
+}
+
+static bool probarFlight()
+{
+	Scene escena;
+	SceneNode* objetivo = escena.root.add(std::make_unique<SceneNode>("objetivo_flight"));
+	objetivo->position = glm::vec3(5.0f, 10.0f, -3.0f);
+	objetivo->rotationEuler.y = glm::radians(90.0f);
+	escena.updateWorld();
+
+	Flight rig(16.0f, 6.0f, 2.0f, 4.0f);
+	rig.update(0.016f, *objetivo);
+
+	const glm::vec3 posicionEsperada(-11.0f, 16.0f, -3.0f);
+	const glm::vec3 objetivoEsperado(9.0f, 12.0f, -3.0f);
+	const bool rectoOk =
+		cerca(rig.posicion(), posicionEsperada) &&
+		cerca(rig.objetivo(), objetivoEsperado);
+
+	const glm::mat4 vista = rig.view();
+	const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
+	const bool vistaOk =
+		std::isfinite(ojo.x) && std::isfinite(ojo.y) && std::isfinite(ojo.z) &&
+		glm::length(ojo - rig.posicion()) < 1e-3f;
+
+	objetivo->rotationEuler.x = glm::radians(-20.0f);
+	escena.updateWorld();
+
+	Flight inclinado(16.0f, 6.0f, 2.0f, 4.0f);
+	inclinado.update(0.016f, *objetivo);
+	const bool inclinacionOk =
+		std::fabs(inclinado.posicion().y - 16.0f) > 0.5f &&
+		std::fabs(inclinado.objetivo().y - 12.0f) > 0.5f;
+
+	const bool ok = rectoOk && vistaOk && inclinacionOk;
+	printf("A4.2 Flight: %s (camara %.3f, %.3f, %.3f; objetivo %.3f, %.3f, %.3f; inclinada y %.3f/%.3f)\n",
+		ok ? "OK" : "FALLO",
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		rig.objetivo().x, rig.objetivo().y, rig.objetivo().z,
+		inclinado.posicion().y, inclinado.objetivo().y);
+	fflush(stdout);
+	return ok;
+}
+
+static bool probarFlightNave(const SceneNode& nave)
+{
+	Flight rig(16.0f, 6.0f, 2.0f, 4.0f);
+	rig.update(0.016f, nave);
+
+	const glm::vec3 base = posicionNodo(nave);
+	glm::vec3 frente(nave.world[2]);
+	const float longitudCuadrada = glm::dot(frente, frente);
+	frente = (longitudCuadrada > 1e-6f)
+		? frente / std::sqrt(longitudCuadrada)
+		: glm::vec3(0.0f, 0.0f, 1.0f);
+
+	const glm::vec3 desplazamiento = rig.posicion() - base;
+	const glm::vec3 direccionObjetivo = rig.objetivo() - base;
+	const bool detras = glm::dot(glm::normalize(desplazamiento), frente) < 0.0f;
+	const bool delante = glm::dot(glm::normalize(direccionObjetivo), frente) > 0.0f;
+	const bool separada = glm::length(rig.objetivo() - rig.posicion()) > 1e-3f;
+	const bool modeloOk = recursos.naveModel.getMeshCount() > 0;
+	const bool finita =
+		std::isfinite(rig.posicion().x) && std::isfinite(rig.posicion().y) &&
+		std::isfinite(rig.posicion().z) && std::isfinite(rig.objetivo().x) &&
+		std::isfinite(rig.objetivo().y) && std::isfinite(rig.objetivo().z);
+	const bool ok = detras && delante && separada && modeloOk && finita;
+
+	printf("A4.2 Flight nave: %s (nave %.3f, %.3f, %.3f; camara %.3f, %.3f, %.3f; mallas %d)\n",
+		ok ? "OK" : "FALLO",
+		base.x, base.y, base.z,
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		recursos.naveModel.getMeshCount());
+	fflush(stdout);
+	return ok;
+}
+
+static bool probarOrbit()
+{
+	Scene escena;
+	SceneNode* objetivo = escena.root.add(std::make_unique<SceneNode>("objetivo_orbit"));
+	objetivo->position = glm::vec3(5.0f, 10.0f, -3.0f);
+	escena.updateWorld();
+
+	Orbit rig(20.0f, 0.0f, glm::radians(30.0f), 2.0f, 0.0f);
+	rig.update(0.016f, *objetivo);
+
+	const glm::vec3 centroEsperado(5.0f, 12.0f, -3.0f);
+	const glm::vec3 posicionEsperada(5.0f, 22.0f, 14.320508f);
+	const bool rectoOk =
+		cerca(rig.posicion(), posicionEsperada) &&
+		cerca(rig.objetivo(), centroEsperado);
+
+	const float distancia = glm::length(rig.posicion() - centroEsperado);
+	const bool distanciaOk = std::fabs(distancia - 20.0f) < 1e-3f;
+
+	const glm::mat4 vista = rig.view();
+	const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
+	const bool vistaOk =
+		std::isfinite(ojo.x) && std::isfinite(ojo.y) && std::isfinite(ojo.z) &&
+		glm::length(ojo - rig.posicion()) < 1e-3f;
+
+	Orbit girando(20.0f, 0.0f, glm::radians(30.0f), 2.0f, 0.12f);
+	girando.update(1.0f, *objetivo);
+	const bool giroOk =
+		std::fabs(girando.yaw - 0.12f) < 1e-5f &&
+		!cerca(girando.posicion(), rig.posicion());
+
+	const bool ok = rectoOk && distanciaOk && vistaOk && giroOk;
+	printf("A4.3 Orbit: %s (camara %.3f, %.3f, %.3f; distancia %.3f; yaw %.3f)\n",
+		ok ? "OK" : "FALLO",
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		distancia, girando.yaw);
+	fflush(stdout);
+	return ok;
+}
+
+static bool probarOrbitNave(SceneNode& nave)
+{
+	Orbit rig(20.0f, 0.0f, glm::radians(30.0f), 2.0f, 0.0f);
+	rig.update(0.016f, nave);
+
+	const glm::vec3 base = posicionNodo(nave);
+	const glm::vec3 centro = base + glm::vec3(0.0f, 2.0f, 0.0f);
+	const glm::vec3 posicionInicial = rig.posicion();
+	const float distancia = glm::length(posicionInicial - centro);
+	const bool distanciaOk = std::fabs(distancia - 20.0f) < 1e-3f;
+	const bool separada = glm::length(rig.objetivo() - rig.posicion()) > 1e-3f;
+	const bool modeloOk = recursos.naveModel.getMeshCount() > 0;
+
+	const glm::mat4 vista = rig.view();
+	const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
+	const bool vistaOk =
+		std::isfinite(ojo.x) && std::isfinite(ojo.y) && std::isfinite(ojo.z) &&
+		glm::length(ojo - rig.posicion()) < 1e-3f;
+
+	const glm::vec3 rotacionOriginal = nave.rotationEuler;
+	nave.rotationEuler.y += glm::radians(45.0f);
+	nave.rotationEuler.x += glm::radians(15.0f);
+	nave.updateWorld();
+	rig.update(0.016f, nave);
+	const bool independiente = cerca(rig.posicion(), posicionInicial);
+	nave.rotationEuler = rotacionOriginal;
+	nave.updateWorld();
+
+	const bool ok = distanciaOk && separada && modeloOk && vistaOk && independiente;
+	printf("A4.3 Orbit nave: %s (nave %.3f, %.3f, %.3f; camara %.3f, %.3f, %.3f; mallas %d)\n",
+		ok ? "OK" : "FALLO",
+		base.x, base.y, base.z,
+		rig.posicion().x, rig.posicion().y, rig.posicion().z,
+		recursos.naveModel.getMeshCount());
+	fflush(stdout);
+	return ok;
+}
+
+static bool vistaEn(const CameraDirector& director, const glm::vec3& esperada)
+{
+	const glm::mat4 vista = director.view();
+	const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
+	return cerca(ojo, esperada) &&
+		std::isfinite(ojo.x) && std::isfinite(ojo.y) && std::isfinite(ojo.z);
+}
+
+static bool probarCameraDirector()
+{
+	Scene escena;
+	SceneNode* objetivo = escena.root.add(std::make_unique<SceneNode>("objetivo_director"));
+	objetivo->position = glm::vec3(3.0f, 0.0f, -2.0f);
+	objetivo->rotationEuler.y = glm::radians(90.0f);
+	escena.updateWorld();
+
+	CameraDirector director;
+	const bool cambioPlaneta = director.setMode(CameraMode::Planeta);
+	director.update(0.0f, *objetivo);
+	const bool planetaOk =
+		cambioPlaneta &&
+		director.mode() == CameraMode::Planeta &&
+		director.rig() != nullptr &&
+		vistaEn(director, glm::vec3(3.0f, 6.0f, -14.0f));
+
+	const CameraRig* rigPlaneta = director.rig();
+	const bool mismoModo = !director.setMode(CameraMode::Planeta);
+	const bool mismoRig = director.rig() == rigPlaneta;
+
+	const bool cambioCarrera = director.setMode(CameraMode::Carrera);
+	director.update(0.0f, *objetivo);
+	const bool carreraOk =
+		cambioCarrera &&
+		director.mode() == CameraMode::Carrera &&
+		director.rig() != nullptr &&
+		vistaEn(director, glm::vec3(-7.0f, 5.0f, -2.0f));
+
+	const bool cambioVuelo = director.setMode(CameraMode::Vuelo);
+	director.update(0.0f, *objetivo);
+	const bool vueloOk =
+		cambioVuelo &&
+		director.mode() == CameraMode::Vuelo &&
+		director.rig() != nullptr &&
+		vistaEn(director, glm::vec3(-13.0f, 6.0f, -2.0f));
+
+	const bool cambioObservacion = director.setMode(CameraMode::Observacion);
+	director.update(0.0f, *objetivo);
+	const bool observacionOk =
+		cambioObservacion &&
+		director.mode() == CameraMode::Observacion &&
+		director.rig() != nullptr &&
+		vistaEn(director, glm::vec3(3.0f, 12.0f, 15.320508f));
+
+	const bool f1Ok =
+		director.setModeForKey(GLFW_KEY_F1) &&
+		director.mode() == CameraMode::Planeta;
+	const bool f2Ok =
+		director.setModeForKey(GLFW_KEY_F2) &&
+		director.mode() == CameraMode::Carrera;
+	const bool f3Ok =
+		director.setModeForKey(GLFW_KEY_F3) &&
+		director.mode() == CameraMode::Vuelo;
+	const bool f4Ok =
+		director.setModeForKey(GLFW_KEY_F4) &&
+		director.mode() == CameraMode::Observacion;
+
+	const CameraMode modoAnterior = director.mode();
+	const bool teclaInvalidaOk =
+		!director.setModeForKey(GLFW_KEY_F5) &&
+		director.mode() == modoAnterior;
+
+	const bool ok = planetaOk && mismoModo && mismoRig && carreraOk && vueloOk &&
+		observacionOk && f1Ok && f2Ok && f3Ok && f4Ok && teclaInvalidaOk;
+
+	printf("A4.4 CameraDirector: %s (Planeta/Carrera/Vuelo/Observacion; F1-F4)\n",
+		ok ? "OK" : "FALLO");
+	fflush(stdout);
+	return ok;
+}
+
 static bool probarPivotes()
 {
 	Scene escena;
@@ -202,10 +492,40 @@ static bool probarPivotes()
 	return pivotesOk && camaraOk;
 }
 
+static const SceneNode* actualizarCamaraPrueba(Window& ventana, CameraDirector& director,
+	const SceneNode& avatar, const SceneNode& nave)
+{
+	static bool anterior[4] = { false, false, false, false };
+	static const SceneNode* objetivo = &avatar;
+
+	bool* teclas = ventana.getsKeys();
+	const int teclasModo[4] = { GLFW_KEY_F1, GLFW_KEY_F2, GLFW_KEY_F3, GLFW_KEY_F4 };
+	const SceneNode* objetivos[4] = { &avatar, &avatar, &nave, &nave };
+	const char* nombres[4] = { "Planeta", "Carrera", "Vuelo", "Observacion" };
+
+	for (int i = 0; i < 4; ++i)
+	{
+		const bool presionada = teclas[teclasModo[i]];
+		if (presionada && !anterior[i] && director.setModeForKey(teclasModo[i]))
+		{
+			objetivo = objetivos[i];
+			printf("Camara: %s\n", nombres[i]);
+			fflush(stdout);
+		}
+		anterior[i] = presionada;
+	}
+
+	return objetivo;
+}
+
 int main()
 {
 	probarJerarquiaEscena();
 	probarFollowXZ();
+	probarChase();
+	probarFlight();
+	probarOrbit();
+	probarCameraDirector();
 	probarPivotes();
 
 	Window mainWindow(1366, 768);
@@ -218,6 +538,7 @@ int main()
 	LoadLlamas();
 	LoadSkyboxCupertin();
 	cargarAvatar();
+	LoadNave();
 
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.45f, 0.85f,
@@ -253,10 +574,24 @@ int main()
 	marcadorPrueba->setMesh(geometria.vegetacionMesh);
 	marcadorPrueba->setTexture(&recursos.plainTexture);
 
+	SceneNode* nodoNave = escena.root.add(std::make_unique<SceneNode>("nave_prueba"));
+	nodoNave->position = glm::vec3(18.0f, 8.0f, 0.0f);
+	nodoNave->rotationEuler.y = glm::radians(30.0f);
+	nodoNave->rotationEuler.x = glm::radians(-10.0f);
+	nodoNave->scale = glm::vec3(0.5f);
+	if (recursos.naveModel.getMeshCount() > 0)
+	{
+		nodoNave->setModel(&recursos.naveModel);
+	}
+
 	escena.updateWorld();
+	probarChaseRekSai(*nodoAvatar);
+	probarFlightNave(*nodoNave);
+	probarOrbitNave(*nodoNave);
 
 	CameraDirector director;
-	director.setRig(std::make_unique<FollowXZ>());
+	director.setMode(CameraMode::Planeta);
+	const SceneNode* objetivoCamara = nodoAvatar;
 
 	const float aspecto = (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight();
 	const glm::mat4 projection = director.projection(aspecto);
@@ -272,6 +607,7 @@ int main()
 		if (dt < 0.0f) dt = 0.0f;
 
 		glfwPollEvents();
+		objetivoCamara = actualizarCamaraPrueba(mainWindow, director, *nodoAvatar, *nodoNave);
 
 		const float t = (float)glfwGetTime();
 		nodoAvatar->position.x = 4.0f * sinf(t * 0.5f);
@@ -280,7 +616,7 @@ int main()
 		pivotePrueba->rotationEuler.y = 1.2f * sinf(t * 1.5f);
 
 		escena.updateWorld();
-		director.update(dt, *nodoAvatar);
+		director.update(dt, *objetivoCamara);
 
 		const glm::mat4 vista = director.view();
 		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);

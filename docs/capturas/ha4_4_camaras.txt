@@ -1,0 +1,16 @@
+H-A1 jerarquia: OK (hijo 1.000, 2.000, 2.000)
+A3.2 FollowXZ: OK (camara 3.000, 4.000, -12.000; objetivo 3.000, 2.000, -2.000)
+A4.1 Chase: OK (camara -7.000, 5.000, -2.000; objetivo 5.000, 2.000, -2.000)
+A4.2 Flight: OK (camara -11.000, 16.000, -3.000; objetivo 9.000, 12.000, -3.000; inclinada y 10.528/13.368)
+A4.3 Orbit: OK (camara 5.000, 22.000, 14.321; distancia 20.000; yaw 0.120)
+A4.4 CameraDirector: OK (Planeta/Carrera/Vuelo/Observacion; F1-F4)
+A3.3 pivotes: OK (pivote 2.000, 0.000, 2.000; hoja 1.000, 0.000, 1.000)
+A3.3 camara-raiz: OK (camara 5.000, 6.000, -9.000; objetivo 5.000, 2.000, 3.000)
+RekSai: 758 mallas cargadas
+A4.1 Chase RekSai: OK (avatar 0.000, -1.880, 0.000; camara 0.000, 3.120, -10.000; mallas 758)
+A4.2 Flight nave: OK (nave 18.000, 8.000, 0.000; camara 10.122, 11.222, -13.646; mallas 5)
+A4.3 Orbit nave: OK (nave 18.000, 8.000, 0.000; camara 18.000, 20.000, 17.321; mallas 5)
+Camara: Planeta
+Camara: Carrera
+Camara: Vuelo
+Camara: Observacion
