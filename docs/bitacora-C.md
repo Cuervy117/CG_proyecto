@@ -80,7 +80,7 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 | — | — | — | — | — | — | — | — |
 | H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el repo en `CG_Venancio`, cambié a `feat/c-avatar` e integré localmente `origin/feat/a-motor` como pidió el equipo. Preparé `Models/reksai.obj/.mtl` desde Drive y Gohan SSJ2 para D3 en Models/ con sus cuatro PNG planos en Textures/; falta `reksai.png`. Registré procedencia y licencia pendiente en docs/recursos-C.md. La verificación y Build.ps1 se detuvieron por falta del ZIP/manifiesto y `include/`; no se generó Release. | Rama local `feat/c-avatar`; `Models/reksai.obj`, `Models/reksai.mtl`; salida de scripts; `AGENTS.md` local | Por confirmar | En curso |
 | H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura RekSai | Encontré la carpeta correcta Proyecto_final_CG y copié su Textures/reksai.png al clon. H-C0 sigue en curso: aún falta el ZIP de dependencias para verificar y compilar. | Textures/reksai.png; docs/recursos-C.md | Por confirmar | En curso |
-| H-C2 | 2026-10-31 | 20:12 CDMX | Articulacion inicial de RekSai | Separe el OBJ por grupos de cuerpo, cabeza, cola y cuatro patas; agregue pivotes SceneNode y ciclo diagonal ligado a velocidad. Falta integrar al main y verificar visualmente en el ejecutable. | src/game/avatar/Avatar.cpp; Models/reksai.obj | Por confirmar | En curso |
+| H-C2 | 2026-10-31 | 20:38 CDMX | Articulación y vista previa horizontal de Rek’Sai | Separé el OBJ por cuerpo, cabeza, cola y cuatro patas; preparé pivotes y ciclo diagonal ligado al movimiento. En una escena local de Blender corregí los ejes del modelo y confirmé una pose cuadrúpeda horizontal sobre el piso. La escena es evidencia visual, no integración al ejecutable; falta integrar y validar en runtime. | `src/game/avatar/Avatar.cpp`; `Models/c_reksai_articulada.blend`; `docs/capturas/reksai_preview.png` | ≈2 h acumuladas (30–31 oct; estimación de Venancio, sin desglose diario) | En curso |
 
 ---
 
@@ -88,8 +88,8 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 
 | Fecha | Qué me propuse | Qué hice | Horas |
 |---|---|---|---|
-| 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | | — |
-| 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integre localmente la rama A, prepare Gohan D3 y RekSai con texturas. Agregue captura/mapeo de entrada y separacion del OBJ en pivotes de cuerpo, cabeza, cola y cuatro patas con ciclo diagonal. Falta integrar al main y verificar visualmente; el ZIP de dependencias sigue pendiente. | Por confirmar |
+| 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | Inicié la preparación del modelo de Rek’Sai para el avatar articulado; las horas se registran acumuladas en H-C2 porque no quedó desglose por día. | Incluidas en total H-C2; sin desglose |
+| 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integré localmente la rama A, preparé Gohan D3 y Rek’Sai con texturas. Agregué captura/mapeo de entrada y separé el OBJ en pivotes de cuerpo, cabeza, cola y cuatro patas con ciclo diagonal. Ajusté ejes y cámara para revisar una pose cuadrúpeda horizontal en Blender. Falta integrar al main y verificar en el ejecutable; el ZIP de dependencias sigue pendiente. | H-C2: ≈2 h acumuladas entre 30–31 oct (sin desglose diario); otros hitos por confirmar |
 | 2026-11-01 | Animaciones y contenido según rol | | — |
 | 2026-11-02 | Demo completa | | — |
 | 2026-11-03 | QA y freeze | | — |
