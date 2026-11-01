@@ -80,6 +80,9 @@
     <None Include="src\game\world\.gitkeep" />
   </ItemGroup>
   <ItemGroup Label="C-avatar">
+    <ClInclude Include="src\game\avatar\Avatar.h" />
+    <ClCompile Include="src\game\avatar\Avatar.cpp" />
+
     <None Include="src\game\avatar\.gitkeep" />
     <None Include="src\game\anim\.gitkeep" />
     <None Include="src\ui\.gitkeep" />

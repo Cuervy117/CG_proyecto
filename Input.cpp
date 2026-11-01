@@ -1,6 +1,98 @@
 #include "Input.hpp"
 
 #include <cmath>
+#include <algorithm>
+
+namespace cgame
+{
+namespace
+{
+InputCapture* activeCapture = nullptr;
+}
+
+bool InputFrame::isDown(int key) const
+{
+    return key >= 0 && key < static_cast<int>(KeyCount) && down[static_cast<std::size_t>(key)];
+}
+
+bool InputFrame::wasPressed(int key) const
+{
+    return key >= 0 && key < static_cast<int>(KeyCount) && pressed[static_cast<std::size_t>(key)];
+}
+
+ControlFrame mapControls(const InputFrame& input)
+{
+    ControlFrame controls;
+    controls.movementXZ.x = (input.isDown(GLFW_KEY_D) ? 1.0f : 0.0f)
+        - (input.isDown(GLFW_KEY_A) ? 1.0f : 0.0f);
+    controls.movementXZ.y = (input.isDown(GLFW_KEY_W) ? 1.0f : 0.0f)
+        - (input.isDown(GLFW_KEY_S) ? 1.0f : 0.0f);
+    controls.descend = input.isDown(GLFW_KEY_Q);
+    controls.ascendOrInteractDown = input.isDown(GLFW_KEY_E);
+    controls.ascendOrInteractPressed = input.wasPressed(GLFW_KEY_E);
+
+    controls.planetMode = input.wasPressed(GLFW_KEY_F1);
+    controls.raceMode = input.wasPressed(GLFW_KEY_F2);
+    controls.flightMode = input.wasPressed(GLFW_KEY_F3);
+    controls.observationMode = input.wasPressed(GLFW_KEY_F4);
+    controls.launchRocket = input.wasPressed(GLFW_KEY_1);
+    controls.toggleCapsuleDoor = input.wasPressed(GLFW_KEY_2);
+    controls.togglePanels = input.wasPressed(GLFW_KEY_3);
+    controls.toggleShipSpot = input.wasPressed(GLFW_KEY_L);
+    controls.togglePlatformSpot = input.wasPressed(GLFW_KEY_K);
+    controls.nextObservationTarget = input.wasPressed(GLFW_KEY_TAB);
+    controls.observationZoom = input.wheelDelta;
+    controls.mouseDeltaX = input.mouseDeltaX;
+    controls.mouseDeltaY = input.mouseDeltaY;
+    return controls;
+}
+
+InputCapture::InputCapture(Window& window)
+    : m_window(window), m_glfwWindow(glfwGetCurrentContext())
+{
+    activeCapture = this;
+    if (m_glfwWindow != nullptr)
+        glfwSetScrollCallback(m_glfwWindow, &InputCapture::onScroll);
+}
+
+InputCapture::~InputCapture()
+{
+    if (activeCapture == this)
+        activeCapture = nullptr;
+    if (m_glfwWindow != nullptr && glfwGetCurrentContext() == m_glfwWindow)
+        glfwSetScrollCallback(m_glfwWindow, nullptr);
+}
+
+const InputFrame& InputCapture::update(float dt)
+{
+    m_frame.deltaTime = std::max(0.0f, dt);
+    m_frame.mouseDeltaX = m_window.getXChange();
+    m_frame.mouseDeltaY = m_window.getYChange();
+    m_frame.wheelDelta = m_pendingWheel;
+    m_pendingWheel = 0.0f;
+
+    const bool* keys = m_window.getsKeys();
+    for (std::size_t key = 0; key < InputFrame::KeyCount; ++key)
+    {
+        const bool isDown = keys[key];
+        m_frame.down[key] = isDown;
+        m_frame.pressed[key] = isDown && !m_previous[key];
+        m_previous[key] = isDown;
+    }
+    return m_frame;
+}
+
+const InputFrame& InputCapture::frame() const
+{
+    return m_frame;
+}
+
+void InputCapture::onScroll(GLFWwindow*, double, double yOffset)
+{
+    if (activeCapture != nullptr)
+        activeCapture->m_pendingWheel += static_cast<float>(yOffset);
+}
+}
 
 EstadoEscena escena;
 
