@@ -80,6 +80,7 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 | — | — | — | — | — | — | — | — |
 | H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el repo en `CG_Venancio`, cambié a `feat/c-avatar` e integré localmente `origin/feat/a-motor` como pidió el equipo. Preparé `Models/reksai.obj/.mtl` desde Drive y Gohan SSJ2 para D3 en Models/ con sus cuatro PNG planos en Textures/; falta `reksai.png`. Registré procedencia y licencia pendiente en docs/recursos-C.md. La verificación y Build.ps1 se detuvieron por falta del ZIP/manifiesto y `include/`; no se generó Release. | Rama local `feat/c-avatar`; `Models/reksai.obj`, `Models/reksai.mtl`; salida de scripts; `AGENTS.md` local | Por confirmar | En curso |
 | H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura RekSai | Encontré la carpeta correcta Proyecto_final_CG y copié su Textures/reksai.png al clon. H-C0 sigue en curso: aún falta el ZIP de dependencias para verificar y compilar. | Textures/reksai.png; docs/recursos-C.md | Por confirmar | En curso |
+| H-C2 | 2026-10-31 | 20:12 CDMX | Articulacion inicial de RekSai | Separe el OBJ por grupos de cuerpo, cabeza, cola y cuatro patas; agregue pivotes SceneNode y ciclo diagonal ligado a velocidad. Falta integrar al main y verificar visualmente en el ejecutable. | src/game/avatar/Avatar.cpp; Models/reksai.obj | Por confirmar | En curso |
 
 ---
 
@@ -88,7 +89,7 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 | Fecha | Qué me propuse | Qué hice | Horas |
 |---|---|---|---|
 | 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | | — |
-| 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integre localmente la rama A, prepare Gohan D3 y RekSai con texturas. Agregue captura/mapeo de entrada y un prefab base de RekSai; todavia faltan integracion al main y articulacion de patas/cola. El ZIP de dependencias sigue pendiente; H-C0 continua en curso. | Por confirmar |
+| 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integre localmente la rama A, prepare Gohan D3 y RekSai con texturas. Agregue captura/mapeo de entrada y separacion del OBJ en pivotes de cuerpo, cabeza, cola y cuatro patas con ciclo diagonal. Falta integrar al main y verificar visualmente; el ZIP de dependencias sigue pendiente. | Por confirmar |
 | 2026-11-01 | Animaciones y contenido según rol | | — |
 | 2026-11-02 | Demo completa | | — |
 | 2026-11-03 | QA y freeze | | — |
