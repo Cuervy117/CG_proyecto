@@ -89,18 +89,19 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C2 actualización | 2026-11-02 | 14:47 CDMX | Caminata más suave | Bajé el movimiento de la cola, hice más lento el de la cabeza y corregí las cuatro patas pequeñas para que quedaran bien pegadas. Volví a compilar y abrir la escena en OpenGL. Falta integrarla al programa común del equipo. | `src/game/avatar/Avatar.cpp`; captura en ventana OpenGL | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Comprobado local; integración común pendiente |
 | H-C2 actualización | 2026-11-02 | 15:05 CDMX | Cola más lenta y brazos delanteros | Hice la cola todavía más lenta y agregué movimiento suave a los brazos delanteros. Dejé como estaban las cuatro patas pequeñas y la cabeza, que ya te gustaban. Compilé y revisé que no hubiera partes sueltas. | `src/game/avatar/Avatar.cpp`; ventana OpenGL local; [fuentes y README en Drive](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU); [ZIP](https://drive.google.com/file/d/1pd8Ay-8fg0ZgM6L1xSWHFK8Sy9Y93ocD/view?usp=drivesdk) | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Hecho en mi demo OpenGL; falta integración al programa común |
 | H-C2 actualización | 2026-11-02 | 15:40 CDMX | Paquete de Rek’Sai en Drive | Subí la demo OpenGL con el código y los archivos del modelo y su textura, organizados en las carpetas que espera el programa. El código está en esta rama y el paquete compartido está en Drive. Falta probarlo con la versión de compilación del equipo e integrarlo al mapa común. | [ZIP completo en Drive](https://drive.google.com/file/d/18WwExs-s2famGcs4KhbadmA4u2tA9Btv/view?usp=drivesdk); [carpeta de demo](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU); `docs/recursos-C.md` | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Paquete en Drive; integración común pendiente |
+| H-C1 / H-C5 | 2026-11-02 | Hora no anotada | Rek’Sai responde a WASD y a las cámaras F1–F4 | Conecté WASD con el movimiento de Rek’Sai para que camine al avanzar y se detenga al soltar las teclas. También conecté F1–F4 para cambiar entre las cuatro cámaras, que ahora siguen al avatar en la demo. Me falta abrirlo y comprobarlo en mi PC; todavía no está unido al programa/mapa común. | `P09-2-424104230.cpp`; commit [`5ae68e0`](https://github.com/Cuervy117/CG_proyecto/commit/5ae68e0) | ≈2 h 15 min, tiempo que trabajé según mi registro | Conectado en el código de la demo; ejecución e integración común pendientes |
 
 ### Estado de los hitos C al 2-nov
 
 | Tarea | Cómo va | Qué falta |
 |---|---|---|
 | H-C0 — abrir el proyecto | **Listo en mi PC**: pude abrir el programa y ver los recursos. | Probarlo con la misma versión de herramientas que usa el equipo. |
-| H-C1 — controles | **A medias**: ya se leen las teclas y el mouse. | Hacer que esas teclas cambien de verdad el modo y el lugar en el programa del equipo. |
+| H-C1 — controles | **Conectados en el código de mi demo**: WASD mueve a Rek’Sai y activa la caminata. | Abrirlo y comprobarlo en mi PC; luego integrar el control en el programa común. |
 | H-C2 — Rek’Sai | **Lista en mi demo OpenGL y en Drive**: se ve completa, con textura y se mueven patas, cabeza, cola y brazos delanteros. | Probarla con las herramientas del equipo y luego meterla al mapa común (H-C3). |
 | Criatura N5 tipo Kurama | **Pendiente**: es otra criatura, aparte de Rek’Sai; todavía no está hecha en esta rama. | Cuando B deje el punto N5 en Shinobi, preparar su caminata moviendo patas y colas. |
 | H-C3 — avatar en el mapa | **Pendiente**: Rek’Sai funciona en una escena de prueba, pero todavía no está en el mapa/programa principal. | Ponerla en P1, hacer que la cámara la siga en tercera persona y comprobarlo en el programa del equipo. |
 | H-C4 — pasar entre mapas | **Pendiente en esta rama**. | Hacer que E permita entrar a un planeta al acercarme en modo nave y volver al espacio desde una cápsula del planeta. |
-| H-C5 — modos F1–F4 | **A medias**: las teclas ya están preparadas. | Conectarlas y probarlas: F1 planeta, F2 carrera, F3 vuelo y F4 observación. |
+| H-C5 — modos F1–F4 | **Conectados en el código de mi demo**: F1 planeta, F2 carrera, F3 vuelo y F4 observación siguen al avatar. | Abrirlo y comprobar las cuatro cámaras; luego integrarlas en el programa común. |
 | H-C6 — información en pantalla | **Pendiente en esta rama**. | Mostrar en pantalla en qué modo y lugar estás y qué acción puedes hacer. |
 
 ### En sencillo: códigos y palabras que aparecen arriba
@@ -146,7 +147,7 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 | 2026-10-30 | Empezar a preparar a Rek’Sai | Empecé a separar y preparar el modelo para poder animarlo. El total que confirmé para ese trabajo fue de unas 3 h entre el 30 y el 31; no recuerdo cuánto fue cada día. | Parte de ≈3 h entre 30–31 oct; el total se anota una sola vez |
 | 2026-10-31 | Preparar el proyecto, controles y avatar | Dejé lista mi rama, junté localmente el trabajo de A, preparé los archivos de Rek’Sai y su textura y avancé los controles. También acomodé el modelo para verlo acostado, como corresponde. El programa todavía no abría porque faltaban archivos; lo resolví el 2-nov. | ≈1 h para clonar/preparar el proyecto y controles; además, este día forma parte de las ≈3 h de Rek’Sai anotadas entre 30–31 oct |
 | 2026-11-01 | Animaciones y contenido según rol | No trabajé en el proyecto ese día. | 0 h |
-| 2026-11-02 | Hacer que Rek’Sai se viera y caminara bien | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, abrí a Rek’Sai completa y con textura en la demo OpenGL, ajusté la cola y los brazos delanteros, y subí el paquete al Drive compartido. Me falta probarlo con la versión de herramientas del equipo y unirlo al programa/mapa común. | ≈1 h en total; no separé el tiempo por actividad |
+| 2026-11-02 | Hacer que Rek’Sai se viera bien, caminara y respondiera a los controles | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, dejé la textura y la caminata de Rek’Sai, conecté WASD para moverla y F1–F4 para cambiar la cámara. También ajusté la cola y los brazos delanteros y subí el paquete al Drive compartido. Me falta abrir esta última versión y comprobarla en mi PC; luego unirla al programa/mapa común. | ≈3 h 15 min en total: ≈1 h de lo que ya había hecho y ≈2 h 15 min para conectar movimiento y cámaras |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
@@ -164,7 +165,8 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 - [x] Preparar y subir a Drive un paquete local con `Models/`, `Textures/`, `include/`, `lib/`, `glm/`, DLLs y ejecutable (VS 2026/v145).
 - [x] Preparar y subir a Drive el paquete completo de la demo OpenGL con fuentes y `Models/reksai.obj/.mtl` + `Textures/reksai.png`, conservando las rutas que espera el código.
 - [ ] Volver a compilar con la versión de herramientas acordada por el equipo.
-- [ ] Conectar los controles ya preparados con el cambio de modos y lugares.
+- [x] Conectar WASD y F1–F4 con Rek’Sai y las cámaras en el código de la demo OpenGL (falta abrirla y comprobarla en mi PC).
+- [ ] Integrar y comprobar los controles y las cámaras en el programa/mapa común.
 - [ ] Poner Rek’Sai en P1/mapa principal, hacer que la cámara la siga y guardar una captura de la prueba común.
 - [ ] Animar la criatura tipo Kurama de N5 en Shinobi; B debe dejar primero el punto donde va colocada.
 - [ ] Hacer que E permita entrar/salir de los planetas y conectar F1 planeta, F2 carrera, F3 vuelo y F4 observación.
