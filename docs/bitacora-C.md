@@ -40,7 +40,7 @@ estado: en curso
 | Rutas que edito | `src/game/avatar/`, `src/game/anim/`, `src/game/Experience.*`, `src/game/main.cpp`, `src/ui/`, `Input.*`, `docs/` |
 | Stack | C++17 · OpenGL 4.3 (contexto actual; objetivo 3.3) · GLFW · GLEW · GLM · Assimp · Visual Studio 2022 |
 | Rama | `feat/c-avatar` |
-| Repositorio | `https://github.com/Cuervy117/CG_proyecto.git` (publicación de base preparada; verificar push) |
+| Repositorio | `https://github.com/Cuervy117/CG_proyecto.git`; rama `feat/c-avatar` |
 | Entrega | sábado 7-nov-2026, 12:00, Google Classroom |
 | Herramientas | Visual Studio 2022, Git, IA como apoyo de planificación y revisión |
 
@@ -62,14 +62,16 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 
 | Fecha | Resultado conjunto que debo apoyar | Estado |
 |---|---|---|
-| 30-oct | Avatar en P1 con cámara dentro de ejecutable común | pendiente |
-| 31-oct | Ambos planetas y cuatro modos básicos; paquete en otra PC | pendiente |
-| 1-nov | Animaciones, iluminación y contenido real | pendiente |
+| 30-oct | Avatar en P1 con cámara dentro de ejecutable común | parcial; falta integración común |
+| 31-oct | Ambos planetas y cuatro modos básicos; paquete en otra PC | parcial; falta mundo B e integración |
+| 1-nov | Animaciones, iluminación y contenido real | parcial; hay piezas y modelos locales, faltan ciclos e integración |
 | 2-nov | Demo completa de requisitos | pendiente |
 | 3-nov | QA, Release externo y freeze 18:00 | pendiente |
 | 4–5 nov | Manuales, videos, plano/propuesta finales | pendiente |
 | 6-nov | Reserva de incidencias | pendiente |
 | 7-nov | Acuse antes de 12:00 | pendiente |
+
+Esta tabla es el resultado **conjunto**, por eso una tarea queda `pendiente` mientras no esté integrada y comprobada en `develop`. Al 2-nov, David tiene H-A0 a H-A4 como hechos y H-E0 pendiente; la bitácora de B aún no registra hitos. `Parcial` significa que hay piezas hechas, pero el resultado completo todavía no.
 
 ---
 
@@ -78,10 +80,11 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 | ID | Fecha | Hora | Hito | Descripción | Evidencia | Horas | Estado |
 |---|---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — | — |
-| H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el repo en `CG_Venancio`, cambié a `feat/c-avatar` e integré localmente `origin/feat/a-motor` como pidió el equipo. Preparé `Models/reksai.obj/.mtl` desde Drive y Gohan SSJ2 para D3 en Models/ con sus cuatro PNG planos en Textures/; falta `reksai.png`. Registré procedencia y licencia pendiente en docs/recursos-C.md. La verificación y Build.ps1 se detuvieron por falta del ZIP/manifiesto y `include/`; no se generó Release. | Rama local `feat/c-avatar`; `Models/reksai.obj`, `Models/reksai.mtl`; salida de scripts; `AGENTS.md` local | Por confirmar | En curso |
-| H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura RekSai | Encontré la carpeta correcta Proyecto_final_CG y copié su Textures/reksai.png al clon. H-C0 sigue en curso: aún falta el ZIP de dependencias para verificar y compilar. | Textures/reksai.png; docs/recursos-C.md | Por confirmar | En curso |
-| H-C1 parcial | 2026-10-31 | 19:57 CDMX | Captura y mapeo base de controles | Implementé `InputFrame`/`InputCapture` y el mapeo de WASD, Q/E, F1-F4, 1-3, L/K, Tab, mouse y rueda según el plan. El código quedó en la rama; falta conectarlo a `Experience` y validarlo en el ejecutable, así que el hito sigue en curso. | `Input.cpp`, `Input.hpp`; commit `aedcd41` | Por confirmar | En curso |
-| H-C2 | 2026-10-31 | 20:38 CDMX | Articulación y vista previa horizontal de Rek’Sai | Separé el OBJ por cuerpo, cabeza, cola y cuatro patas; preparé pivotes y ciclo diagonal ligado al movimiento. En una escena local de Blender corregí los ejes del modelo y confirmé una pose cuadrúpeda horizontal sobre el piso. La escena es evidencia visual, no integración al ejecutable; falta integrar y validar en runtime. | `src/game/avatar/Avatar.cpp`; `Models/c_reksai_articulada.blend`; `docs/capturas/reksai_preview.png` | ≈2 h acumuladas (30–31 oct; estimación de Venancio, sin desglose diario) | En curso |
+| H-DB0 | 2026-10-17 | No registrada | Recursos Dragon Ball preparados localmente | Se reunieron modelos de referencia de Gohan/Cámara del Tiempo y se generaron siete modelos sencillos propios. Vista previa y revisión local de OBJ/GLB listas; falta compartirlos en el repo y probar su carga en el motor. | `assets/dragon_ball/LEEME.md`; inventario, verificación y vista previa locales | No registradas | hecho local |
+| H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el repo, cambié a `feat/c-avatar` e integré localmente la rama A. Preparé Rek’Sai y Gohan D3; el build quedó bloqueado por el paquete de dependencias y `include/`, así que no hay Release propio. | `Models/reksai.obj/.mtl`; `docs/recursos-C.md`; commit `aedcd41` | Por confirmar | En curso |
+| H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura de Rek’Sai | Copié `reksai.png` desde Drive. Falta recibir dependencias y comprobar la carga en el ejecutable. | `Textures/reksai.png`; `docs/recursos-C.md` | Por confirmar | En curso |
+| H-C1 parcial | 2026-10-31 | 19:57 CDMX | Entrada y controles | Añadí captura por frame y mapeo de teclas/mouse/rueda. Falta conectarlo a `Experience` y probarlo en el ejecutable. | `Input.cpp`, `Input.hpp`; commit `aedcd41` | Por confirmar | En curso |
+| H-C2 | 2026-10-31 | 20:38 CDMX | Rek’Sai articulada y vista previa | Separé cuerpo, cabeza, cola y patas, con pivotes y ciclo diagonal; corregí la pose horizontal en Blender. Falta comprobar articulación y caminata en el ejecutable. | `src/game/avatar/Avatar.cpp`; `Models/c_reksai_articulada.blend`; `docs/capturas/reksai_preview.png` | ≈2 h entre 30–31 oct, estimación confirmada por Venancio | En curso |
 
 ---
 
@@ -101,11 +104,11 @@ Este material se preparó localmente el 17-oct, antes de que el reparto vigente 
 
 | Fecha | Qué me propuse | Qué hice | Horas |
 |---|---|---|---|
-| 2026-10-17 | Preparar recursos de la parte Dragon Ball | Reuní modelos descargables de Gohan/Cámara del Tiempo y preparé modelos sencillos propios para cápsula, estación, domo, cohete, llama, plataforma/torre y pista; generé vista previa y revisé los OBJ/GLB localmente. La evidencia está en la carpeta local `assets/dragon_ball`, fuera del repo. | No registradas |
+| 2026-10-17 | Preparar recursos de la parte Dragon Ball | Con apoyo de Codex se reunieron modelos descargables de Gohan/Cámara del Tiempo y se generaron modelos sencillos para cápsula, estación, domo, cohete, llama, plataforma/torre y pista. Se hizo vista previa y revisión local de OBJ/GLB; los archivos siguen fuera del repo. | No registradas |
 | 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | Inicié la preparación del modelo de Rek’Sai para el avatar articulado; las horas se registran acumuladas en H-C2 porque no quedó desglose por día. | Incluidas en total H-C2; sin desglose |
 | 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integré localmente la rama A, preparé Gohan D3 y Rek’Sai con texturas. Dejé el mapeo base de controles en `Input.cpp/.hpp`; todavía falta conectarlo a `Experience` y probarlo en el ejecutable. Separé Rek’Sai por cuerpo, cabeza, cola y patas, y revisé en Blender la pose cuadrúpeda horizontal. El ZIP de dependencias sigue pendiente. | H-C2: ≈2 h acumuladas entre 30–31 oct, sin desglose diario; H-C1 y lo demás: por confirmar |
-| 2026-11-01 | Animaciones y contenido según rol | | — |
-| 2026-11-02 | Demo completa | | — |
+| 2026-11-01 | Animaciones y contenido según rol | No encontré commits de C para esta fecha; si hubo trabajo fuera del repo, falta anotarlo con el avance y las horas reales. | Sin registro; confirmar |
+| 2026-11-02 | Revisar bitácora y estado del equipo | Con apoyo de Codex comparé los hitos de A/B/C y aclaré qué está hecho, qué va parcial y qué sigue sin integración. No se agregó implementación al ejecutable en esta revisión. | Horas de Venancio no registradas |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
