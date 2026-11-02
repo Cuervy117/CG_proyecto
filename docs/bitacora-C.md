@@ -85,6 +85,7 @@ Esta tabla es el resultado **conjunto**, por eso una tarea queda `pendiente` mie
 | H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura de Rek’Sai | Copié `reksai.png` desde Drive. Falta recibir dependencias y comprobar la carga en el ejecutable. | `Textures/reksai.png`; `docs/recursos-C.md` | Por confirmar | En curso |
 | H-C1 parcial | 2026-10-31 | 19:57 CDMX | Entrada y controles | Añadí captura por frame y mapeo de teclas/mouse/rueda. Falta conectarlo a `Experience` y probarlo en el ejecutable. | `Input.cpp`, `Input.hpp`; commit `aedcd41` | Por confirmar | En curso |
 | H-C2 | 2026-10-31 | 20:38 CDMX | Rek’Sai articulada y vista previa | Separé cuerpo, cabeza, cola y patas, con pivotes y ciclo diagonal; corregí la pose horizontal en Blender. Falta comprobar articulación y caminata en el ejecutable. | `src/game/avatar/Avatar.cpp`; `Models/c_reksai_articulada.blend`; `docs/capturas/reksai_preview.png` | ≈2 h entre 30–31 oct, estimación confirmada por Venancio | En curso |
+| H-C2 actualización | 2026-11-02 | 11:03 CDMX | Textura de Rek’Sai preparada | Dejé `reksai.obj` y `reksai.png` en las rutas locales que usa el avatar. El código asigna la textura a las piezas; revisión del OBJ encontró UVs y las siete partes. Falta validarlo en el ejecutable. | `Models/reksai.obj`, `Textures/reksai.png`; hashes en `docs/recursos-C.md` | Sin horas de Venancio registradas | En curso |
 
 ---
 
@@ -108,7 +109,7 @@ Este material se preparó localmente el 17-oct, antes de que el reparto vigente 
 | 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | Inicié la preparación del modelo de Rek’Sai para el avatar articulado; las horas se registran acumuladas en H-C2 porque no quedó desglose por día. | Incluidas en total H-C2; sin desglose |
 | 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integré localmente la rama A, preparé Gohan D3 y Rek’Sai con texturas. Dejé el mapeo base de controles en `Input.cpp/.hpp`; todavía falta conectarlo a `Experience` y probarlo en el ejecutable. Separé Rek’Sai por cuerpo, cabeza, cola y patas, y revisé en Blender la pose cuadrúpeda horizontal. El ZIP de dependencias sigue pendiente. | H-C2: ≈2 h acumuladas entre 30–31 oct, sin desglose diario; H-C1 y lo demás: por confirmar |
 | 2026-11-01 | Animaciones y contenido según rol | No encontré commits de C para esta fecha; si hubo trabajo fuera del repo, falta anotarlo con el avance y las horas reales. | Sin registro; confirmar |
-| 2026-11-02 | Revisar bitácora y estado del equipo | Con apoyo de Codex comparé los hitos de A/B/C y aclaré qué está hecho, qué va parcial y qué sigue sin integración. No se agregó implementación al ejecutable en esta revisión. | Horas de Venancio no registradas |
+| 2026-11-02 | Revisar hitos y avanzar H-C2 | Con apoyo de Codex comparé las ramas y dejé el OBJ/textura en `Models/` y `Textures/` del checkout local. Confirmé que el código asigna la textura a las piezas; falta probar en el ejecutable. Los archivos siguen ignorados por Git y las horas de Venancio no están registradas. | Sin horas de Venancio registradas |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
