@@ -17,7 +17,7 @@ La propuesta entregada ubica a Gohan como referencia Dragon Ball en D3 (imagen o
 - SHA-256 local del OBJ: `4ABFE2537CFCF4EB05D475BA652041941703806D85470646983FF4CE69C0D4B3`.
 - SHA-256 local de la textura: `9C9984C51848EB7306DE0DC0F9C01C930D4F7DA99B642774A175460007979FFB`.
 - El OBJ referencia `reksai.mtl`; el MTL apunta a `../Textures/reksai.png`, consistente con la estructura `Models/` y `Textures/`. El cargador de C usa el PNG explícito y no lee el MTL; este sirve al abrir el OBJ directamente en Blender/otro visor.
-- `Models/` y `Textures/` siguen ignorados por Git; los archivos permanecen locales y deben compartirse con el paquete acordado por el equipo.
+- `Models/` y `Textures/` siguen ignorados por Git de acuerdo con PLAN_MAESTRO §16.4. El paquete completo para probar la demo OpenGL (fuentes + OBJ/MTL/PNG, con las rutas preservadas) está en el [Drive compartido](https://drive.google.com/file/d/18WwExs-s2famGcs4KhbadmA4u2tA9Btv/view?usp=drivesdk); la carpeta también contiene los archivos por separado: [RekSai OpenGL - Animacion](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU).
 
 ## Empaquetado
 
