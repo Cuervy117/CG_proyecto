@@ -48,17 +48,9 @@ estado: en curso
 
 ## 2. Planeación vigente — 30-oct-2026
 
-Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación sustituye objetivos anteriores; no registra trabajo ejecutado ni horas de compañeros.
+David confirmó el reparto: B = Jonhatan y C = Venancio. En corto, a mí me toca hacer que Rek’Sai y la criatura N5 funcionen como avatar, conectar controles y modos, y después meterlo al programa y mostrar la información básica en pantalla. B se encarga del mundo y de sus naves/puertas. El plan completo está en `PLAN_MAESTRO.md`.
 
-- Rol: **C — avatar e integración**.
-- Objetivo: Rek’Sai articulada, criatura N5, entrada unificada, cuatro modos y tres ubicaciones, main y HUD.
-- Rutas: `src/game/avatar/, src/game/anim/, src/game/Experience.*, src/game/main.cpp, src/ui/, Input.*`. Excepciones de vcxproj en PLAN_MAESTRO §10/§16.
-- Hoy: **H-C0, H-C1, H-C2 y H-C3**, criterios y dependencias en PLAN_MAESTRO §6.1.
-- Contratos §5: esperar headers compartidos antes de integrar; preparar datos/piezas mientras tanto.
-- Rúbrica y aceptación §2/§7; controles únicos §8; no conservar controles de prácticas.
-- Recursos: modelos en subcarpetas propias; texturas importadas temporalmente `Textures/c_nombre.ext` hasta validar el cargador.
-- No usar rover/holocron/satélite de prácticas como contenido final.
-- Documentación repartida según §10: cada uno redacta su sección y conclusión, no todo recae en C.
+Los hitos con letra C son las tareas de mi rol. Las rutas `src/...` son carpetas/archivos del código donde se trabaja; no son tareas aparte. Los modelos y sus imágenes deben quedar en sus carpetas para que el programa los encuentre. Cada integrante redacta su parte de la documentación.
 
 | Fecha | Resultado conjunto que debo apoyar | Estado |
 |---|---|---|
@@ -71,43 +63,64 @@ Reparto confirmado por David: B = Jonhatan; C = Venancio. Esta planeación susti
 | 6-nov | Reserva de incidencias | pendiente |
 | 7-nov | Acuse antes de 12:00 | pendiente |
 
-Esta tabla es el resultado **conjunto**, por eso una tarea queda `pendiente` mientras no esté integrada y comprobada en `develop`. Al 2-nov, David tiene H-A0 a H-A4 como hechos y H-E0 pendiente; la bitácora de B aún no registra hitos. `Parcial` significa que hay piezas hechas, pero el resultado completo todavía no.
+Esta tabla habla del resultado de **todo el equipo**, no solo de mi trabajo. `Parcial` quiere decir que ya hay avances, pero todavía falta unirlos o probarlos juntos. `Pendiente` quiere decir que ese resultado común todavía no está listo. Por eso Rek’Sai puede estar funcionando en mi demo y la fecha del equipo seguir marcada como parcial.
 
 ---
 
 ## 3. Hitos
 
-| ID | Fecha | Hora | Hito | Descripción | Evidencia | Horas | Estado |
+En esta tabla, **Hora de referencia** es la hora del reloj que quedó anotada para ese avance; no significa cuánto duró. **Tiempo trabajado** es la duración real que me confirmaste. Para no contar lo mismo varias veces, los totales por día se anotan una sola vez en la sección 4; las filas de hitos apuntan a ese registro.
+
+| ID | Fecha | Hora de referencia | Hito | Qué hice, dicho sencillo | Evidencia | Tiempo trabajado | Estado |
 |---|---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — | — |
 | H-DB0 | 2026-10-17 | No registrada | Recursos Dragon Ball preparados localmente | Se reunieron modelos de referencia de Gohan/Cámara del Tiempo y se generaron siete modelos sencillos propios. Fue preparación local, no integración al mapa. Venancio aclara que el mapa actual no tiene modelo/personaje de Gohan; la propuesta aún enumera D3 como referencia y el equipo debe confirmar si se conserva. | `assets/dragon_ball/LEEME.md`; inventario, verificación y vista previa locales; fuera de `feat/c-avatar` y del Drive revisado | No registradas | Preparación local hecha; D3 por confirmar con el equipo |
-| H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el repo, cambié a `feat/c-avatar` e integré localmente la rama A. Preparé Rek’Sai y Gohan D3; al cierre inicial el build seguía bloqueado por el paquete de dependencias y `include/`. | `Models/reksai.obj/.mtl`; `docs/recursos-C.md`; commit `aedcd41` | Incluida en el total H-C0/H-C1 del 31-oct (≈1 h, sin desglose) | Parcial en ese momento; cierre local registrado el 2-nov |
-| H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura de Rek’Sai | Copié `reksai.png` desde Drive; faltaban las dependencias para comprobar la carga en el ejecutable. | `Textures/reksai.png`; `docs/recursos-C.md` | Incluida en el total H-C0/H-C1 del 31-oct (≈1 h, sin desglose) | Parcial en ese momento; cierre local registrado el 2-nov |
-| H-C1 parcial | 2026-10-31 | 19:57 CDMX | Entrada y controles | Implementé `InputFrame`, captura de teclas/mouse/rueda y `mapControls` con flancos para WASD, Q/E, F1–F4 y acciones. Falta conectarlo al estado de modo/ubicación de `Experience` y probarlo en el ejecutable común. | `Input.cpp`, `Input.hpp`; commit `aedcd41` | Incluida en el total H-C0/H-C1 del 31-oct (≈1 h, sin desglose) | Parcial |
-| H-C2 | 2026-10-31 | 20:38 CDMX | Rek’Sai articulada y vista previa | Separé cuerpo, cabeza, cola y patas, con pivotes y ciclo diagonal; corregí la pose horizontal en Blender. La comprobación de caminata en OpenGL se completó después, el 2-nov. | `src/game/avatar/Avatar.cpp`; `Models/c_reksai_articulada.blend`; `docs/capturas/reksai_preview.png` | ≈3 h entre 30–31 oct, total aproximado confirmado por Venancio, sin desglose diario | Hecho local; ver prueba OpenGL posterior |
-| H-C2 actualización | 2026-11-02 | 11:03 CDMX | Textura de Rek’Sai preparada | Dejé `reksai.obj` y `reksai.png` en las rutas locales que usa el avatar. El código asigna la textura a las piezas; revisión del OBJ encontró UVs y las siete partes. Falta validarlo en el ejecutable. | `Models/reksai.obj`, `Textures/reksai.png`; hashes en `docs/recursos-C.md` | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | En curso en ese momento |
-| H-C2 actualización | 2026-11-02 | Hora no registrada | Recursos Rek’Sai completados desde Drive | Localicé en el Drive compartido el OBJ, MTL y PNG del equipo; añadí el MTL faltante y ajusté su ruta de textura a `../Textures/reksai.png`. | Drive `Models/reksai/`, `Textures/reksai.png`; `Models/reksai.mtl` local | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | Preparación completada; prueba OpenGL registrada después |
-| H-C2 actualización | 2026-11-02 | 11:20 CDMX | Prueba visual local de la textura | Importé `Models/reksai.obj` en Blender 5.2 con su MTL y la vista Material Preview mostró la textura sobre la malla. Confirma el mapeo OBJ/MTL/PNG en Blender; faltaba comprobar el cargador del proyecto. | Captura visible en Blender; `Models/reksai.obj`, `Models/reksai.mtl`, `Textures/reksai.png` | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | Prueba de Blender hecha; OpenGL comprobado después |
-| H-C2 actualización | 2026-11-02 | 11:52 CDMX | Caminata de Rek’Sai en OpenGL | Conecté el avatar articulado al bucle de la escena de prueba: su desplazamiento alimenta dirección y velocidad de `Avatar::update`, que alterna patas y mueve cuerpo/cabeza/cola. La compilación y prueba OpenGL se completaron después ese mismo día. | `P09-2-424104230.cpp`; `src/game/avatar/Avatar.cpp`; modelo y textura en `Models/` y `Textures/` | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | En curso en ese momento; prueba posterior registrada abajo |
-| H-C2 actualización | 2026-11-02 | 13:05 CDMX | Render completo y bundle local | Corregí `MeshModel::CreateMeshModel`: reservaba solo 1/8 del buffer intercalado. Compilé con VS 2026/v145 y ejecuté la escena OpenGL; Rek’Sai texturizada ya aparece completa y articulada. Preparé y subí un ZIP local con dependencias y ejecutable; falta validar compilación con el toolset v143 acordado para el equipo e integrar en P1/main común. | `src/engine/Mesh_tn.cpp`; `P09-2-424104230.cpp`; `x64/Release/LabCGeIHC.local.exe`; [ZIP en Drive](https://drive.google.com/file/d/1y0RRxMR6n6LyBR34hjpAqKC_uwOlasbz/view?usp=drivesdk); SHA-256 `C52AF0CC42C4A738278BDB35DDFB48FC9B59E84E857E4D00B95316565520B157` | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | Hecho local; integración común pendiente |
-| H-C0 actualización | 2026-11-02 | 13:05 CDMX | Build local con recursos visibles | Después de recibir las dependencias compilé Release x64 con VS 2026/v145 y abrí la demo con Rek’Sai texturizada. Esto cierra el arranque/build local de H-C0; todavía falta confirmar compatibilidad con el toolset v143 del equipo. | `x64/Release/LabCGeIHC.local.exe`; [ZIP de dependencias en Drive](https://drive.google.com/file/d/1y0RRxMR6n6LyBR34hjpAqKC_uwOlasbz/view?usp=drivesdk) | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | H-C0 hecho local; v143 pendiente |
-| H-C2 actualización | 2026-11-02 | 13:57 CDMX | Caminata articulada comprobada de perfil | Con apoyo de Codex corregí la vista de prueba para dejar a Rek’Sai quieta en el sitio y de perfil, y ajusté los pivotes del OBJ para hacer visibles las patas, la cabeza y la cola sin dejar piezas desprendidas. Compilé Release x64 con VS 2026/v145 y la abrí en OpenGL. La animación sigue siendo una prueba local; falta validar con v143 e integrarla al mapa/main común. | `P09-2-424104230.cpp`; `src/game/avatar/Avatar.cpp`; `Models/reksai.obj`; `Textures/reksai.png` | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | Comprobado local; integración común pendiente |
-| H-C2 actualización | 2026-11-02 | 14:47 CDMX | Ajuste suave de la caminata | A petición de Venancio bajé el recorrido de la cola, hice más lento el movimiento de la cabeza y restauré las cuatro patas pequeñas a sus grupos OBJ originales, que quedan separadas de los grupos humanoides de hombros/brazos. Compilé y volví a abrir la vista en OpenGL; la integración en el ejecutable común sigue pendiente. | `src/game/avatar/Avatar.cpp`; captura en ventana OpenGL | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | Comprobado local; integración común pendiente |
-| H-C2 actualización | 2026-11-02 | 15:05 CDMX | Cola más lenta y brazos delanteros | A petición de Venancio bajé otra vez la velocidad y amplitud de la cola, y separé los grupos OBJ de hombro/codo/mano en dos pivotes para que los brazos delanteros oscilen suavemente. Se conserva el ciclo aprobado de cuatro patas pequeñas y cabeza. Compilé y revisé la escena en OpenGL sin piezas desprendidas. | `src/game/avatar/Avatar.cpp`; ventana OpenGL local; [fuentes y README en Drive](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU); [ZIP](https://drive.google.com/file/d/1pd8Ay-8fg0ZgM6L1xSWHFK8Sy9Y93ocD/view?usp=drivesdk) | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | H-C2 hecho en demo OpenGL local; integración H-C3 pendiente |
-| H-C2 actualización | 2026-11-02 | 15:40 CDMX | Paquete completo de Rek’Sai en Drive | Empaqueté la demo OpenGL con sus fuentes y recursos OBJ/MTL/PNG, respetando las rutas `Models/` y `Textures/`. El código queda en esta rama; los assets se comparten por Drive conforme a PLAN_MAESTRO §16.4. Falta validar con toolset v143 e integrar en el main/mapa común. | [ZIP completo en Drive](https://drive.google.com/file/d/18WwExs-s2famGcs4KhbadmA4u2tA9Btv/view?usp=drivesdk); [carpeta de demo](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU); `docs/recursos-C.md` | Incluida en el total diario 2-nov (≈1 h para el trabajo del día, sin desglose) | Paquete comprobado en Drive; integración común pendiente |
+| H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el proyecto, me cambié a mi rama y junté localmente los cambios de A. Preparé los archivos de Rek’Sai y Gohan D3. En ese primer intento no pude compilar porque faltaban archivos del paquete de dependencias. | `Models/reksai.obj/.mtl`; `docs/recursos-C.md`; commit `aedcd41` | Parte de la hora total de H-C0/H-C1 del 31-oct; ver sección 4 | Parcial en ese momento; build local completado el 2-nov |
+| H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura de Rek’Sai | Copié la imagen de textura de Rek’Sai desde Drive. Aún no podía comprobarla en el programa porque faltaban dependencias. | `Textures/reksai.png`; `docs/recursos-C.md` | Parte de la hora total de H-C0/H-C1 del 31-oct; ver sección 4 | Parcial en ese momento; build local completado el 2-nov |
+| H-C1 parcial | 2026-10-31 | 19:57 CDMX | Entrada y controles | Dejé preparada la lectura del teclado, mouse y rueda, con las teclas WASD, Q/E y F1–F4. Falta conectarla a los modos y ubicaciones del programa y probarla junto con el trabajo del equipo. | `Input.cpp`, `Input.hpp`; commit `aedcd41` | Parte de la hora total de H-C0/H-C1 del 31-oct; ver sección 4 | Parcial |
+| H-C2 | 2026-10-31 | 20:38 CDMX | Rek’Sai articulada y vista previa | Separé las partes de Rek’Sai para poder moverlas y acomodé el modelo en posición horizontal. La caminata en OpenGL se probó después, el 2-nov. | `src/game/avatar/Avatar.cpp`; `Models/c_reksai_articulada.blend`; `docs/capturas/reksai_preview.png` | ≈3 h en total entre 30 y 31-oct; ver sección 4 (no sumar de nuevo) | Preparación hecha; caminata OpenGL registrada después |
+| H-C2 actualización | 2026-11-02 | 11:03 CDMX | Textura de Rek’Sai preparada | Dejé el modelo y la imagen de textura en las carpetas que usa el avatar. Revisé que el modelo tuviera sus partes y datos para colocarle la imagen; faltaba probarlo en el programa. | `Models/reksai.obj`, `Textures/reksai.png`; datos de archivos en `docs/recursos-C.md` | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | En curso en ese momento |
+| H-C2 actualización | 2026-11-02 | Hora del día no anotada | Archivos de Rek’Sai preparados desde Drive | Encontré en el Drive del equipo el modelo y sus archivos de material/imagen. Añadí el archivo que faltaba y corregí dónde busca la imagen. | Drive `Models/reksai/`, `Textures/reksai.png`; `Models/reksai.mtl` local | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Preparación hecha; prueba OpenGL registrada después |
+| H-C2 actualización | 2026-11-02 | 11:20 CDMX | Revisé la textura en Blender | Abrí el modelo con sus archivos de material e imagen; la textura se vio sobre Rek’Sai. Después también se comprobó en la demo OpenGL. | Captura en Blender; `Models/reksai.obj`, `Models/reksai.mtl`, `Textures/reksai.png` | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Revisión en Blender hecha; OpenGL comprobado después |
+| H-C2 actualización | 2026-11-02 | 11:52 CDMX | Caminata de Rek’Sai en OpenGL | Conecté el avatar a la escena de prueba para que el movimiento active su caminata. En ese momento el código movía algunas partes; la compilación y revisión final se hicieron después ese día. | `P09-2-424104230.cpp`; `src/game/avatar/Avatar.cpp`; modelo e imagen en `Models/` y `Textures/` | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Avance parcial en ese momento; prueba final abajo |
+| H-C2 actualización | 2026-11-02 | 13:05 CDMX | Rek’Sai completa en la demo OpenGL | Corregí un error que hacía que el modelo apareciera incompleto. Compilé y abrí la demo: Rek’Sai ya se ve completa, con textura y partes articuladas. También preparé el ZIP con el programa y sus dependencias; falta probarlo con la versión de compilación del equipo e integrarlo al mapa/programa común. | `src/engine/Mesh_tn.cpp`; `P09-2-424104230.cpp`; `x64/Release/LabCGeIHC.local.exe`; [ZIP en Drive](https://drive.google.com/file/d/1y0RRxMR6n6LyBR34hjpAqKC_uwOlasbz/view?usp=drivesdk) | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Hecho en mi demo; falta integración común |
+| H-C0 actualización | 2026-11-02 | 13:05 CDMX | Programa local abre con los recursos | Cuando recibí los archivos que faltaban, compilé y abrí el programa con Rek’Sai texturizada. Esto completa el arranque local. Aún falta probarlo con la misma versión que usa el equipo. | `x64/Release/LabCGeIHC.local.exe`; [ZIP de dependencias en Drive](https://drive.google.com/file/d/1y0RRxMR6n6LyBR34hjpAqKC_uwOlasbz/view?usp=drivesdk) | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Hecho local; prueba con versión del equipo pendiente |
+| H-C2 actualización | 2026-11-02 | 13:57 CDMX | Caminata revisada de perfil | Ajusté la vista para ver a Rek’Sai de lado y comprobé que caminaran sus patas, cabeza y cola sin que las piezas se vieran separadas. La abrí en OpenGL; sigue siendo una prueba local y falta unirla al programa/mapa del equipo. | `P09-2-424104230.cpp`; `src/game/avatar/Avatar.cpp`; `Models/reksai.obj`; `Textures/reksai.png` | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Comprobado local; integración común pendiente |
+| H-C2 actualización | 2026-11-02 | 14:47 CDMX | Caminata más suave | Bajé el movimiento de la cola, hice más lento el de la cabeza y corregí las cuatro patas pequeñas para que quedaran bien pegadas. Volví a compilar y abrir la escena en OpenGL. Falta integrarla al programa común del equipo. | `src/game/avatar/Avatar.cpp`; captura en ventana OpenGL | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Comprobado local; integración común pendiente |
+| H-C2 actualización | 2026-11-02 | 15:05 CDMX | Cola más lenta y brazos delanteros | Hice la cola todavía más lenta y agregué movimiento suave a los brazos delanteros. Dejé como estaban las cuatro patas pequeñas y la cabeza, que ya te gustaban. Compilé y revisé que no hubiera partes sueltas. | `src/game/avatar/Avatar.cpp`; ventana OpenGL local; [fuentes y README en Drive](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU); [ZIP](https://drive.google.com/file/d/1pd8Ay-8fg0ZgM6L1xSWHFK8Sy9Y93ocD/view?usp=drivesdk) | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Hecho en mi demo OpenGL; falta integración al programa común |
+| H-C2 actualización | 2026-11-02 | 15:40 CDMX | Paquete de Rek’Sai en Drive | Subí la demo OpenGL con el código y los archivos del modelo y su textura, organizados en las carpetas que espera el programa. El código está en esta rama y el paquete compartido está en Drive. Falta probarlo con la versión de compilación del equipo e integrarlo al mapa común. | [ZIP completo en Drive](https://drive.google.com/file/d/18WwExs-s2famGcs4KhbadmA4u2tA9Btv/view?usp=drivesdk); [carpeta de demo](https://drive.google.com/drive/folders/1BjhEMXsBatML2Dhk65OjgfRBtdywbhvU); `docs/recursos-C.md` | Incluida en el total del 2-nov; ver sección 4 (no sumar de nuevo) | Paquete en Drive; integración común pendiente |
 
 ### Estado de los hitos C al 2-nov
 
-| Hito | Estado actual según `feat/c-avatar` | Qué falta para cerrarlo |
+| Tarea | Cómo va | Qué falta |
 |---|---|---|
-| H-C0 — clonar, paquete y build local | **Hecho localmente**: Release x64 con recursos visibles usando VS 2026/v145. | Confirmar build con v143, que es el toolset acordado para el equipo. |
-| H-C1 — entrada y estado de modo/ubicación | **Parcial**: `InputFrame` y `mapControls` ya capturan entradas y flancos. | Conectarlos al estado de `Experience` y comprobar que los controles no colisionen en el ejecutable común. |
-| H-C2 — Rek’Sai articulada | **Hecho en la demo OpenGL local**: modelo completo con textura, cuatro patas, cabeza, cola y brazos delanteros animados; paquete completo en Drive. | Comprobar el mismo recurso/código con v143; su integración al mapa común se registra en H-C3. |
-| Criatura N5 — animación C (PLAN_MAESTRO §8.3) | **Pendiente en esta rama**: no hay implementación de la criatura N5 ni su recorrido entre puntos. | B deja el ancla N5; C prepara/integra la criatura que camina y mueve patas/colas continuamente. |
-| H-C3 — main, P1, avatar y FollowXZ | **Pendiente**: `P09-2-424104230.cpp` es una escena de prueba, no la integración al main común. | Insertar el avatar en P1, conectar cámara FollowXZ y límites y guardar captura del ejecutable común. |
-| H-C4 — E entre mapas | **Pendiente en esta rama**. | Integrar interacción y salida con objetivo válido, con prioridad de E según el plan. |
-| H-C5 — F1–F4 y objetivos | **Parcial**: el mapeo de teclas existe, pero no está conectado a experiencias/objetivos. | Conectar y verificar los cuatro modos sin objetivos nulos ni recargas. |
-| H-C6 — HUD mínimo | **Pendiente en esta rama**. | Mostrar modo, ubicación y acción contextual. |
+| H-C0 — abrir el proyecto | **Listo en mi PC**: pude abrir el programa y ver los recursos. | Probarlo con la misma versión de herramientas que usa el equipo. |
+| H-C1 — controles | **A medias**: ya se leen las teclas y el mouse. | Hacer que esas teclas cambien de verdad el modo y el lugar en el programa del equipo. |
+| H-C2 — Rek’Sai | **Lista en mi demo OpenGL y en Drive**: se ve completa, con textura y se mueven patas, cabeza, cola y brazos delanteros. | Probarla con las herramientas del equipo y luego meterla al mapa común (H-C3). |
+| Criatura N5 | **Pendiente**: todavía no está hecha en esta rama. | Cuando B deje el punto N5 en el mapa, preparar la criatura para que recorra puntos moviendo patas/cola. |
+| H-C3 — avatar en el mapa | **Pendiente**: Rek’Sai funciona en una escena de prueba, pero todavía no está en el mapa/programa principal. | Ponerla en P1, hacer que la cámara la siga y comprobarlo en el programa del equipo. |
+| H-C4 — pasar entre mapas | **Pendiente en esta rama**. | Hacer que la tecla E permita salir de un mapa y entrar al otro. |
+| H-C5 — modos F1–F4 | **A medias**: las teclas ya están preparadas. | Conectarlas a los cuatro modos del proyecto y comprobar que funcionen. |
+| H-C6 — información en pantalla | **Pendiente en esta rama**. | Mostrar en pantalla en qué modo y lugar estás y qué acción puedes hacer. |
+
+### En sencillo: códigos y palabras que aparecen arriba
+
+| Palabra/código | Qué significa aquí |
+|---|---|
+| H-C0 | Dejar el proyecto listo para abrir y compilar en mi computadora. |
+| H-C1 | Hacer que el programa lea los controles del teclado y mouse. |
+| H-C2 | Preparar a Rek’Sai y hacer que sus partes se muevan al caminar. |
+| H-C3 | Poner el avatar en el mapa principal y hacer que la cámara lo siga. |
+| H-C4 | Poder pasar de un mapa a otro con la tecla E. |
+| H-C5 | Hacer que F1–F4 cambien entre los modos del proyecto. |
+| H-C6 / HUD | Mostrar en pantalla el modo y el lugar donde estás. |
+| N5 | Punto del mapa donde B debe dejar un lugar para la criatura que me toca animar. |
+| `main` / programa común | La versión principal donde se juntan los trabajos del equipo. |
+| P1 | El planeta donde el plan pide colocar primero al avatar. |
+| OpenGL | La ventana del programa donde se dibuja y se probó Rek’Sai. |
+| OBJ / MTL / PNG | Archivo del modelo / archivo que describe su material / imagen de textura. |
+| v143 / v145 | Dos versiones de las herramientas de compilación; falta usar la misma que acordó el equipo. |
+| Rama | Una línea separada de trabajo en GitHub; la mía es `feat/c-avatar`. |
 
 ---
 
@@ -126,34 +139,34 @@ Este material se preparó localmente el 17-oct, antes de que el reparto vigente 
 
 ## 4. Registro diario (formato del PDF)
 
-| Fecha | Qué me propuse | Qué hice | Horas |
+| Fecha | Qué me propuse | Qué hice | Tiempo que trabajé |
 |---|---|---|---|
-| 2026-10-17 | Preparar recursos de la parte Dragon Ball | Con apoyo de Codex se reunieron modelos descargables de Gohan/Cámara del Tiempo y se generaron modelos sencillos para cápsula, estación, domo, cohete, llama, plataforma/torre y pista. Se hizo vista previa y revisión local de OBJ/GLB; los archivos siguen fuera del repo. | No registradas |
-| 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | Inicié la preparación del modelo de Rek’Sai para el avatar articulado. El tiempo de H-C2 se confirmó acumulado entre el 30 y 31 de octubre, sin desglose por día. | H-C2: incluido en ≈3 h acumuladas entre 30–31 oct; sin desglose diario |
-| 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integré localmente la rama A, preparé Gohan D3 y Rek’Sai con texturas. Dejé el mapeo base de controles en `Input.cpp/.hpp`; faltó conectarlo a `Experience`. Separé Rek’Sai por cuerpo, cabeza, cola y patas, y revisé en Blender la pose cuadrúpeda horizontal. Al cierre de ese día faltaban las dependencias y el build local; se resolvieron el 2-nov. | H-C0/H-C1: ≈1 h total el 31-oct; H-C2: parte de ≈3 h acumuladas entre 30–31 oct, sin desglose |
+| 2026-10-17 | Preparar recursos de la parte Dragon Ball | Busqué modelos de Gohan y la Cámara del Tiempo y preparé modelos sencillos de cápsula, estación, domo, cohete, llama, plataforma/torre y pista. Hice una vista previa y revisé los archivos en mi computadora; todavía no están integrados al programa del equipo. | Sin registrar; no voy a inventar el tiempo |
+| 2026-10-30 | Empezar a preparar a Rek’Sai | Empecé a separar y preparar el modelo para poder animarlo. El total que confirmé para ese trabajo fue de unas 3 h entre el 30 y el 31; no recuerdo cuánto fue cada día. | Parte de ≈3 h entre 30–31 oct; el total se anota una sola vez |
+| 2026-10-31 | Preparar el proyecto, controles y avatar | Dejé lista mi rama, junté localmente el trabajo de A, preparé los archivos de Rek’Sai y su textura y avancé los controles. También acomodé el modelo para verlo acostado, como corresponde. El programa todavía no abría porque faltaban archivos; lo resolví el 2-nov. | ≈1 h para clonar/preparar el proyecto y controles; además, este día forma parte de las ≈3 h de Rek’Sai anotadas entre 30–31 oct |
 | 2026-11-01 | Animaciones y contenido según rol | Según recuerda Venancio, no se trabajó en el proyecto ese día. | 0 h reportadas por Venancio |
-| 2026-11-02 | Revisar hitos y avanzar H-C2 | Con apoyo de Codex corregí el tamaño del buffer de las mallas, compilé con el toolset local v145 y corrí Rek’Sai en OpenGL: ya se ve completa, con textura y articulación. Después ajusté la cola y los brazos delanteros y subí al Drive compartido el paquete completo con las fuentes y los recursos OBJ/MTL/PNG. Falta comprobarlo con el toolset v143 y meterlo en el main/mapa común. | ≈1 h total del trabajo del día, aproximado confirmado por Venancio; sin desglose entre build, ajustes y Drive |
+| 2026-11-02 | Hacer que Rek’Sai se viera y caminara bien | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, abrí a Rek’Sai completa y con textura en la demo OpenGL, ajusté la cola y los brazos delanteros, y subí el paquete al Drive compartido. Falta probarlo con la versión de herramientas del equipo y unirlo al programa/mapa común. | ≈1 h en total, como me confirmaste; no está separado por actividad |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
 | 2026-11-06 | Incidencias | | — |
 | 2026-11-07 | Acuse de entrega | | — |
 
-Las horas se anotan al trabajar; — significa sin registrar, no cero horas realizadas.
+**Ojo:** la hora que aparece en la sección 3 es la hora del reloj asociada a una anotación; no es la duración del trabajo. Aquí, en “Tiempo que trabajé”, van las horas reales. “Sin registrar” quiere decir que no tenemos el dato; no quiere decir que hayan sido cero horas. El 17-oct sigue sin tiempo anotado.
 
 ---
 
 ## 5. Pendientes y bloqueos
 
-- [ ] Confirmar con David si el ZIP local v145 puede servir al equipo; el repo pide Assimp v143 y el paquete disponible se compiló con VS 2026/v145.
+- [ ] Preguntarle a David si el paquete que armé en mi computadora sirve para el equipo; está hecho con una versión distinta de la que pide el proyecto.
 - [x] Copiar `Textures/reksai.png` desde el Drive compartido y comprobar su carga en la demo OpenGL local; la verificación con v143 sigue pendiente.
 - [x] Preparar y subir a Drive un paquete local con `Models/`, `Textures/`, `include/`, `lib/`, `glm/`, DLLs y ejecutable (VS 2026/v145).
 - [x] Preparar y subir a Drive el paquete completo de la demo OpenGL con fuentes y `Models/reksai.obj/.mtl` + `Textures/reksai.png`, conservando las rutas que espera el código.
-- [ ] Verificar build con la configuración v143 del equipo.
-- [ ] Cerrar H-C1 conectando `InputFrame`/`mapControls` al estado de modo/ubicación en `Experience`.
-- [ ] Cerrar H-C3 integrando avatar en P1/main común con cámara FollowXZ, límites y captura.
+- [ ] Volver a compilar con la versión de herramientas acordada por el equipo.
+- [ ] Conectar los controles ya preparados con el cambio de modos y lugares.
+- [ ] Poner Rek’Sai en P1/mapa principal, hacer que la cámara la siga y guardar una captura de la prueba común.
 - [ ] Implementar/integrar la criatura N5 de C: recorrido entre puntos con patas/colas en movimiento; requiere el ancla de B.
-- [ ] Completar H-C4 (E entre mapas), H-C5 (F1–F4 conectados a objetivos) y H-C6 (HUD mínimo) conforme al plan.
+- [ ] Terminar el cambio entre mapas con E, conectar F1–F4 a los modos y mostrar modo/lugar en pantalla.
 - [x] Generar mi `AGENTS.md` local con datos comprobados (`PLAN_MAESTRO.md` §§14–15.1; no se commitea).
 - [x] Confirmar rama local `feat/c-avatar` y traer `origin/feat/a-motor` localmente.
 
