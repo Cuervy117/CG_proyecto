@@ -37,6 +37,7 @@
 #include "Orbit.h"
 #include "Scene.h"
 #include "SceneNode.h"
+#include "src/game/avatar/Avatar.h"
 
 static const float pi = 3.14159265358979323846f;
 static const float aRad = pi / 180.0f;
@@ -65,9 +66,6 @@ static const float PISO_ESCALA = 10.0f;
 
 static const glm::vec3 REKSAI_POS(0.0f, PISO_Y + 0.12f, 0.0f);
 static const float REKSAI_ESCALA = 2.2f;
-static const float REKSAI_GIRO_Y = 0.0f;
-static Model rekSaiModel;
-static bool rekSaiCargado = false;
 
 static void crearShaders()
 {
@@ -76,14 +74,6 @@ static void crearShaders()
 	Shader* shader = new Shader();
 	shader->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader);
-}
-
-static void cargarAvatar()
-{
-	rekSaiModel.LoadModel("Models/avatar/reksai.obj");
-	rekSaiCargado = rekSaiModel.getMeshCount() > 0;
-	printf("RekSai: %d mallas cargadas\n", rekSaiModel.getMeshCount());
-	fflush(stdout);
 }
 
 static bool probarJerarquiaEscena()
@@ -537,7 +527,6 @@ int main()
 	LoadTextures();
 	LoadLlamas();
 	LoadSkyboxCupertin();
-	cargarAvatar();
 	LoadNave();
 
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
@@ -553,16 +542,14 @@ int main()
 	nodoPiso->position = glm::vec3(0.0f, PISO_Y, 0.0f);
 	nodoPiso->scale = glm::vec3(PISO_ESCALA, 1.0f, PISO_ESCALA);
 
-	SceneNode* nodoAvatar = escena.root.add(std::make_unique<SceneNode>("avatar"));
-	nodoAvatar->position = REKSAI_POS;
-	nodoAvatar->rotationEuler.y = glm::radians(REKSAI_GIRO_Y);
-	nodoAvatar->scale = glm::vec3(REKSAI_ESCALA);
-	nodoAvatar->specular = 4.0f;
-	nodoAvatar->shininess = 256.0f;
-	if (rekSaiCargado)
+	cgame::Avatar rekSaiAvatar;
+	if (!rekSaiAvatar.attach(escena.root, "Models/reksai.obj",
+		"Textures/reksai.png", REKSAI_POS, REKSAI_ESCALA))
 	{
-		nodoAvatar->setModel(&rekSaiModel);
+		printf("No se pudo cargar el avatar articulado de Rek'Sai.\n");
+		return 1;
 	}
+	SceneNode* nodoAvatar = rekSaiAvatar.root();
 
 	SceneNode* pivotePrueba = nodoAvatar->add(std::make_unique<SceneNode>("pivote_prueba"));
 	pivotePrueba->position = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -596,7 +583,7 @@ int main()
 	const float aspecto = (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight();
 	const glm::mat4 projection = director.projection(aspecto);
 
-	GLfloat lastTime = 0.0f;
+	GLfloat lastTime = (GLfloat)glfwGetTime();
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -610,9 +597,15 @@ int main()
 		objetivoCamara = actualizarCamaraPrueba(mainWindow, director, *nodoAvatar, *nodoNave);
 
 		const float t = (float)glfwGetTime();
-		nodoAvatar->position.x = 4.0f * sinf(t * 0.5f);
-		nodoAvatar->position.z = 4.0f * cosf(t * 0.5f);
-		nodoAvatar->rotationEuler.y = glm::radians(REKSAI_GIRO_Y) + 0.5f * sinf(t * 0.25f);
+		const glm::vec3 previousAvatarPosition = nodoAvatar->position;
+		const glm::vec3 nextAvatarPosition(
+			4.0f * sinf(t * 0.5f), REKSAI_POS.y, 4.0f * cosf(t * 0.5f));
+		const glm::vec3 avatarDirection = nextAvatarPosition - previousAvatarPosition;
+		const float avatarSpeed = dt > 0.0f
+			? glm::length(avatarDirection) / dt
+			: 0.0f;
+		rekSaiAvatar.setPosition(nextAvatarPosition);
+		rekSaiAvatar.update(dt, avatarDirection, avatarSpeed);
 		pivotePrueba->rotationEuler.y = 1.2f * sinf(t * 1.5f);
 
 		escena.updateWorld();
