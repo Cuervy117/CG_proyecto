@@ -34,6 +34,7 @@ private:
     SceneNode* m_headPivot = nullptr;
     SceneNode* m_tailPivot = nullptr;
     std::array<SceneNode*, 4> m_legPivots{};
+    std::array<SceneNode*, 2> m_armPivots{};
     glm::vec3 m_bodyBasePosition{0.0f};
     float m_walkPhase = 0.0f;
     std::unique_ptr<Texture> m_texture;
