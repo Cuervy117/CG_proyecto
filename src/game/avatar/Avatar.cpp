@@ -4,6 +4,7 @@
 #include "SceneNode.h"
 #include "Texture.h"
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstdio>
@@ -36,7 +37,9 @@ struct PartGeometry
     std::vector<unsigned int> indices;
     std::unordered_map<std::string, unsigned int> vertexLookup;
     glm::vec3 positionSum{0.0f};
+    glm::vec3 attachmentSum{0.0f};
     unsigned int positionCount = 0;
+    unsigned int attachmentCount = 0;
     glm::vec3 pivot{0.0f};
 };
 
@@ -52,6 +55,15 @@ PartId classifyGroup(const std::string& group)
     if (group == "Head" || group == "Neck" || contains(group, "Jaw") ||
         contains(group, "Tongue"))
         return Head;
+
+    const bool forelegRigPart = contains(group, "Shoulder") ||
+        contains(group, "Elbow") || contains(group, "Hand") ||
+        contains(group, "Thumb") || contains(group, "Index") ||
+        contains(group, "Pinky") || contains(group, "Middle");
+    if (forelegRigPart && group.rfind("R_", 0) == 0)
+        return RightFrontLeg;
+    if (forelegRigPart && group.rfind("L_", 0) == 0)
+        return LeftFrontLeg;
 
     const bool front = contains(group, "_Front_");
     const bool back = contains(group, "_Back_");
@@ -162,6 +174,7 @@ bool loadObjParts(const std::string& path, std::array<PartGeometry, PartCount>& 
     std::vector<glm::vec2> texcoords;
     std::vector<glm::vec3> normals;
     PartId activePart = Body;
+    std::string activeGroup;
     std::string line;
     while (std::getline(input, line))
     {
@@ -188,9 +201,8 @@ bool loadObjParts(const std::string& path, std::array<PartGeometry, PartCount>& 
         }
         else if (kind == "g" || kind == "o")
         {
-            std::string group;
-            row >> group;
-            activePart = classifyGroup(group);
+            row >> activeGroup;
+            activePart = classifyGroup(activeGroup);
         }
         else if (kind == "f")
         {
@@ -208,6 +220,17 @@ bool loadObjParts(const std::string& path, std::array<PartGeometry, PartCount>& 
                     valid = false;
                     break;
                 }
+                if ((activePart == Head && activeGroup == "Neck") ||
+                    (activePart == Tail && activeGroup == "Tail1") ||
+                    (activePart == RightFrontLeg && activeGroup == "R_Shoulder") ||
+                    (activePart == LeftFrontLeg && activeGroup == "L_Shoulder"))
+                {
+                    const std::size_t offset = static_cast<std::size_t>(vertexIndex) * 8;
+                    PartGeometry& part = parts[activePart];
+                    part.attachmentSum += glm::vec3(part.vertices[offset],
+                        part.vertices[offset + 1], part.vertices[offset + 2]);
+                    ++part.attachmentCount;
+                }
                 face.push_back(vertexIndex);
             }
             if (!valid || face.size() < 3)
@@ -221,11 +244,46 @@ bool loadObjParts(const std::string& path, std::array<PartGeometry, PartCount>& 
         }
     }
 
-    for (PartGeometry& part : parts)
+    for (std::size_t partIndex = 0; partIndex < parts.size(); ++partIndex)
     {
+        PartGeometry& part = parts[partIndex];
         if (part.indices.empty() || part.positionCount == 0)
             continue;
         part.pivot = part.positionSum / static_cast<float>(part.positionCount);
+        if (part.attachmentCount > 0)
+        {
+            part.pivot = part.attachmentSum /
+                static_cast<float>(part.attachmentCount);
+        }
+
+        // Put each leg hinge at the upper attachment point instead of the
+        // mesh centroid; otherwise the limb barely swings and looks welded on.
+        if (partIndex >= RightFrontLeg && part.attachmentCount == 0)
+        {
+            float minY = part.vertices[1];
+            float maxY = part.vertices[1];
+            for (std::size_t i = 0; i < part.vertices.size(); i += 8)
+            {
+                minY = std::min(minY, part.vertices[i + 1]);
+                maxY = std::max(maxY, part.vertices[i + 1]);
+            }
+            const float hingeBand = (maxY - minY) * 0.12f;
+            glm::vec2 hingeXZ(0.0f);
+            unsigned int hingeCount = 0;
+            for (std::size_t i = 0; i < part.vertices.size(); i += 8)
+            {
+                if (part.vertices[i + 1] >= maxY - hingeBand)
+                {
+                    hingeXZ += glm::vec2(part.vertices[i], part.vertices[i + 2]);
+                    ++hingeCount;
+                }
+            }
+            if (hingeCount > 0)
+            {
+                hingeXZ /= static_cast<float>(hingeCount);
+                part.pivot = glm::vec3(hingeXZ.x, maxY, hingeXZ.y);
+            }
+        }
         for (std::size_t i = 0; i < part.vertices.size(); i += 8)
         {
             part.vertices[i] -= part.pivot.x;
@@ -321,16 +379,20 @@ void Avatar::update(float dt, const glm::vec3& direction, float speed)
     if (speed > 0.05f && directionLength2 > 0.0001f)
     {
         m_walkPhase = std::fmod(m_walkPhase + safeDt * (4.0f + speed * 2.0f), 6.2831853f);
-        const float stride = std::sin(m_walkPhase) * 0.52f;
-        const float oppositeStride = std::sin(m_walkPhase + 3.1415926f) * 0.52f;
-        m_legPivots[0]->rotationEuler.x = stride;
+        // The exported Rek'Sai OBJ runs along Z with its feet below the body
+        // on Y. From the side, X is the hinge axis for a visible stride.
+        const float stride = std::sin(m_walkPhase) * 1.05f;
+        const float oppositeStride = std::sin(m_walkPhase + 3.1415926f) * 1.05f;
+        const float frontStride = stride * 0.32f;
+        const float frontOppositeStride = oppositeStride * 0.32f;
+        m_legPivots[0]->rotationEuler.x = frontStride;
         m_legPivots[3]->rotationEuler.x = stride;
-        m_legPivots[1]->rotationEuler.x = oppositeStride;
+        m_legPivots[1]->rotationEuler.x = frontOppositeStride;
         m_legPivots[2]->rotationEuler.x = oppositeStride;
         m_bodyPivot->position.y = m_bodyBasePosition.y +
-            std::abs(std::sin(m_walkPhase * 2.0f)) * 0.035f;
-        m_headPivot->rotationEuler.x = std::sin(m_walkPhase * 2.0f) * 0.04f;
-        m_tailPivot->rotationEuler.y = std::sin(m_walkPhase * 0.5f) * 0.22f;
+            std::abs(std::sin(m_walkPhase * 2.0f)) * 0.02f;
+        m_headPivot->rotationEuler.x = std::sin(m_walkPhase * 2.0f) * 0.26f;
+        m_tailPivot->rotationEuler.x = std::sin(m_walkPhase * 0.75f) * 0.6f;
     }
     else
     {

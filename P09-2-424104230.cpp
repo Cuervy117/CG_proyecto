@@ -550,15 +550,9 @@ int main()
 	}
 	SceneNode* nodoAvatar = rekSaiAvatar.root();
 
-	SceneNode* pivotePrueba = nodoAvatar->add(std::make_unique<SceneNode>("pivote_prueba"));
-	pivotePrueba->position = glm::vec3(0.0f, 1.0f, 0.0f);
-
-	SceneNode* marcadorPrueba = pivotePrueba->add(std::make_unique<SceneNode>("marcador_prueba"));
-	marcadorPrueba->position = glm::vec3(0.0f, 0.0f, 0.8f);
-	marcadorPrueba->scale = glm::vec3(0.35f);
-	marcadorPrueba->tint = glm::vec3(1.0f, 0.0f, 1.0f);
-	marcadorPrueba->setMesh(geometria.vegetacionMesh);
-	marcadorPrueba->setTexture(&recursos.plainTexture);
+	SceneNode* objetivoCamaraFijo = escena.root.add(
+		std::make_unique<SceneNode>("c.avatar.reksai.camera_anchor"));
+	objetivoCamaraFijo->position = glm::vec3(0.0f, REKSAI_POS.y, 0.0f);
 
 	SceneNode* nodoNave = escena.root.add(std::make_unique<SceneNode>("nave_prueba"));
 	nodoNave->position = glm::vec3(18.0f, 8.0f, 0.0f);
@@ -569,6 +563,7 @@ int main()
 	{
 		nodoNave->setModel(&recursos.naveModel);
 	}
+	nodoNave->visible = false;
 
 	escena.updateWorld();
 	probarChaseRekSai(*nodoAvatar);
@@ -577,7 +572,7 @@ int main()
 
 	CameraDirector director;
 	director.setMode(CameraMode::Planeta);
-	const SceneNode* objetivoCamara = nodoAvatar;
+	const SceneNode* objetivoCamara = objetivoCamaraFijo;
 
 	const float aspecto = (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight();
 	const glm::mat4 projection = director.projection(aspecto);
@@ -593,24 +588,21 @@ int main()
 		if (dt < 0.0f) dt = 0.0f;
 
 		glfwPollEvents();
-		objetivoCamara = actualizarCamaraPrueba(mainWindow, director, *nodoAvatar, *nodoNave);
 
-		const float t = (float)glfwGetTime();
-		const glm::vec3 previousAvatarPosition = nodoAvatar->position;
-		const glm::vec3 nextAvatarPosition(
-			4.0f * sinf(t * 0.5f), REKSAI_POS.y, 4.0f * cosf(t * 0.5f));
-		const glm::vec3 avatarDirection = nextAvatarPosition - previousAvatarPosition;
-		const float avatarSpeed = dt > 0.0f
-			? glm::length(avatarDirection) / dt
-			: 0.0f;
-		rekSaiAvatar.setPosition(nextAvatarPosition);
-		rekSaiAvatar.update(dt, avatarDirection, avatarSpeed);
-		pivotePrueba->rotationEuler.y = 1.2f * sinf(t * 1.5f);
+		// Keep the preview planted and side-on so the walk cycle is easy to see.
+		// The previous circular path rotated and translated the whole character,
+		// making the limb motion look like floating instead of walking.
+		const glm::vec3 avatarDirection(0.0f, 0.0f, 1.0f);
+		rekSaiAvatar.setPosition(REKSAI_POS);
+		rekSaiAvatar.update(dt, avatarDirection, 1.2f);
 
 		escena.updateWorld();
 		director.update(dt, *objetivoCamara);
 
-		const glm::mat4 vista = director.view();
+		const glm::vec3 objetivoVista(0.0f, REKSAI_POS.y + 1.8f, 0.0f);
+		const glm::vec3 posicionVista(12.0f, REKSAI_POS.y + 3.8f, 0.0f);
+		const glm::mat4 vista = glm::lookAt(posicionVista, objetivoVista,
+			glm::vec3(0.0f, 1.0f, 0.0f));
 		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
