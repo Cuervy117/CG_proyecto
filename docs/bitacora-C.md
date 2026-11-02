@@ -48,7 +48,7 @@ estado: en curso
 
 ## 2. Planeación vigente — 30-oct-2026
 
-David confirmó el reparto: B = Jonhatan y C = Venancio. En corto, a mí me toca hacer que Rek’Sai y la criatura N5 funcionen como avatar, conectar controles y modos, y después meterlo al programa y mostrar la información básica en pantalla. B se encarga del mundo y de sus naves/puertas. El plan completo está en `PLAN_MAESTRO.md`.
+David confirmó el reparto: Jonhatan quedó en B y yo en C. Me toca hacer que Rek’Sai y la criatura N5 funcionen como avatar, conectar controles y modos, y después meterlos al programa y mostrar la información básica en pantalla. B se encarga del mundo y de sus naves/puertas. El plan completo está en `PLAN_MAESTRO.md`.
 
 Los hitos con letra C son las tareas de mi rol. Las rutas `src/...` son carpetas/archivos del código donde se trabaja; no son tareas aparte. Los modelos y sus imágenes deben quedar en sus carpetas para que el programa los encuentre. Cada integrante redacta su parte de la documentación.
 
@@ -69,12 +69,12 @@ Esta tabla habla del resultado de **todo el equipo**, no solo de mi trabajo. `Pa
 
 ## 3. Hitos
 
-En esta tabla, **Hora de referencia** es la hora del reloj que quedó anotada para ese avance; no significa cuánto duró. **Tiempo trabajado** es la duración real que me confirmaste. Para no contar lo mismo varias veces, los totales por día se anotan una sola vez en la sección 4; las filas de hitos apuntan a ese registro.
+En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese avance; no significa cuánto duró. **Tiempo trabajado** es cuánto trabajé realmente. Para no contar lo mismo varias veces, anoto el total por día una sola vez en la sección 4; las filas de hitos apuntan a ese registro.
 
 | ID | Fecha | Hora de referencia | Hito | Qué hice, dicho sencillo | Evidencia | Tiempo trabajado | Estado |
 |---|---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — | — |
-| H-DB0 | 2026-10-17 | No registrada | Recursos Dragon Ball preparados localmente | Se reunieron modelos de referencia de Gohan/Cámara del Tiempo y se generaron siete modelos sencillos propios. Fue preparación local, no integración al mapa. Venancio aclara que el mapa actual no tiene modelo/personaje de Gohan; la propuesta aún enumera D3 como referencia y el equipo debe confirmar si se conserva. | `assets/dragon_ball/LEEME.md`; inventario, verificación y vista previa locales; fuera de `feat/c-avatar` y del Drive revisado | No registradas | Preparación local hecha; D3 por confirmar con el equipo |
+| H-DB0 | 2026-10-17 | No registrada | Recursos Dragon Ball preparados localmente | Reuní modelos de referencia de Gohan/Cámara del Tiempo y preparé siete modelos sencillos propios. Hice esta parte en mi computadora; no la integré al mapa. En el mapa actual no hay un modelo/personaje de Gohan, aunque la propuesta todavía lo menciona como referencia D3; falta confirmarlo con el equipo. | `assets/dragon_ball/LEEME.md`; inventario, verificación y vista previa locales; fuera de `feat/c-avatar` y del Drive revisado | Sin registrar | Preparación local hecha; falta confirmar con el equipo si D3 se conserva |
 | H-C0 | 2026-10-31 | 18:42 CDMX | Clon y arranque local | Cloné el proyecto, me cambié a mi rama y junté localmente los cambios de A. Preparé los archivos de Rek’Sai y Gohan D3. En ese primer intento no pude compilar porque faltaban archivos del paquete de dependencias. | `Models/reksai.obj/.mtl`; `docs/recursos-C.md`; commit `aedcd41` | Parte de la hora total de H-C0/H-C1 del 31-oct; ver sección 4 | Parcial en ese momento; build local completado el 2-nov |
 | H-C0 actualización | 2026-10-31 | 19:14 CDMX | Textura de Rek’Sai | Copié la imagen de textura de Rek’Sai desde Drive. Aún no podía comprobarla en el programa porque faltaban dependencias. | `Textures/reksai.png`; `docs/recursos-C.md` | Parte de la hora total de H-C0/H-C1 del 31-oct; ver sección 4 | Parcial en ese momento; build local completado el 2-nov |
 | H-C1 parcial | 2026-10-31 | 19:57 CDMX | Entrada y controles | Dejé preparada la lectura del teclado, mouse y rueda, con las teclas WASD, Q/E y F1–F4. Falta conectarla a los modos y ubicaciones del programa y probarla junto con el trabajo del equipo. | `Input.cpp`, `Input.hpp`; commit `aedcd41` | Parte de la hora total de H-C0/H-C1 del 31-oct; ver sección 4 | Parcial |
@@ -126,14 +126,14 @@ En esta tabla, **Hora de referencia** es la hora del reloj que quedó anotada pa
 
 ## 3.1 Trabajo previo de recursos Dragon Ball
 
-Este material se preparó localmente el 17-oct, antes de que el reparto vigente moviera a C a Rek’Sai/avatar e integración. Lo dejo registrado como trabajo previo de Venancio en los elementos Dragon Ball; no significa que ya esté integrado ni subido a esta rama.
+Preparé este material en mi computadora el 17-oct, antes de que el reparto vigente me asignara Rek’Sai/avatar e integración. Lo anoto como trabajo previo de Dragon Ball; todavía no está integrado al mapa ni subido a esta rama.
 
 - Se reunieron tres recursos descargables de Gohan SSJ2 y la Cámara del Tiempo, con sus ZIP, OBJ/MTL, texturas y procedencia documentada.
-- Con apoyo de Codex se generaron versiones propias sencillas de cápsula saiyajin, estación inspirada en Freezer, domo de entrenamiento, cohete, llama, plataforma/torre y pista orbital, en OBJ/MTL/GLB con texturas.
+- Con apoyo de Codex generé versiones propias sencillas de una cápsula saiyajin, una estación inspirada en Freezer, un domo de entrenamiento, un cohete, una llama, una plataforma/torre y una pista orbital, en OBJ/MTL/GLB con texturas.
 - Se generó una vista previa y se ejecutó la verificación local de 17 archivos OBJ/GLB. Esto comprueba los archivos del paquete, no su carga en el ejecutable del equipo.
-- Evidencia anotada en el registro previo: `assets/dragon_ball/LEEME.md`, `inventario_modelos_propios.json`, `verificacion.json` y `vista_previa_modelos_propios.png`. No localicé estos archivos en el checkout de `feat/c-avatar` ni en el Drive compartido revisado. Como Gohan no aparece en el mapa actual según Venancio, confirmar con el equipo si D3 se conserva como referencia antes de tratar estos recursos como entrega pendiente.
-- Aclaración de Venancio (2026-11-02): en el mapa actual no hay un modelo de Gohan; lo que se observa son naves/cápsulas que abren y cierran. La propuesta identifica D3 como referencia de Gohan, así que su inclusión final queda por confirmar en el grupo. El plan asigna a B las animaciones de infraestructura (naves/puertas/paneles); no cuentan como trabajo C.
-- Horas: no quedaron registradas; no se asigna una cifra retroactiva.
+- Dejé como evidencia `assets/dragon_ball/LEEME.md`, `inventario_modelos_propios.json`, `verificacion.json` y `vista_previa_modelos_propios.png`. No encontré esos archivos en mi rama `feat/c-avatar` ni en el Drive compartido que revisé. Como en el mapa actual no hay un personaje Gohan y solo se ven naves/cápsulas que abren y cierran, tengo que confirmar en el grupo si D3 sigue siendo parte del proyecto.
+- El plan asigna a B las animaciones de naves, puertas y paneles; esa parte no es de mi rol C.
+- No anoté cuánto tiempo me tomó; no voy a inventar una cifra.
 
 ---
 
@@ -141,11 +141,11 @@ Este material se preparó localmente el 17-oct, antes de que el reparto vigente 
 
 | Fecha | Qué me propuse | Qué hice | Tiempo que trabajé |
 |---|---|---|---|
-| 2026-10-17 | Preparar recursos de la parte Dragon Ball | Busqué modelos de Gohan y la Cámara del Tiempo y preparé modelos sencillos de cápsula, estación, domo, cohete, llama, plataforma/torre y pista. Hice una vista previa y revisé los archivos en mi computadora; todavía no están integrados al programa del equipo. | Sin registrar; no voy a inventar el tiempo |
+| 2026-10-17 | Preparar recursos de la parte Dragon Ball | Busqué modelos de Gohan y la Cámara del Tiempo y preparé modelos sencillos de cápsula, estación, domo, cohete, llama, plataforma/torre y pista. Hice una vista previa y revisé los archivos en mi computadora; todavía no los integro al programa del equipo. | Sin registrar; no anoté cuánto tiempo me tomó |
 | 2026-10-30 | Empezar a preparar a Rek’Sai | Empecé a separar y preparar el modelo para poder animarlo. El total que confirmé para ese trabajo fue de unas 3 h entre el 30 y el 31; no recuerdo cuánto fue cada día. | Parte de ≈3 h entre 30–31 oct; el total se anota una sola vez |
 | 2026-10-31 | Preparar el proyecto, controles y avatar | Dejé lista mi rama, junté localmente el trabajo de A, preparé los archivos de Rek’Sai y su textura y avancé los controles. También acomodé el modelo para verlo acostado, como corresponde. El programa todavía no abría porque faltaban archivos; lo resolví el 2-nov. | ≈1 h para clonar/preparar el proyecto y controles; además, este día forma parte de las ≈3 h de Rek’Sai anotadas entre 30–31 oct |
-| 2026-11-01 | Animaciones y contenido según rol | Según recuerda Venancio, no se trabajó en el proyecto ese día. | 0 h reportadas por Venancio |
-| 2026-11-02 | Hacer que Rek’Sai se viera y caminara bien | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, abrí a Rek’Sai completa y con textura en la demo OpenGL, ajusté la cola y los brazos delanteros, y subí el paquete al Drive compartido. Falta probarlo con la versión de herramientas del equipo y unirlo al programa/mapa común. | ≈1 h en total, como me confirmaste; no está separado por actividad |
+| 2026-11-01 | Animaciones y contenido según rol | No trabajé en el proyecto ese día. | 0 h |
+| 2026-11-02 | Hacer que Rek’Sai se viera y caminara bien | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, abrí a Rek’Sai completa y con textura en la demo OpenGL, ajusté la cola y los brazos delanteros, y subí el paquete al Drive compartido. Me falta probarlo con la versión de herramientas del equipo y unirlo al programa/mapa común. | ≈1 h en total; no separé el tiempo por actividad |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
