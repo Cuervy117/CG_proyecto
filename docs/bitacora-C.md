@@ -89,6 +89,7 @@ Esta tabla es el resultado **conjunto**, por eso una tarea queda `pendiente` mie
 | H-C2 actualización | 2026-11-02 | Hora no registrada | Recursos Rek’Sai completados desde Drive | Localicé en el Drive compartido el OBJ, MTL y PNG del equipo; añadí el MTL faltante y ajusté su ruta de textura a `../Textures/reksai.png`. Sigue pendiente validarlo en el ejecutable. | Drive `Models/reksai/`, `Textures/reksai.png`; `Models/reksai.mtl` local | Sin horas registradas | En curso |
 | H-C2 actualización | 2026-11-02 | 11:20 CDMX | Prueba visual local de la textura | Importé `Models/reksai.obj` en Blender 5.2 con su MTL y la vista Material Preview mostró la textura sobre la malla. Confirma el mapeo OBJ/MTL/PNG en Blender; falta ejecutar y comprobar el cargador del proyecto. | Captura visible en Blender; `Models/reksai.obj`, `Models/reksai.mtl`, `Textures/reksai.png` | Sin horas de Venancio registradas | En curso |
 | H-C2 actualización | 2026-11-02 | 11:52 CDMX | Caminata de Rek’Sai en OpenGL | Conecté el avatar articulado al bucle de la escena de prueba: su desplazamiento alimenta dirección y velocidad de `Avatar::update`, que alterna patas y mueve cuerpo/cabeza/cola. Falta compilar y verlo dentro del ejecutable por dependencias faltantes. | `P09-2-424104230.cpp`; `src/game/avatar/Avatar.cpp`; modelo y textura en `Models/` y `Textures/` | Sin horas de Venancio registradas | En curso |
+| H-C2 actualización | 2026-11-02 | 13:05 CDMX | Render completo y bundle local | Corregí `MeshModel::CreateMeshModel`: reservaba solo 1/8 del buffer intercalado. Compilé con VS 2026/v145 y ejecuté la escena OpenGL; Rek’Sai texturizada ya aparece completa y articulada. Preparé y subí un ZIP local con dependencias y ejecutable; falta validar compilación con el toolset v143 acordado para el equipo e integrar en P1/main común. | `src/engine/Mesh_tn.cpp`; `P09-2-424104230.cpp`; `x64/Release/LabCGeIHC.local.exe`; [ZIP en Drive](https://drive.google.com/file/d/1y0RRxMR6n6LyBR34hjpAqKC_uwOlasbz/view?usp=drivesdk); SHA-256 `C52AF0CC42C4A738278BDB35DDFB48FC9B59E84E857E4D00B95316565520B157` | Sin horas de Venancio registradas | Hecho local; integración común pendiente |
 
 ---
 
@@ -112,7 +113,7 @@ Este material se preparó localmente el 17-oct, antes de que el reparto vigente 
 | 2026-10-30 | H-C0, H-C1, H-C2 y H-C3 | Inicié la preparación del modelo de Rek’Sai para el avatar articulado; las horas se registran acumuladas en H-C2 porque no quedó desglose por día. | Incluidas en total H-C2; sin desglose |
 | 2026-10-31 | H-C1/H-C2 y avanzar avatar | Clon y rama C preparados; integré localmente la rama A, preparé Gohan D3 y Rek’Sai con texturas. Dejé el mapeo base de controles en `Input.cpp/.hpp`; todavía falta conectarlo a `Experience` y probarlo en el ejecutable. Separé Rek’Sai por cuerpo, cabeza, cola y patas, y revisé en Blender la pose cuadrúpeda horizontal. El ZIP de dependencias sigue pendiente. | H-C2: ≈2 h acumuladas entre 30–31 oct, sin desglose diario; H-C1 y lo demás: por confirmar |
 | 2026-11-01 | Animaciones y contenido según rol | No encontré commits de C para esta fecha; si hubo trabajo fuera del repo, falta anotarlo con el avance y las horas reales. | Sin registro; confirmar |
-| 2026-11-02 | Revisar hitos y avanzar H-C2 | Con apoyo de Codex localicé el OBJ, MTL y PNG de Rek’Sai en Drive; probé visualmente la textura en Blender y conecté la caminata de `Avatar::update` al bucle OpenGL de la escena de prueba, usando dirección y velocidad del movimiento. El `.blend` no es la entrega de animación. Falta compilar y comprobar el ciclo en el ejecutable por dependencias faltantes. | Sin horas de Venancio registradas |
+| 2026-11-02 | Revisar hitos y avanzar H-C2 | Con apoyo de Codex corregí el tamaño del buffer de las mallas, compilé con el toolset local v145 y corrí Rek’Sai en OpenGL: ya se ve completa, con textura y articulación. También preparé el ZIP de dependencias/ejecutable y lo subí a Drive. Falta comprobarlo con el toolset v143 y meterlo en el main/mapa común. | Sin horas de Venancio registradas |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
@@ -125,9 +126,10 @@ Las horas se anotan al trabajar; — significa sin registrar, no cero horas real
 
 ## 5. Pendientes y bloqueos
 
-- [ ] Obtener de David el ZIP de dependencias y su SHA-256; las carpetas `utilidades` y `modelos` revisadas en Drive no contienen el ZIP.
+- [ ] Confirmar con David si el ZIP local v145 puede servir al equipo; el repo pide Assimp v143 y el paquete disponible se compiló con VS 2026/v145.
 - [x] Copiar `Textures/reksai.png` desde `Proyecto_final_CG/Textures`; queda pendiente verificar la carga en el ejecutable.
-- [ ] Copiar `Models/`, `Textures/`, `include/`, `lib/`, `glm/` y DLLs y verificar Release x64 desde la raíz.
+- [x] Preparar y subir a Drive un paquete local con `Models/`, `Textures/`, `include/`, `lib/`, `glm/`, DLLs y ejecutable (VS 2026/v145).
+- [ ] Verificar build con la configuración v143 del equipo y luego integrar avatar en P1/main común.
 - [x] Generar mi `AGENTS.md` local con datos comprobados (`PLAN_MAESTRO.md` §§14–15.1; no se commitea).
 - [x] Confirmar rama local `feat/c-avatar` y traer `origin/feat/a-motor` localmente.
 

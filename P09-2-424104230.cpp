@@ -176,11 +176,10 @@ static bool probarChaseRekSai(const SceneNode& avatar)
 		std::isfinite(rig.objetivo().y) && std::isfinite(rig.objetivo().z);
 	const bool ok = detras && separada && finita;
 
-	printf("A4.1 Chase RekSai: %s (avatar %.3f, %.3f, %.3f; camara %.3f, %.3f, %.3f; mallas %d)\n",
+	printf("A4.1 Chase RekSai: %s (avatar %.3f, %.3f, %.3f; camara %.3f, %.3f, %.3f)\n",
 		ok ? "OK" : "FALLO",
 		base.x, base.y, base.z,
-		rig.posicion().x, rig.posicion().y, rig.posicion().z,
-		rekSaiModel.getMeshCount());
+		rig.posicion().x, rig.posicion().y, rig.posicion().z);
 	fflush(stdout);
 	return ok;
 }

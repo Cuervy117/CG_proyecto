@@ -190,6 +190,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);src\engine;src\scene;src\game;src\game\cameras;src\game\world;src\game\avatar;src\game\anim;src\ui;include;glm;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -207,6 +208,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);src\engine;src\scene;src\game;src\game\cameras;src\game\world;src\game\avatar;src\game\anim;src\ui;include;glm;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
