@@ -481,32 +481,6 @@ static bool probarPivotes()
 	return pivotesOk && camaraOk;
 }
 
-static const SceneNode* actualizarCamaraPrueba(Window& ventana, CameraDirector& director,
-	const SceneNode& avatar, const SceneNode& nave)
-{
-	static bool anterior[4] = { false, false, false, false };
-	static const SceneNode* objetivo = &avatar;
-
-	bool* teclas = ventana.getsKeys();
-	const int teclasModo[4] = { GLFW_KEY_F1, GLFW_KEY_F2, GLFW_KEY_F3, GLFW_KEY_F4 };
-	const SceneNode* objetivos[4] = { &avatar, &avatar, &nave, &nave };
-	const char* nombres[4] = { "Planeta", "Carrera", "Vuelo", "Observacion" };
-
-	for (int i = 0; i < 4; ++i)
-	{
-		const bool presionada = teclas[teclasModo[i]];
-		if (presionada && !anterior[i] && director.setModeForKey(teclasModo[i]))
-		{
-			objetivo = objetivos[i];
-			printf("Camara: %s\n", nombres[i]);
-			fflush(stdout);
-		}
-		anterior[i] = presionada;
-	}
-
-	return objetivo;
-}
-
 int main()
 {
 	probarJerarquiaEscena();
@@ -519,6 +493,7 @@ int main()
 
 	Window mainWindow(1366, 768);
 	mainWindow.Initialise();
+	cgame::InputCapture inputCapture(mainWindow);
 
 	CreateObjects();
 	crearShaders();
@@ -550,10 +525,6 @@ int main()
 	}
 	SceneNode* nodoAvatar = rekSaiAvatar.root();
 
-	SceneNode* objetivoCamaraFijo = escena.root.add(
-		std::make_unique<SceneNode>("c.avatar.reksai.camera_anchor"));
-	objetivoCamaraFijo->position = glm::vec3(0.0f, REKSAI_POS.y, 0.0f);
-
 	SceneNode* nodoNave = escena.root.add(std::make_unique<SceneNode>("nave_prueba"));
 	nodoNave->position = glm::vec3(18.0f, 8.0f, 0.0f);
 	nodoNave->rotationEuler.y = glm::radians(30.0f);
@@ -572,7 +543,8 @@ int main()
 
 	CameraDirector director;
 	director.setMode(CameraMode::Planeta);
-	const SceneNode* objetivoCamara = objetivoCamaraFijo;
+	glm::vec3 posicionAvatar = REKSAI_POS;
+	const float velocidadAvatar = 2.5f;
 
 	const float aspecto = (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight();
 	const glm::mat4 projection = director.projection(aspecto);
@@ -589,20 +561,31 @@ int main()
 
 		glfwPollEvents();
 
-		// Keep the preview planted and side-on so the walk cycle is easy to see.
-		// The previous circular path rotated and translated the whole character,
-		// making the limb motion look like floating instead of walking.
-		const glm::vec3 avatarDirection(0.0f, 0.0f, 1.0f);
-		rekSaiAvatar.setPosition(REKSAI_POS);
-		rekSaiAvatar.update(dt, avatarDirection, 1.2f);
+		const cgame::InputFrame& input = inputCapture.update(dt);
+		const cgame::ControlFrame controls = cgame::mapControls(input);
+		if (controls.planetMode) director.setMode(CameraMode::Planeta);
+		if (controls.raceMode) director.setMode(CameraMode::Carrera);
+		if (controls.flightMode) director.setMode(CameraMode::Vuelo);
+		if (controls.observationMode) director.setMode(CameraMode::Observacion);
+
+		glm::vec3 avatarDirection(controls.movementXZ.x, 0.0f,
+			controls.movementXZ.y);
+		const float directionLength = glm::length(avatarDirection);
+		if (directionLength > 1.0f)
+			avatarDirection /= directionLength;
+		if (glm::length(avatarDirection) > 0.001f)
+		{
+			posicionAvatar += avatarDirection * velocidadAvatar * dt;
+			posicionAvatar.x = glm::clamp(posicionAvatar.x, -8.0f, 8.0f);
+			posicionAvatar.z = glm::clamp(posicionAvatar.z, -8.0f, 8.0f);
+		}
+		rekSaiAvatar.setPosition(posicionAvatar);
+		rekSaiAvatar.update(dt, avatarDirection,
+			directionLength > 0.001f ? velocidadAvatar : 0.0f);
 
 		escena.updateWorld();
-		director.update(dt, *objetivoCamara);
-
-		const glm::vec3 objetivoVista(0.0f, REKSAI_POS.y + 1.8f, 0.0f);
-		const glm::vec3 posicionVista(12.0f, REKSAI_POS.y + 3.8f, 0.0f);
-		const glm::mat4 vista = glm::lookAt(posicionVista, objetivoVista,
-			glm::vec3(0.0f, 1.0f, 0.0f));
+		director.update(dt, *nodoAvatar);
+		const glm::mat4 vista = director.view();
 		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
