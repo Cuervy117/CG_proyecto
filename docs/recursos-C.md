@@ -12,11 +12,11 @@ La propuesta entregada ubica a Gohan como referencia Dragon Ball en D3 (imagen o
 
 ## Rek'Sai recibido del equipo
 
-`Models/reksai.obj` y `Textures/reksai.png` están colocados en esas rutas en el checkout local de `feat/c-avatar` para coincidir con los argumentos por defecto de `Avatar::attach`. El OBJ trae coordenadas UV y grupos que el avatar reparte entre cuerpo, cabeza, cola y cuatro patas; `Avatar::attach` carga el PNG y lo asigna a cada pieza. La revisión del archivo encontró UVs y geometría para las siete piezas, pero esto no sustituye probarlo en el ejecutable.
+`Models/reksai.obj`, `Models/reksai.mtl` y `Textures/reksai.png` están colocados en esas rutas en el checkout local de `feat/c-avatar`. El OBJ/MTL y el PNG se localizaron en el Drive compartido del equipo. El OBJ trae coordenadas UV y grupos que el avatar reparte entre cuerpo, cabeza, cola y cuatro patas; `Avatar::attach` carga el PNG y lo asigna a cada pieza. La revisión del archivo encontró UVs y geometría para las siete piezas, pero esto no sustituye probarlo en el ejecutable.
 
 - SHA-256 local del OBJ: `4ABFE2537CFCF4EB05D475BA652041941703806D85470646983FF4CE69C0D4B3`.
 - SHA-256 local de la textura: `9C9984C51848EB7306DE0DC0F9C01C930D4F7DA99B642774A175460007979FFB`.
-- El OBJ referencia `reksai.mtl`; esa copia de trabajo no lo incluye. El cargador de C usa el PNG explícito y no lee el MTL. Para importar el OBJ directamente en Blender/otro visor, conservar también el MTL original.
+- El OBJ referencia `reksai.mtl`; el MTL apunta a `../Textures/reksai.png`, consistente con la estructura `Models/` y `Textures/`. El cargador de C usa el PNG explícito y no lee el MTL; este sirve al abrir el OBJ directamente en Blender/otro visor.
 - `Models/` y `Textures/` siguen ignorados por Git; los archivos permanecen locales y deben compartirse con el paquete acordado por el equipo.
 
 ## Empaquetado
