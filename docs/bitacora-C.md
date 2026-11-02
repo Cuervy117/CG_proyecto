@@ -48,7 +48,7 @@ estado: en curso
 
 ## 2. Planeación vigente — 30-oct-2026
 
-David confirmó el reparto: Jonhatan quedó en B y yo en C. Me toca hacer que Rek’Sai y la criatura N5 funcionen como avatar, conectar controles y modos, y después meterlos al programa y mostrar la información básica en pantalla. B se encarga del mundo y de sus naves/puertas. El plan completo está en `PLAN_MAESTRO.md`.
+David confirmó el reparto: Jonhatan quedó en B y yo en C. Me toca integrar a Rek’Sai como el avatar que controlamos por los mapas y, aparte, animar la criatura tipo Kurama que el plan coloca en N5, en Shinobi. También me toca conectar controles/modos y mostrar información básica en pantalla. B se encarga del mundo y de sus naves/puertas. El plan completo está en `PLAN_MAESTRO.md`.
 
 Los hitos con letra C son las tareas de mi rol. Las rutas `src/...` son carpetas/archivos del código donde se trabaja; no son tareas aparte. Los modelos y sus imágenes deben quedar en sus carpetas para que el programa los encuentre. Cada integrante redacta su parte de la documentación.
 
@@ -97,10 +97,10 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C0 — abrir el proyecto | **Listo en mi PC**: pude abrir el programa y ver los recursos. | Probarlo con la misma versión de herramientas que usa el equipo. |
 | H-C1 — controles | **A medias**: ya se leen las teclas y el mouse. | Hacer que esas teclas cambien de verdad el modo y el lugar en el programa del equipo. |
 | H-C2 — Rek’Sai | **Lista en mi demo OpenGL y en Drive**: se ve completa, con textura y se mueven patas, cabeza, cola y brazos delanteros. | Probarla con las herramientas del equipo y luego meterla al mapa común (H-C3). |
-| Criatura N5 | **Pendiente**: todavía no está hecha en esta rama. | Cuando B deje el punto N5 en el mapa, preparar la criatura para que recorra puntos moviendo patas/cola. |
-| H-C3 — avatar en el mapa | **Pendiente**: Rek’Sai funciona en una escena de prueba, pero todavía no está en el mapa/programa principal. | Ponerla en P1, hacer que la cámara la siga y comprobarlo en el programa del equipo. |
-| H-C4 — pasar entre mapas | **Pendiente en esta rama**. | Hacer que la tecla E permita salir de un mapa y entrar al otro. |
-| H-C5 — modos F1–F4 | **A medias**: las teclas ya están preparadas. | Conectarlas a los cuatro modos del proyecto y comprobar que funcionen. |
+| Criatura N5 tipo Kurama | **Pendiente**: es otra criatura, aparte de Rek’Sai; todavía no está hecha en esta rama. | Cuando B deje el punto N5 en Shinobi, preparar su caminata moviendo patas y colas. |
+| H-C3 — avatar en el mapa | **Pendiente**: Rek’Sai funciona en una escena de prueba, pero todavía no está en el mapa/programa principal. | Ponerla en P1, hacer que la cámara la siga en tercera persona y comprobarlo en el programa del equipo. |
+| H-C4 — pasar entre mapas | **Pendiente en esta rama**. | Hacer que E permita entrar a un planeta al acercarme en modo nave y volver al espacio desde una cápsula del planeta. |
+| H-C5 — modos F1–F4 | **A medias**: las teclas ya están preparadas. | Conectarlas y probarlas: F1 planeta, F2 carrera, F3 vuelo y F4 observación. |
 | H-C6 — información en pantalla | **Pendiente en esta rama**. | Mostrar en pantalla en qué modo y lugar estás y qué acción puedes hacer. |
 
 ### En sencillo: códigos y palabras que aparecen arriba
@@ -110,13 +110,14 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C0 | Dejar el proyecto listo para abrir y compilar en mi computadora. |
 | H-C1 | Hacer que el programa lea los controles del teclado y mouse. |
 | H-C2 | Preparar a Rek’Sai y hacer que sus partes se muevan al caminar. |
-| H-C3 | Poner el avatar en el mapa principal y hacer que la cámara lo siga. |
-| H-C4 | Poder pasar de un mapa a otro con la tecla E. |
-| H-C5 | Hacer que F1–F4 cambien entre los modos del proyecto. |
+| H-C3 | Poner a Rek’Sai en el mapa principal y hacer que la cámara la siga en tercera persona. |
+| H-C4 | Usar E para entrar a un planeta desde la nave o volver al espacio desde una cápsula. |
+| H-C5 | Cambiar de modo con F1 planeta, F2 carrera, F3 vuelo y F4 observación. |
 | H-C6 / HUD | Mostrar en pantalla el modo y el lugar donde estás. |
-| N5 | Punto del mapa donde B debe dejar un lugar para la criatura que me toca animar. |
+| N5 | Lugar en el planeta Shinobi para una criatura tipo Kurama. Es aparte de Rek’Sai; B deja el punto y yo hago su caminata. |
 | `main` / programa común | La versión principal donde se juntan los trabajos del equipo. |
-| P1 | El planeta donde el plan pide colocar primero al avatar. |
+| P1 | El planeta Vacío, donde el plan pide colocar primero a Rek’Sai. |
+| Primera/tercera persona | El plan sí pide recorrer los planetas en tercera persona. No encontré que exija una cámara en primera persona. |
 | OpenGL | La ventana del programa donde se dibuja y se probó Rek’Sai. |
 | OBJ / MTL / PNG | Archivo del modelo / archivo que describe su material / imagen de textura. |
 | v143 / v145 | Dos versiones de las herramientas de compilación; falta usar la misma que acordó el equipo. |
@@ -159,14 +160,15 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 ## 5. Pendientes y bloqueos
 
 - [ ] Preguntarle a David si el paquete que armé en mi computadora sirve para el equipo; está hecho con una versión distinta de la que pide el proyecto.
-- [x] Copiar `Textures/reksai.png` desde el Drive compartido y comprobar su carga en la demo OpenGL local; la verificación con v143 sigue pendiente.
+- [x] Copiar `Textures/reksai.png` desde el Drive compartido y comprobar su carga en mi demo OpenGL local.
 - [x] Preparar y subir a Drive un paquete local con `Models/`, `Textures/`, `include/`, `lib/`, `glm/`, DLLs y ejecutable (VS 2026/v145).
 - [x] Preparar y subir a Drive el paquete completo de la demo OpenGL con fuentes y `Models/reksai.obj/.mtl` + `Textures/reksai.png`, conservando las rutas que espera el código.
 - [ ] Volver a compilar con la versión de herramientas acordada por el equipo.
 - [ ] Conectar los controles ya preparados con el cambio de modos y lugares.
 - [ ] Poner Rek’Sai en P1/mapa principal, hacer que la cámara la siga y guardar una captura de la prueba común.
-- [ ] Implementar/integrar la criatura N5 de C: recorrido entre puntos con patas/colas en movimiento; requiere el ancla de B.
-- [ ] Terminar el cambio entre mapas con E, conectar F1–F4 a los modos y mostrar modo/lugar en pantalla.
+- [ ] Animar la criatura tipo Kurama de N5 en Shinobi; B debe dejar primero el punto donde va colocada.
+- [ ] Hacer que E permita entrar/salir de los planetas y conectar F1 planeta, F2 carrera, F3 vuelo y F4 observación.
+- [ ] Mostrar en pantalla el modo, el planeta/lugar y la acción disponible.
 - [x] Generar mi `AGENTS.md` local con datos comprobados (`PLAN_MAESTRO.md` §§14–15.1; no se commitea).
 - [x] Confirmar rama local `feat/c-avatar` y traer `origin/feat/a-motor` localmente.
 
