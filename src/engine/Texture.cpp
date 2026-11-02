@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "CommonValues.h"
+#include <cmath>
 
 Texture::Texture()
 {
@@ -25,7 +26,10 @@ bool Texture::LoadTextureA()
 	unsigned char *texData = stbi_load(fileLocation, &width, &height, &bitDepth,STBI_rgb_alpha); //el tipo unsigned char es para un array de bytes de la imagen, obtener datos de la imagen 
 	if (!texData)
 	{
-		printf("No se encontró el archivo: %s", fileLocation);
+		printf("No se encontro el archivo: %s\n", fileLocation);
+		// Antes seguía de largo y regresaba true con una textura vacía: el modelo salía negro
+		// y Model.cpp nunca usaba plain.png como respaldo.
+		return false;
 	}
 	glGenTextures(1, &textureID); //parecido al VAO: crear una textura y asignarle un índice
 	glBindTexture(GL_TEXTURE_2D, textureID);//se indica que la textura es de tipo 2D, para superficies planas es suficiente esta textura
@@ -38,11 +42,20 @@ bool Texture::LoadTextureA()
 	/*GL_TEXTURE_MIN_FILTER: Para más cerca o textura se escala a menor tamaño. GL_TEXTURE_MAG_FILTER: Para más lejos o textura se escala a mayor tamaño. 
 	GL_LINEAR  aplica sampling y blending de texels más cercanos. GL_NEAREST aplica sample de texel más cercano
 	*/
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// GL_LINEAR_MIPMAP_LINEAR usa los mipmaps que genera glGenerateMipmap: sin esto las texturas
+	// lejanas o muy repetidas (pisos) parpadean y se ven con ruido
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
 	glGenerateMipmap(GL_TEXTURE_2D);
+	// filtro anisotrópico: suelo, corteza y piel se ven nítidos aunque se miren de lado
+	if (GLEW_EXT_texture_filter_anisotropic)
+	{
+		GLfloat maximo = 1.0f;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maximo);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, fminf(8.0f, maximo));
+	}
 	glBindTexture(GL_TEXTURE_2D, 0);//para hacer un unbind de la textura
 	stbi_image_free(texData); //para liberar la información de la imagen
 	return true;
@@ -54,7 +67,10 @@ bool Texture::LoadTexture()
 	unsigned char *texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0); //el tipo unsigned char es para un array de bytes de la imagen, obtener datos de la imagen 
 	if (!texData)
 	{
-		printf("No se encontró el archivo: %s", fileLocation);
+		printf("No se encontro el archivo: %s\n", fileLocation);
+		// Antes seguía de largo y regresaba true con una textura vacía: el modelo salía negro
+		// y Model.cpp nunca usaba plain.png como respaldo.
+		return false;
 	}
 	glGenTextures(1, &textureID); //parecido al VAO: crear una textura y asignarle un índice
 	glBindTexture(GL_TEXTURE_2D, textureID);//se indica que la textura es de tipo 2D, para superficies planas es suficiente esta textura
@@ -67,7 +83,9 @@ bool Texture::LoadTexture()
 	/*GL_TEXTURE_MIN_FILTER: Para más cerca o textura se escala a menor tamaño. GL_TEXTURE_MAG_FILTER: Para más lejos o textura se escala a mayor tamaño.
 	GL_LINEAR  aplica sampling y blending de texels más cercanos. GL_NEAREST aplica sample de texel más cercano
 	*/
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// GL_LINEAR_MIPMAP_LINEAR usa los mipmaps que genera glGenerateMipmap: sin esto las texturas
+	// lejanas o muy repetidas (pisos) parpadean y se ven con ruido
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);

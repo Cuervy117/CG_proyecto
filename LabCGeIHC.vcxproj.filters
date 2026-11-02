@@ -72,6 +72,9 @@
     <ClInclude Include="Input.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\world\Superficie.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\Camera.cpp">
@@ -119,10 +122,10 @@
     <ClCompile Include="src\engine\Create.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="P09-424104230.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="P09-2-424104230.cpp">
+    <ClCompile Include="src\game\world\Superficie.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,5 +162,11 @@
     </None>
     <None Include="shaders\shader_texture.frag" />
     <None Include="shaders\shader_texture.vert" />
+    <None Include="src\scene\.gitkeep" />
+    <None Include="src\game\cameras\.gitkeep" />
+    <None Include="src\game\world\.gitkeep" />
+    <None Include="src\game\avatar\.gitkeep" />
+    <None Include="src\game\anim\.gitkeep" />
+    <None Include="src\ui\.gitkeep" />
   </ItemGroup>
 </Project>

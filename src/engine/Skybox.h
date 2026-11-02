@@ -16,6 +16,9 @@ public:
 	Skybox();
 	Skybox(std::vector<std::string> faceLocations);
 	void DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	// Ambientacion del cielo: 'tinte' multiplica el cubemap y 'bruma' (rgb = color, a = intensidad)
+	// pinta el horizonte. Con tinte (1,1,1) y bruma.a = 0 el skybox se ve como siempre.
+	void SetAmbiente(const glm::vec3& tinte, const glm::vec4& bruma);
 		
 	~Skybox();
 private:
@@ -23,6 +26,9 @@ private:
 	Shader* skyShader;
 	GLuint textureId;
 	GLuint uniformProjection, uniformView;
+	GLuint uniformTinte, uniformBruma;
+	glm::vec3 tinteCielo;
+	glm::vec4 brumaHorizonte;
 
 };
 

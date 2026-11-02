@@ -17,6 +17,7 @@ public:
 	void mouseControl(GLfloat xChange, GLfloat yChange);
 
 	glm::vec3 getCameraPosition();
+	void setPosition(const glm::vec3& nuevaPosicion) { position = nuevaPosicion; }   // para limitar la zona caminable
 	glm::vec3 getCameraDirection();
 	glm::mat4 calculateViewMatrix();
 

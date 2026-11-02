@@ -69,6 +69,14 @@ struct Recursos
 	Model satelite_panel_izq;
 	Model satelite_aspa;
 
+	//jjyjyhtjgk
+	Model planetaSelvaticoModel;
+	Model planetaRocosoModel;
+	Model capsulaCuerpoModel;
+	Model capsulaPuertaModel;
+	Model alaDerModel;
+	Model alaIzqModel;
+
 	// Skybox
 	Skybox skybox;
 };

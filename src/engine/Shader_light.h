@@ -32,6 +32,7 @@ public:
 	GLuint GetEyePositionLocation();
 	GLuint getColorLocation();
 	GLuint getOffsetLocation();   // Practica 9: uniform vec2 toffset del vertex shader
+	GLuint GetShaderID() { return shaderID; }   // id del programa, para pedir uniforms extra con glGetUniformLocation
 
 	void SetDirectionalLight(DirectionalLight * dLight);
 	void SetPointLights(PointLight * pLight, unsigned int lightCount);

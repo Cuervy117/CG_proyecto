@@ -4,6 +4,12 @@
 
 Skybox::Skybox()
 {
+	skyMesh = nullptr;
+	skyShader = nullptr;
+	textureId = 0;
+	uniformProjection = uniformView = uniformTinte = uniformBruma = 0;
+	tinteCielo = glm::vec3(1.0f);
+	brumaHorizonte = glm::vec4(0.0f);
 }
 
 Skybox::Skybox(std::vector<std::string> faceLocations)
@@ -12,6 +18,11 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	skyShader->CreateFromFiles("shaders/skybox.vert", "shaders/skybox.frag");
 	uniformProjection = skyShader->GetProjectionLocation();
 	uniformView = skyShader->GetViewLocation();
+	// uniforms de ambientacion (skybox.frag)
+	uniformTinte = glGetUniformLocation(skyShader->GetShaderID(), "tinteCielo");
+	uniformBruma = glGetUniformLocation(skyShader->GetShaderID(), "brumaHorizonte");
+	tinteCielo = glm::vec3(1.0f);
+	brumaHorizonte = glm::vec4(0.0f);
 
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
@@ -81,6 +92,8 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	skyShader->UseShader();
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniform3f(uniformTinte, tinteCielo.x, tinteCielo.y, tinteCielo.z);
+	glUniform4f(uniformBruma, brumaHorizonte.x, brumaHorizonte.y, brumaHorizonte.z, brumaHorizonte.w);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 	//skyShader->Validate();
@@ -89,6 +102,12 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 
 }
 
+
+void Skybox::SetAmbiente(const glm::vec3& tinte, const glm::vec4& bruma)
+{
+	tinteCielo = tinte;
+	brumaHorizonte = bruma;
+}
 
 Skybox::~Skybox()
 {

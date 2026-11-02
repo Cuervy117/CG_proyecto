@@ -59,6 +59,11 @@ uniform Material material;
 
 uniform vec3 eyePosition;
 
+// Ambientacion de las superficies de los planetas. Los valores iniciales hacen que en el
+// espacio (donde no se mandan) el shader se comporte exactamente igual que antes.
+uniform vec4 niebla = vec4(0.0);   // rgb = color de la niebla, a = densidad (0 = sin niebla)
+uniform vec3 emision = vec3(0.0);  // brillo propio que no depende de las luces (cristales)
+
 vec4 CalcLightByDirection(Light light, vec3 direction)
 {
 	vec4 ambientcolor = vec4(light.color, 1.0f) * light.ambientIntensity;
@@ -160,7 +165,18 @@ void main()
 	vec4 finalcolor = CalcDirectionalLight();
 	finalcolor += CalcPointLights();
 	finalcolor += CalcSpotLights();
+	vec4 colorTextura = texture(theTexture, TexCoord);
 	//color = texture(theTexture, TexCoord)*vColor;
-	color = texture(theTexture, TexCoord)*vColor*finalcolor;
-	
+	color = colorTextura*vColor*finalcolor;
+
+	// brillo propio: se suma despues de la iluminacion, asi brilla aunque sea de noche
+	color.rgb += emision * colorTextura.rgb;
+
+	// niebla exponencial cuadrada: casi nada cerca y se cierra rapido a lo lejos
+	if (niebla.a > 0.0)
+	{
+		float distancia = length(eyePosition - FragPos);
+		float factorNiebla = 1.0 - exp(-pow(distancia * niebla.a, 2.0));
+		color.rgb = mix(color.rgb, niebla.rgb, clamp(factorNiebla, 0.0, 1.0));
+	}
 }
