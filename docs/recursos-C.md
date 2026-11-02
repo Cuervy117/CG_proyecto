@@ -12,7 +12,7 @@ La propuesta entregada ubica a Gohan como referencia Dragon Ball en D3 (imagen o
 
 ## Rek'Sai recibido del equipo
 
-`Models/reksai.obj`, `Models/reksai.mtl` y `Textures/reksai.png` están colocados en esas rutas en el checkout local de `feat/c-avatar`. El OBJ/MTL y el PNG se localizaron en el Drive compartido del equipo. El OBJ trae coordenadas UV y grupos que el avatar reparte entre cuerpo, cabeza, cola y cuatro patas; `Avatar::attach` carga el PNG y lo asigna a cada pieza. La revisión del archivo encontró UVs y geometría para las siete piezas, pero esto no sustituye probarlo en el ejecutable.
+`Models/reksai.obj`, `Models/reksai.mtl` y `Textures/reksai.png` están colocados en esas rutas en el checkout local de `feat/c-avatar`. El OBJ/MTL y el PNG se localizaron en el Drive compartido del equipo. Se importó el OBJ en Blender 5.2 y la vista Material Preview mostró la textura. El OBJ trae coordenadas UV y grupos que el avatar reparte entre cuerpo, cabeza, cola y cuatro patas; `Avatar::attach` carga el PNG y lo asigna a cada pieza. La prueba de Blender no sustituye probar el cargador del proyecto en su ejecutable.
 
 - SHA-256 local del OBJ: `4ABFE2537CFCF4EB05D475BA652041941703806D85470646983FF4CE69C0D4B3`.
 - SHA-256 local de la textura: `9C9984C51848EB7306DE0DC0F9C01C930D4F7DA99B642774A175460007979FFB`.
