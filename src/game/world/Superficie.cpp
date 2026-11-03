@@ -35,10 +35,12 @@ enum ModeloNPC
 	NPC_CABALLO_DELFIN,
 	NPC_PULPO,
 	NPC_TIGRE_FUEGO,
+	NPC_CALAMARDO_GUAPO,
 	NPC_MONSTRUO_NEGRO,    // roca
 	NPC_ESCORPION,
 	NPC_CERBERO,
 	NPC_SERPIENTE_ALAS,
+	NPC_PAUL,              // se esconde detrás del portal del planeta rocoso
 	NUM_MODELOS_NPC
 };
 struct DefinicionNPC
@@ -53,10 +55,12 @@ static const DefinicionNPC DEFINICION_NPC[NUM_MODELOS_NPC] = {
 	{ { "Models/npcSelva/caballoDelfin.obj", nullptr }, "Textures/caballoDelfinTexture.png", "caballo-delfin" },
 	{ { "Models/npcSelva/pulpo.obj", nullptr }, "Textures/pulpoTexture.png", "pulpo" },
 	{ { "Models/npcSelva/tigreFuego.obj", nullptr }, "Textures/tigreFuegoTexture.png", "tigre de fuego" },
+	{ { "Models/npcSelva/calamardoGuapo.obj", nullptr }, "Textures/calamardoGuapoTexture.png", "calamardo guapo" },
 	{ { "Models/npcRoca/monstruoNegro.obj", nullptr }, "Textures/monstruoNegroTexture.png", "monstruo negro" },
 	{ { "Models/npcRoca/escorpion.obj", nullptr }, "Textures/escorpionTexture.png", "escorpion" },
 	{ { "Models/npcRoca/Cerbero.obj", nullptr }, "Textures/cerberoTexture.png", "cerbero" },
 	{ { "Models/npcRoca/serpienteAlas.obj", "Models/npcSelva/serpienteAlas.obj" }, "Textures/serpienteAlasTexture.png", "serpiente alada" },
+	{ { "Models/npcRoca/Paul.obj", nullptr }, "Textures/PaulTexture.png", "Paul" },
 };
 
 // Portal de salida (al cruzarlo regresas al espacio). En la carpeta venía como asteroide.obj.
@@ -80,8 +84,8 @@ static const float ANGULO_CONO = 62.0f;            // medio ángulo horizontal q
 static const float DISTANCIA_NPC = 260.0f;
 // Plantas luminosas (arbustos que brillan de noche, como las "plantas luminosas" del boceto).
 // Ponle 0 para quitarlas.
-static const float PROBABILIDAD_LUMINOSA_ORILLA = 0.25f;
-static const float PROBABILIDAD_LUMINOSA_BOSQUE = 0.10f;
+static const float PROBABILIDAD_LUMINOSA_ORILLA = 0.0f;   // desactivadas: eran los árboles "todos verdes"
+static const float PROBABILIDAD_LUMINOSA_BOSQUE = 0.0f;
 static const float RADIO_JUGADOR = 0.9f;           // para no meterse en troncos ni rocas
 
 enum TipoObjeto
@@ -120,7 +124,8 @@ enum AnimacionNPC
 	ANIM_RESPIRA,     // respira y se balancea en su lugar:      escalaY = 1 + 0.04 sen(1.6 t)
 	ANIM_ELIPSE,      // ronda en una elipse pequeña:            p = (a cos th, b sen th)
 	ANIM_LEVITA,      // flota y gira:                           y = y0 + h sen(omega t)
-	ANIM_LISSAJOUS    // vuela en un ocho de Lissajous:          p = (a sen th, b sen 2th)
+	ANIM_LISSAJOUS,   // vuela en un ocho de Lissajous:          p = (a sen th, b sen 2th)
+	ANIM_BAILE        // se mece y gira de lado a lado:          x = a sen th, y = h |sen 2th|, giro = 0.5 sen 2th
 };
 
 struct NPC
@@ -180,6 +185,7 @@ struct Mundo
 	std::vector<Objeto> objetos;
 	std::vector<NPC> npcs;
 	Portal portal;
+	bool paulActivo = false;      // Paul se asoma detrás del portal de este planeta
 	glm::vec3 posCapsula = glm::vec3(0.0f);
 	glm::vec3 posInicio = glm::vec3(0.0f, 0.0f, 20.0f);
 	float yawInicio = -90.0f;
@@ -194,6 +200,8 @@ static Model modelosNPC[NUM_MODELOS_NPC];
 static bool hayNPC[NUM_MODELOS_NPC] = {};
 static Texture texturasNPC[NUM_MODELOS_NPC];
 static Model modeloPortal;
+static bool paulValido = false;       // false si Paul.obj no se cargó o trae la malla equivocada
+static float revelacionPaul = 0.0f;   // 0 = escondido detrás del portal, 1 = asomado
 static Texture texturaPortal;
 static bool hayPortal = false;
 static Texture texSueloSelva, texSueloRocoso, texArbol, texPlain;
@@ -742,12 +750,13 @@ static void generarSelva(Mundo& m)
 
 	// --- NPCs: cerca uno del otro (cada 28 unidades), alternando lado, sin pisar el camino ---
 	//          modelo              animación     s     lado  altura radio  a     b     h     omega fase
-	colocarNPC(m, NPC_NARUTO,         ANIM_SALTOS,  36.0f, 1.0f, 4.2f, 1.3f, 0.0f, 0.0f, 1.6f, 2.1f, 0.0f, 0.0f);
-	colocarNPC(m, NPC_ZORRO_BLANCO,   ANIM_REBOTE,  62.0f,-1.0f, 2.2f, 1.2f, 1.2f, 0.0f, 0.5f, 1.4f, 0.0f, 0.0f);
-	colocarNPC(m, NPC_CABALLO_DELFIN, ANIM_OCHO,    90.0f, 1.0f, 7.0f, 4.8f, 3.0f, 3.0f, 0.35f,0.55f,0.0f, 0.0f);
-	colocarNPC(m, NPC_PULPO,          ANIM_RESPIRA,118.0f,-1.0f, 8.5f, 5.9f, 0.0f, 0.0f, 0.0f, 0.35f,0.0f, 0.0f);
-	colocarNPC(m, NPC_TIGRE_FUEGO,    ANIM_ELIPSE, 146.0f, 1.0f, 6.0f, 5.4f, 4.0f, 1.5f, 0.15f,0.45f,0.0f, 0.0f);
-	colocarPortal(m, 175.0f, 11.0f);   // poco después del último NPC
+	colocarNPC(m, NPC_NARUTO,          ANIM_SALTOS,  36.0f, 1.0f, 4.2f, 1.3f, 0.0f, 0.0f, 1.6f, 2.1f, 0.0f, 0.0f);
+	colocarNPC(m, NPC_ZORRO_BLANCO,    ANIM_REBOTE,  70.0f,-1.0f, 2.2f, 1.2f, 1.2f, 0.0f, 0.5f, 1.4f, 0.0f, 0.0f);
+	colocarNPC(m, NPC_CABALLO_DELFIN,  ANIM_OCHO,   104.0f, 1.0f, 7.0f, 4.8f, 3.0f, 3.0f, 0.35f,0.55f,0.0f, 0.0f);
+	colocarNPC(m, NPC_CALAMARDO_GUAPO, ANIM_BAILE,  138.0f,-1.0f, 4.6f, 1.3f, 1.0f, 0.0f, 0.25f,2.0f, 0.0f, 0.0f);
+	colocarNPC(m, NPC_PULPO,           ANIM_RESPIRA,172.0f, 1.0f, 8.5f, 5.9f, 0.0f, 0.0f, 0.0f, 0.35f,0.0f, 0.0f);
+	colocarNPC(m, NPC_TIGRE_FUEGO,     ANIM_ELIPSE, 206.0f,-1.0f, 6.0f, 5.4f, 4.0f, 1.5f, 0.15f,0.45f,0.0f, 0.0f);
+	colocarPortal(m, 248.0f, 11.0f);   // un tramo después del último NPC
 
 	RejillaEspacial troncos(12.0f);
 	troncos.agregar(glm::vec2(m.posCapsula.x, m.posCapsula.z), 5.0f);
@@ -887,10 +896,16 @@ static void generarDesierto(Mundo& m)
 	// --- NPCs: cerca uno del otro, alternando lado, sin pisar el camino ---
 	//          modelo              animación       s     lado  altura radio  a     b     h     omega fase  
 	colocarNPC(m, NPC_MONSTRUO_NEGRO, ANIM_LEVITA,    36.0f, 1.0f, 3.6f, 1.2f, 0.0f, 0.0f, 0.6f, 1.1f, 1.0f, 0.0f);
-	colocarNPC(m, NPC_ESCORPION,      ANIM_OCHO,      64.0f,-1.0f, 1.5f, 3.9f, 2.0f, 2.0f, 0.05f,0.7f, 0.0f, 0.0f);
-	colocarNPC(m, NPC_CERBERO,        ANIM_ELIPSE,    92.0f, 1.0f, 6.0f, 3.8f, 5.0f, 1.5f, 0.12f,0.4f, 0.0f, 0.0f);
-	colocarNPC(m, NPC_SERPIENTE_ALAS, ANIM_LISSAJOUS,122.0f,-1.0f, 7.0f, 5.4f, 5.0f, 2.5f, 1.5f, 0.35f,7.0f, 0.0f);
-	colocarPortal(m, 150.0f, 11.0f);   // poco después del último NPC
+	colocarNPC(m, NPC_ESCORPION,      ANIM_OCHO,      70.0f,-1.0f, 1.5f, 3.9f, 2.0f, 2.0f, 0.05f,0.7f, 0.0f, 0.0f);
+	colocarNPC(m, NPC_CERBERO,        ANIM_ELIPSE,   104.0f, 1.0f, 6.0f, 3.8f, 5.0f, 1.5f, 0.12f,0.4f, 0.0f, 0.0f);
+	colocarNPC(m, NPC_SERPIENTE_ALAS, ANIM_LISSAJOUS,138.0f,-1.0f, 7.0f, 5.4f, 5.0f, 2.5f, 1.5f, 0.35f,7.0f, 0.0f);
+	colocarPortal(m, 180.0f, 11.0f);   // un tramo después del último NPC
+	// Paul se esconde detrás del portal: se deja libre la zona donde se asoma
+	{
+		glm::vec2 lado(-m.portal.adelante.y, m.portal.adelante.x);
+		m.claros.push_back({ m.portal.centro + m.portal.adelante * 3.0f + lado * 4.0f, 8.0f });
+		m.paulActivo = true;
+	}
 
 	RejillaEspacial ocupado(16.0f);
 	ocupado.agregar(glm::vec2(m.posCapsula.x, m.posCapsula.z), 6.0f);
@@ -1056,6 +1071,13 @@ static glm::mat4 matrizNPC(const NPC& n, float tiempo, glm::vec2& posicion)
 		yaw += 0.6f * sinf(0.45f * tiempo + n.fase);
 		alabeo = 0.08f * sinf(1.3f * tiempo + n.fase);
 		break;
+	case ANIM_BAILE:
+		// baile: se mece a lo largo del camino y gira la cadera de un lado a otro
+		desplazamiento = n.adelante * (n.a * sinf(th));
+		y += n.h * fabsf(sinf(2.0f * th));
+		yaw += 0.5f * sinf(2.0f * th);
+		alabeo = 0.08f * sinf(th);
+		break;
 	case ANIM_LISSAJOUS:
 	{
 		// curva de Lissajous: p = (a sen th, b sen 2th); y = y0 + h sen(0.9 t)
@@ -1070,7 +1092,7 @@ static glm::mat4 matrizNPC(const NPC& n, float tiempo, glm::vec2& posicion)
 		break;
 	}
 	}
-	if (glm::length(velocidad) > 1.0e-4f)
+	if (n.animacion != ANIM_BAILE && glm::length(velocidad) > 1.0e-4f)
 		yaw = atan2f(velocidad.x, velocidad.y);   // los modelos miran hacia +Z: se orientan con su velocidad
 
 	posicion = n.centro + desplazamiento;
@@ -1109,6 +1131,16 @@ void InicializarSuperficies()
 		hayNPC[i] = cargarModelo(modelosNPC[i], DEFINICION_NPC[i].rutas, DEFINICION_NPC[i].rutas[1] ? 2 : 1,
 			DEFINICION_NPC[i].nombre, &texturasNPC[i], DEFINICION_NPC[i].textura);
 	hayPortal = cargarModelo(modeloPortal, RUTAS_PORTAL, 2, "portal", &texturaPortal, RUTA_TEXTURA_PORTAL);
+	// Paul.obj se exportó con la malla del portal (mismo número de triángulos y mismas medidas):
+	// así se dibujaría un segundo portal, por eso no se usa hasta que se re-exporte el personaje
+	paulValido = hayNPC[NPC_PAUL];
+	if (paulValido && hayPortal && modelosNPC[NPC_PAUL].getNumTriangulos() == modeloPortal.getNumTriangulos()
+		&& glm::length(modelosNPC[NPC_PAUL].getTamano() - modeloPortal.getTamano()) < 0.01f)
+	{
+		printf("[AVISO] Models/npcRoca/Paul.obj tiene la misma malla que el portal (en Blender se exporto el\n"
+			"        objeto equivocado). Paul no se dibuja hasta que se re-exporte el personaje.\n");
+		paulValido = false;
+	}
 
 	cargarTextura(texSueloSelva, RUTA_SUELO_SELVA);
 	cargarTextura(texSueloRocoso, RUTA_SUELO_ROCOSO);
@@ -1143,6 +1175,9 @@ void DibujarSuperficie(TipoSuperficie tipo, const glm::vec3& posCamara, const gl
 	if (!inicializado)
 		return;
 	Mundo& m = mundos[tipo];
+	static float tiempoAnterior = 0.0f;
+	float dt = glm::clamp(tiempo - tiempoAnterior, 0.0f, 0.1f);
+	tiempoAnterior = tiempo;
 
 	// --- 1) Piso fijo (cubre toda la zona del planeta) ---
 	glUniform3f(u.emision, 0.0f, 0.0f, 0.0f);
@@ -1225,6 +1260,38 @@ void DibujarSuperficie(TipoSuperficie tipo, const glm::vec3& posCamara, const gl
 		modeloPortal.RenderModel();
 		glUniform3f(u.emision, 0.0f, 0.0f, 0.0f);
 		triangulosNPC += modeloPortal.getNumTriangulos();
+		dibujados++;
+	}
+
+	// --- Paul: escondido detrás del portal; se asoma cuando miras hacia el portal ---
+	if (paulValido && m.paulActivo && m.portal.activo)
+	{
+		glm::vec2 haciaPortal = m.portal.centro - camara;
+		float distanciaPortal = glm::length(haciaPortal);
+		bool mirando = usarCono && distanciaPortal > 1.0f && distanciaPortal < 110.0f
+			&& glm::dot(haciaPortal / distanciaPortal, direccion) > cosf(glm::radians(20.0f));
+		// mientras miras el portal se asoma y se esconde (lo decide sen(1.4 t)); si no lo miras, se esconde
+		float objetivo = (mirando && sinf(1.4f * tiempo) > -0.2f) ? 1.0f : 0.0f;
+		revelacionPaul += (objetivo - revelacionPaul) * fminf(1.0f, 4.0f * dt);
+		float r = suave(revelacionPaul);
+
+		glm::vec2 lado(-m.portal.adelante.y, m.portal.adelante.x);
+		glm::vec2 pos = m.portal.centro + m.portal.adelante * 2.5f + lado * (r * (0.5f * m.portal.ancho + 1.5f));
+		float yaw = atan2f(-m.portal.adelante.x, -m.portal.adelante.y);   // mira hacia quien llega
+		glm::vec2 ejeX(cosf(yaw), -sinf(yaw));                               // su derecha en el mundo
+		float inclinacion = -0.22f * r * (glm::dot(lado, ejeX) > 0.0f ? 1.0f : -1.0f);   // se ladea al asomarse
+		const Model& paul = modelosNPC[NPC_PAUL];
+		float escala = 4.4f / fmaxf(paul.getTamano().y, 0.001f);
+		glm::mat4 matrizPaul = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, 0.12f * r * fabsf(sinf(3.0f * tiempo)), pos.y))
+			* glm::rotate(glm::mat4(1.0f), yaw, glm::vec3(0.0f, 1.0f, 0.0f))
+			* glm::rotate(glm::mat4(1.0f), inclinacion, glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), glm::vec3(escala))
+			* matrizBase(paul);
+		matNPC.UseMaterial(u.especular, u.brillo);
+		glUniform3f(u.color, 1.0f, 1.0f, 1.0f);
+		glUniformMatrix4fv(u.model, 1, GL_FALSE, glm::value_ptr(matrizPaul));
+		modelosNPC[NPC_PAUL].RenderModel();
+		triangulosNPC += paul.getNumTriangulos();
 		dibujados++;
 	}
 
@@ -1350,12 +1417,76 @@ glm::vec3 LimitarPosicion(TipoSuperficie tipo, const glm::vec3& posicion)
 	return glm::vec3(p.x, posicion.y, p.y);
 }
 
+// Carrera dentro del planeta: del punto de inicio hasta un poco después del portal
+static float inicioCarrera(const Mundo& m)
+{
+	(void)m;
+	return 8.0f;   // posInicio está a 8 unidades del principio del camino
+}
+
+float LargoCarreraSuperficie(TipoSuperficie tipo)
+{
+	const Mundo& m = mundos[tipo];
+	float sPortal = m.portal.activo ? 0.0f : m.largo * 0.5f;
+	if (m.portal.activo)
+	{
+		// distancia del camino donde quedó el portal
+		float mejor = 1.0e30f;
+		for (size_t i = 0; i < m.camino.size(); i++)
+		{
+			float d = glm::length(m.camino[i] - m.portal.centro);
+			if (d < mejor) { mejor = d; sPortal = m.acumulado[i]; }
+		}
+	}
+	return sPortal + 5.0f - inicioCarrera(m);
+}
+
+void PuntoCarreraSuperficie(TipoSuperficie tipo, float distancia, float carril, float altura, glm::vec3& posicion, glm::vec3& adelante)
+{
+	const Mundo& m = mundos[tipo];
+	glm::vec2 p, t;
+	puntoEnCamino(m, inicioCarrera(m) + distancia, p, t);
+	glm::vec2 lado(-t.y, t.x);
+	glm::vec2 q = p + lado * carril;
+	posicion = glm::vec3(q.x, altura, q.y);
+	adelante = glm::vec3(t.x, 0.0f, t.y);
+}
+
+glm::vec3 AjustarACamino(TipoSuperficie tipo, const glm::vec3& posicion, float altura, glm::vec3* adelante)
+{
+	const Mundo& m = mundos[tipo];
+	glm::vec2 q(posicion.x, posicion.z);
+	float mejor = 1.0e30f, sMejor = 0.0f;
+	for (size_t i = 0; i < m.camino.size(); i++)
+	{
+		glm::vec2 a = m.camino[i], b = m.camino[(i + 1) % m.camino.size()];
+		glm::vec2 ab = b - a;
+		float f = glm::clamp(glm::dot(q - a, ab) / fmaxf(glm::dot(ab, ab), 1.0e-6f), 0.0f, 1.0f);
+		float d = glm::length(q - (a + ab * f));
+		if (d < mejor) { mejor = d; sMejor = m.acumulado[i] + f * (m.acumulado[i + 1] - m.acumulado[i]); }
+	}
+	glm::vec2 p, t;
+	puntoEnCamino(m, sMejor, p, t);
+	glm::vec2 lado(-t.y, t.x);
+	float lateral = glm::clamp(glm::dot(q - p, lado), -(m.anchoCamino - 1.5f), m.anchoCamino - 1.5f);
+	glm::vec2 r = p + lado * lateral;
+	if (adelante) *adelante = glm::vec3(t.x, 0.0f, t.y);
+	return glm::vec3(r.x, altura, r.y);
+}
+
+Model* ModeloPaul()
+{
+	return (inicializado && paulValido) ? &modelosNPC[NPC_PAUL] : nullptr;
+}
+
 bool CruzandoPortal(TipoSuperficie tipo, const glm::vec3& posicion)
 {
 	const Portal& portal = mundos[tipo].portal;
 	if (!inicializado || !portal.activo)
 		return false;
 	// posición del jugador medida en los ejes del portal: a lo largo del camino y hacia los lados
+	if (posicion.y > portal.altura)
+		return false;   // con la cámara libre, pasar volando por encima no cuenta
 	glm::vec2 d = glm::vec2(posicion.x, posicion.z) - portal.centro;
 	glm::vec2 lado(-portal.adelante.y, portal.adelante.x);
 	float alFrente = glm::dot(d, portal.adelante);

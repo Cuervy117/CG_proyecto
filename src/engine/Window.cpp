@@ -88,6 +88,11 @@ void Window::createCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, ManejaTeclado);
 	glfwSetCursorPosCallback(mainWindow, ManejaMouse);
+	// cursor capturado: el mouse gira la camara sin limite y el cursor no se sale de la ventana
+	// (TAB lo libera y lo vuelve a capturar)
+	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(mainWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 }
 GLfloat Window::getXChange()
 {
@@ -113,6 +118,12 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+	if (key == GLFW_KEY_TAB && action == GLFW_PRESS)
+	{
+		bool capturado = glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+		glfwSetInputMode(window, GLFW_CURSOR, capturado ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+		theWindow->mouseFirstMoved = true;   // sin brinco al volver a capturar
 	}
 	if (key == GLFW_KEY_Y)
 	{

@@ -6,6 +6,7 @@ uniform samplerCube skybox;
 // Ambientacion por planeta (Skybox::SetAmbiente). Con los valores iniciales se ve igual que antes.
 uniform vec3 tinteCielo = vec3(1.0);       // multiplica el cubemap: cambia el tono del cielo
 uniform vec4 brumaHorizonte = vec4(0.0);   // rgb = color de la bruma, a = intensidad (0 = sin bruma)
+uniform vec4 cieloSolido = vec4(0.0);      // cielo despejado: rgb = color arriba, a = cuanto reemplaza al cubemap
 
 void main()
 {
@@ -16,5 +17,12 @@ void main()
 	float altura = normalize(-TexCoords).y;
 	float bruma = brumaHorizonte.a * (1.0 - smoothstep(-0.10, 0.55, altura));
 	c.rgb = mix(c.rgb, brumaHorizonte.rgb, clamp(bruma, 0.0, 1.0));
+
+	// cielo despejado (planeta oceano): degradado del horizonte hacia arriba
+	if (cieloSolido.a > 0.0)
+	{
+		vec3 degradado = mix(brumaHorizonte.rgb, cieloSolido.rgb, smoothstep(0.0, 0.6, max(altura, 0.0)));
+		c.rgb = mix(c.rgb, degradado, cieloSolido.a);
+	}
 	color = c;
 }

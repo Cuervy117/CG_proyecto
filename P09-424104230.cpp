@@ -30,6 +30,10 @@
 #include "Create.hpp"
 #include "Load.hpp"
 #include "Superficie.h"   // src/game/world: selva y desierto de los planetas
+#include "Espacio.h"      // src/game/world: pista de carreras, cinturon de asteroides y salidas de los portales
+#include "Reloj.h"        // src/game/world: reloj en pantalla
+#include "Jugador.h"      // src/game/world: avatar en tercera persona (Paul / miNave)
+#include "Oceano.h"       // src/game/world: planeta oceano (por fuera y por dentro, con la ola gigante)
 
 Window mainWindow;
 std::vector<Shader> shaderList;
@@ -83,13 +87,20 @@ enum ZonaActiva
 {
 	ZONA_ESPACIO = 0,
 	ZONA_PLANETA_ROCOSO,
-	ZONA_PLANETA_SELVATICO
+	ZONA_PLANETA_SELVATICO,
+	ZONA_PLANETA_OCEANO
 };
 
 static ZonaActiva zonaActual = ZONA_ESPACIO;
 static bool teclaE_Presionada = false;
 static bool tecla2_Presionada = false;
 static bool tecla3_Presionada = false;
+static bool teclaC_Presionada = false;
+static bool teclaK_Presionada = false;
+
+// Camara: la del avatar (tercera persona, lo sigue por la pista y por los planetas) o la "libre",
+// que vuela por todo el recorrido, mas rapida y sin limites. La tecla C alterna entre las dos.
+static bool camaraLibre = false;
 
 static const glm::vec3 posPlanetaRocosoEspacio(0.0f, 0.0f, 0.0f);
 static const float radioMundoPlanetaRocoso = 14.0f;
@@ -117,22 +128,10 @@ static bool panelesAbiertos = true;
 static float factorAperturaPaneles = 1.0f;
 static const float duracionCicloDiaNoche = 120.0f;
 
-static const float pistaLado = 34.0f;
-static const float pistaRadio = 10.0f;
-static const float pistaRectaInicio = pistaLado - pistaRadio;
-static const float pistaRecta = 2.0f * pistaRectaInicio;
-static const float pistaAlturaInicio = 0.0f;
-static const float pistaAlturaSubida = 12.0f;
-static const float pistaAlturaSuperior = -12.0f;
-static const float pistaVelocidad = 12.0f;
+// La pista de carreras ahora esta en Espacio.cpp (curva 3D que pasa por detras de los dos planetas)
 
-static const float pi = 3.14159265359f;
-static const float cuartoPi = 1.57079632679f;
 static const float dosPi = 6.28318530718f;
-static const float cuartoLongitud = pistaRadio * cuartoPi;
 
-static const float guiaAncho = 0.35f;
-static const float guiaLargo = 1.8f;
 static const float guiaPaso = 3.0f;
 static const float guiaSateliteAncho = 0.28f;
 static const float guiaSateliteLargo = 1.5f;
@@ -143,30 +142,14 @@ static const float satAltura = 26.0f;
 static const float satOndulacion = 2.0f;
 static const float satOmega = 0.35f;
 
-enum TramoPista
-{
-	RectaInferior = 0,
-	CuartoInferiorDerecho,
-	RectaDerecha,
-	CuartoSuperiorDerecho,
-	RectaSuperior,
-	CuartoSuperiorIzquierdo,
-	RectaFinal,
-	CuartoInferiorIzquierdo,
-	NumTramos
-};
-
 struct PuntoGuia
 {
 	glm::vec3 pos;
 	glm::vec3 forward;
 };
 
-static std::vector<PuntoGuia> guiaPuntos;
 static std::vector<PuntoGuia> guiaSatelite;
 
-static int tramoActual = RectaInferior;
-static float offsetTramo = 0.0f;
 static glm::vec3 naveForward(1.0f, 0.0f, 0.0f);
 
 static int estadoSatelite = 0;
@@ -273,116 +256,6 @@ static void createShaders()
 	shaderList.push_back(*shader);
 }
 
-static float longitudTramo(int tramo)
-{
-	if (tramo == RectaInferior || tramo == RectaDerecha ||
-		tramo == RectaSuperior || tramo == RectaFinal)
-		return pistaRecta;
-
-	return cuartoLongitud;
-}
-
-static void evaluarTramo(int tramo, float s, glm::vec3& pos, glm::vec3& tangente)
-{
-	switch (tramo)
-	{
-	case RectaInferior:
-		pos = glm::vec3(-pistaRectaInicio, pistaAlturaInicio, -pistaLado) + glm::vec3(s, 0.0f, 0.0f);
-		tangente = glm::vec3(1.0f, 0.0f, 0.0f);
-		break;
-
-	case CuartoInferiorDerecho:
-	{
-		float theta = -cuartoPi + s / pistaRadio;
-		glm::vec3 centro(pistaRectaInicio, pistaAlturaInicio, -pistaRectaInicio);
-		pos = centro + glm::vec3(pistaRadio * cosf(theta), 0.0f, pistaRadio * sinf(theta));
-		tangente = glm::vec3(-sinf(theta), 0.0f, cosf(theta));
-		break;
-	}
-
-	case RectaDerecha:
-	{
-		float t = s / pistaRecta;
-		float altura = pistaAlturaInicio + (pistaAlturaSubida - pistaAlturaInicio) * t;
-		pos = glm::vec3(pistaLado, altura, -pistaRectaInicio) + glm::vec3(0.0f, 0.0f, s);
-		tangente = glm::normalize(glm::vec3(0.0f, (pistaAlturaSubida - pistaAlturaInicio) / pistaRecta, 1.0f));
-		break;
-	}
-
-	case CuartoSuperiorDerecho:
-	{
-		float theta = s / pistaRadio;
-		float t = s / cuartoLongitud;
-		float altura = pistaAlturaSubida + (pistaAlturaSuperior - pistaAlturaSubida) * t;
-		glm::vec3 centro(pistaRectaInicio, pistaAlturaSuperior, pistaRectaInicio);
-		pos = glm::vec3(centro.x + pistaRadio * cosf(theta), altura, centro.z + pistaRadio * sinf(theta));
-		float pendiente = (pistaAlturaSuperior - pistaAlturaSubida) / cuartoLongitud;
-		tangente = glm::normalize(glm::vec3(-sinf(theta), pendiente, cosf(theta)));
-		break;
-	}
-
-	case RectaSuperior:
-		pos = glm::vec3(pistaRectaInicio, pistaAlturaSuperior, pistaLado) + glm::vec3(-s, 0.0f, 0.0f);
-		tangente = glm::vec3(-1.0f, 0.0f, 0.0f);
-		break;
-
-	case CuartoSuperiorIzquierdo:
-	{
-		float theta = cuartoPi + s / pistaRadio;
-		glm::vec3 centro(-pistaRectaInicio, pistaAlturaSuperior, pistaRectaInicio);
-		pos = centro + glm::vec3(pistaRadio * cosf(theta), 0.0f, pistaRadio * sinf(theta));
-		tangente = glm::vec3(-sinf(theta), 0.0f, cosf(theta));
-		break;
-	}
-
-	case RectaFinal:
-	{
-		float mitad = pistaRecta * 0.5f;
-		float altura = pistaAlturaSuperior;
-		float pendiente = 0.0f;
-
-		if (s > mitad)
-		{
-			altura = pistaAlturaSuperior + (pistaAlturaInicio - pistaAlturaSuperior) * (s - mitad) / mitad;
-			pendiente = (pistaAlturaInicio - pistaAlturaSuperior) / mitad;
-		}
-
-		pos = glm::vec3(-pistaLado, altura, pistaRectaInicio) + glm::vec3(0.0f, 0.0f, -s);
-		tangente = glm::normalize(glm::vec3(0.0f, pendiente, -1.0f));
-		break;
-	}
-
-	case CuartoInferiorIzquierdo:
-	{
-		float theta = pi + s / pistaRadio;
-		glm::vec3 centro(-pistaRectaInicio, pistaAlturaInicio, -pistaRectaInicio);
-		pos = centro + glm::vec3(pistaRadio * cosf(theta), 0.0f, pistaRadio * sinf(theta));
-		tangente = glm::vec3(-sinf(theta), 0.0f, cosf(theta));
-		break;
-	}
-
-	default:
-		pos = glm::vec3(-pistaRectaInicio, pistaAlturaInicio, -pistaLado);
-		tangente = glm::vec3(1.0f, 0.0f, 0.0f);
-		break;
-	}
-}
-
-static void construirGuia()
-{
-	guiaPuntos.clear();
-	for (int tramo = 0; tramo < NumTramos; tramo++)
-	{
-		float longitud = longitudTramo(tramo);
-		for (float s = 0.0f; s < longitud; s += guiaPaso)
-		{
-			glm::vec3 pos, tangente;
-			evaluarTramo(tramo, s, pos, tangente);
-			guiaPuntos.push_back(PuntoGuia{ pos, glm::normalize(tangente) });
-		}
-	}
-}
-
 static glm::mat4 matrizOrientacion(const glm::vec3& pos, const glm::vec3& forward, const glm::vec3& upRef)
 {
 	glm::vec3 f = glm::normalize(forward);
@@ -432,15 +305,6 @@ static void dibujarGuia(const std::vector<PuntoGuia>& puntos, const glm::vec3& c
 	glDisable(GL_BLEND);
 }
 
-static void animarNave(GLfloat dt)
-{
-	offsetTramo += pistaVelocidad * dt;
-	while (offsetTramo >= longitudTramo(tramoActual))
-	{
-		offsetTramo -= longitudTramo(tramoActual);
-		tramoActual = (tramoActual + 1) % NumTramos;
-	}
-}
 
 static glm::vec3 posicionSatelite(int estado, float theta)
 {
@@ -547,26 +411,79 @@ static void dibujarCapsulaRetorno(const glm::vec3& posMundo, float escala,
 	capsulaPuertaModel.RenderModel(uniformColor, glm::vec3(1.0f));
 }
 
-// Sale de la atmosfera del planeta actual y deja la camara en el espacio, frente a ese planeta
+// Velocidad de movimiento y de giro de la camara segun el modo y el lugar
+static float velocidadCamara()
+{
+	if (camaraLibre)
+		return (zonaActual == ZONA_ESPACIO) ? 45.0f : 30.0f;
+	return 14.0f;
+}
+
+static float giroCamara()
+{
+	return camaraLibre ? 0.50f : 0.35f;   // el cursor esta capturado: se puede girar sin limite
+}
+
+static LugarJugador lugarJugador()
+{
+	if (zonaActual == ZONA_PLANETA_ROCOSO) return LUGAR_ROCOSO;
+	if (zonaActual == ZONA_PLANETA_SELVATICO) return LUGAR_SELVATICO;
+	if (zonaActual == ZONA_PLANETA_OCEANO) return LUGAR_OCEANO;
+	return LUGAR_ESPACIO;
+}
+
+// Vuelve a crear la camara (la clase Camera no permite cambiar su velocidad ni su orientacion)
+static void reiniciarCamara(const glm::vec3& posicion, float yaw, float pitch)
+{
+	camera = Camera(posicion, glm::vec3(0.0f, 1.0f, 0.0f), yaw, pitch, velocidadCamara(), giroCamara());
+}
+
+// Tecla C: alterna entre la camara sobre la pista y la camara libre, sin moverla de lugar
+static void cambiarModoCamara()
+{
+	camaraLibre = !camaraLibre;
+	glm::vec3 dir = camera.getCameraDirection();
+	float yaw = glm::degrees(atan2f(dir.z, dir.x));
+	float pitch = glm::degrees(asinf(glm::clamp(dir.y, -1.0f, 1.0f)));
+	reiniciarCamara(camera.getCameraPosition(), yaw, pitch);
+	printf("Camara %s\n", camaraLibre ? "LIBRE (vuela por todo el recorrido)" : "SOBRE LA PISTA");
+}
+
+// Nave rival dentro de un planeta o del oceano (en el espacio se dibuja con sus llamas y luces)
+static void dibujarRivalEn(LugarJugador lugar, GLuint uniformModel, GLuint uniformColor,
+	GLuint uniformSpecularIntensity, GLuint uniformShininess)
+{
+	glm::vec3 pos, adelante, arriba;
+	LugarJugador lugarRival;
+	EstadoRival(tAnim, lugarRival, pos, adelante, arriba);
+	if (lugarRival != lugar)
+		return;
+	glm::mat4 modelo = matrizOrientacion(pos, adelante, arriba);
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelo));
+	glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
+	recursos.plainTexture.UseTexture();
+	materialBrillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+	recursos.naveModel.RenderModel();
+}
+
+// Sale de la atmosfera del planeta actual: la camara aparece sobre la pista de carreras, en el
+// punto de salida de ese planeta (como en el croquis), mirando hacia donde avanza la carrera.
 static void salirAlEspacio()
 {
-	if (zonaActual == ZONA_PLANETA_ROCOSO)
-	{
-		zonaActual = ZONA_ESPACIO;
-		camera = Camera(posPlanetaRocosoEspacio + glm::vec3(0.0f, 8.0f, -(radioAtmosferaRocoso + 14.0f)),
-			glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -5.0f, 20.0f, 0.25f);
-	}
-	else if (zonaActual == ZONA_PLANETA_SELVATICO)
-	{
-		zonaActual = ZONA_ESPACIO;
-		camera = Camera(posPlanetaSelvaticoEspacio + glm::vec3(0.0f, 8.0f, -(radioAtmosferaSelvatico + 14.0f)),
-			glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -5.0f, 20.0f, 0.25f);
-	}
+	if (zonaActual == ZONA_ESPACIO)
+		return;
+	int planeta = PLANETA_ROCOSO;
+	if (zonaActual == ZONA_PLANETA_SELVATICO) planeta = PLANETA_SELVATICO;
+	else if (zonaActual == ZONA_PLANETA_OCEANO) planeta = PLANETA_OCEANO;
+	zonaActual = ZONA_ESPACIO;
+	float yaw = ColocarJugadorAlSalir(planeta);   // en su nave sobre la pista (o en la base si aun no la aborda)
+	reiniciarCamara(PosicionJugador() + glm::vec3(0.0f, 4.0f, 0.0f), yaw, camaraLibre ? 0.0f : -10.0f);
 }
 
 static void actualizarTransicionAtmosfera(bool* teclas)
 {
-	glm::vec3 camPos = camera.getCameraPosition();
+	// con la camara del avatar, lo que entra a los planetas o cruza el portal es el avatar
+	glm::vec3 camPos = camaraLibre ? camera.getCameraPosition() : PosicionJugador();
 	bool pulsoE = teclas[GLFW_KEY_E] && !teclaE_Presionada;
 	teclaE_Presionada = teclas[GLFW_KEY_E];
 
@@ -578,31 +495,63 @@ static void actualizarTransicionAtmosfera(bool* teclas)
 		panelesAbiertos = !panelesAbiertos;
 	tecla3_Presionada = teclas[GLFW_KEY_3];
 
+	if (teclas[GLFW_KEY_C] && !teclaC_Presionada)
+		cambiarModoCamara();
+	teclaC_Presionada = teclas[GLFW_KEY_C];
+
+	// K junto a miNave (en la base): la nave pasa a ser el avatar, aparece en la meta y empieza la carrera
+	if (teclas[GLFW_KEY_K] && !teclaK_Presionada && zonaActual == ZONA_ESPACIO && !camaraLibre)
+	{
+		float yaw;
+		if (IntentarAbordarNave(tAnim, yaw))
+			reiniciarCamara(PosicionJugador() + glm::vec3(0.0f, 4.0f, 0.0f), yaw, -10.0f);
+	}
+	// K en el planeta rocoso o selvatico: bajar de la nave (queda estacionada) o volver a subir
+	else if (teclas[GLFW_KEY_K] && !teclaK_Presionada && !camaraLibre
+		&& (zonaActual == ZONA_PLANETA_ROCOSO || zonaActual == ZONA_PLANETA_SELVATICO))
+	{
+		BajarOSubirNave(lugarJugador());
+	}
+	teclaK_Presionada = teclas[GLFW_KEY_K];
+
 	if (zonaActual == ZONA_ESPACIO)
 	{
 		float distRocoso = glm::distance(camPos, posPlanetaRocosoEspacio);
 		float distSelvatico = glm::distance(camPos, posPlanetaSelvaticoEspacio);
+		float distOceano = glm::distance(camPos, CentroPlanetaOceano());
 
 		if (distRocoso < radioAtmosferaRocoso || (pulsoE && distRocoso < radioAtmosferaRocoso * 1.6f))
 		{
 			zonaActual = ZONA_PLANETA_ROCOSO;
 			glm::vec3 inicio = PosicionInicio(SUPERFICIE_ROCOSA);
-			camera = Camera(glm::vec3(inicio.x, alturaCamaraSuperficie, inicio.z),
-				glm::vec3(0.0f, 1.0f, 0.0f), YawInicio(SUPERFICIE_ROCOSA), 0.0f, 14.0f, 0.25f);
+			float yaw = ColocarJugadorEnPlaneta(LUGAR_ROCOSO, inicio, YawInicio(SUPERFICIE_ROCOSA));   // sigue en su nave
+			reiniciarCamara(glm::vec3(inicio.x, alturaCamaraSuperficie, inicio.z), yaw, camaraLibre ? 0.0f : -12.0f);
 		}
 		else if (distSelvatico < radioAtmosferaSelvatico || (pulsoE && distSelvatico < radioAtmosferaSelvatico * 1.6f))
 		{
 			zonaActual = ZONA_PLANETA_SELVATICO;
 			glm::vec3 inicio = PosicionInicio(SUPERFICIE_SELVATICA);
-			camera = Camera(glm::vec3(inicio.x, alturaCamaraSuperficie, inicio.z),
-				glm::vec3(0.0f, 1.0f, 0.0f), YawInicio(SUPERFICIE_SELVATICA), 0.0f, 14.0f, 0.25f);
+			float yaw = ColocarJugadorEnPlaneta(LUGAR_SELVATICO, inicio, YawInicio(SUPERFICIE_SELVATICA));   // sigue en su nave
+			reiniciarCamara(glm::vec3(inicio.x, alturaCamaraSuperficie, inicio.z), yaw, camaraLibre ? 0.0f : -12.0f);
 		}
+		else if (distOceano < RadioAtmosferaOceano() || (pulsoE && distOceano < RadioAtmosferaOceano() * 1.6f))
+		{
+			zonaActual = ZONA_PLANETA_OCEANO;
+			float yaw = ColocarJugadorEnOceano();   // de espaldas a la ola, viendo el mar abierto
+			reiniciarCamara(PosicionJugador() + glm::vec3(0.0f, 5.0f, 12.0f), yaw, camaraLibre ? 0.0f : -6.0f);
+		}
+	}
+	else if (zonaActual == ZONA_PLANETA_OCEANO)
+	{
+		// en el oceano: al llegar a la cresta de la ola gigante (o con E) se sale a la pista
+		if (pulsoE || LlegoALaCresta(camPos))
+			salirAlEspacio();
 	}
 	else
 	{
 		// en un planeta: E o cruzar el portal del final del camino regresan al espacio
 		TipoSuperficie zona = (zonaActual == ZONA_PLANETA_ROCOSO) ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA;
-		if (pulsoE || CruzandoPortal(zona, camPos))
+		if (pulsoE || (JugadorEnNave() && CruzandoPortal(zona, camPos)))   // el portal se cruza en la nave
 			salirAlEspacio();
 	}
 }
@@ -643,6 +592,20 @@ int main()
 
 	// Selva y desierto de los planetas (arboles, rocas, cristales, camino y pisos)
 	InicializarSuperficies();
+	// Pista de carreras y cinturon de asteroides
+	InicializarEspacio();
+	// Reloj en pantalla
+	InicializarReloj();
+
+	// Planeta oceano (por fuera y por dentro)
+	InicializarOceano();
+
+	// Avatar: empieza en la base, junto a la pista y antes de la meta, como Paul y con miNave al lado
+	InicializarJugador();
+	{
+		float yaw = ColocarJugadorEnBase();
+		reiniciarCamara(PosicionJugador() + glm::vec3(0.0f, 6.0f, 0.0f), yaw, -15.0f);
+	}
 
 	if (existeArchivo("Models/AlaDer.obj"))
 	{
@@ -658,7 +621,6 @@ int main()
 	recursos.plainTexture = Texture("Textures/plain.png");
 	recursos.plainTexture.LoadTextureA();
 
-	construirGuia();
 	construirGuiaSatelite();
 
 	materialBrillante = Material(4.0f, 256);
@@ -704,22 +666,31 @@ int main()
 
 		bool* teclas = mainWindow.getsKeys();
 
-		camera.keyControl(teclas, deltaTime);
+		if (camaraLibre)
+			camera.keyControl(teclas, deltaTime);   // con la camara del avatar, W A S D mueven al avatar
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		actualizarTransicionAtmosfera(teclas);
 
-		// en los planetas el jugador camina a altura fija y no puede salir de la zona del camino
-		if (zonaActual != ZONA_ESPACIO)
+		if (!camaraLibre)
 		{
-			TipoSuperficie zona = (zonaActual == ZONA_PLANETA_ROCOSO) ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA;
-			glm::vec3 limitada = LimitarPosicion(zona, camera.getCameraPosition());
-			limitada.y = alturaCamaraSuperficie;
-			camera.setPosition(limitada);
+			// el avatar se mueve con W A S D y la camara lo sigue en tercera persona
+			ActualizarJugador(teclas, deltaTime, lugarJugador(), camera, tAnim);
+		}
+		else if (zonaActual == ZONA_PLANETA_OCEANO)
+		{
+			// camara libre en el oceano: no se mete bajo el agua ni dentro de la ola
+			camera.setPosition(AjustarCamaraOceano(camera.getCameraPosition()));
+		}
+		else if (zonaActual != ZONA_ESPACIO && camera.getCameraPosition().y < 1.5f)
+		{
+			// camara libre en un planeta: vuela por donde quiera, pero no atraviesa el suelo
+			glm::vec3 p = camera.getCameraPosition();
+			p.y = 1.5f;
+			camera.setPosition(p);
 		}
 
 		tAnim += deltaTime;
-		animarNave(deltaTime);
 		animarSatelite(deltaTime);
 		animarCapsula(deltaTime);
 
@@ -730,16 +701,21 @@ int main()
 
 		glm::mat4 viewMatrix = camera.calculateViewMatrix();
 		glm::vec3 eyePos = camera.getCameraPosition();
-		if (zonaActual != ZONA_ESPACIO)
-		{
-			glm::vec3 dirVista = camera.getCameraDirection();
-			eyePos.y = alturaCamaraSuperficie;
-			viewMatrix = glm::lookAt(eyePos, eyePos + dirVista, mundoArriba);
-		}
-
 		// cielo de cada lugar: el espacio sin cambios; en los planetas, tinte y bruma en el horizonte
 		AmbienteSuperficie ambiente = {};
-		if (zonaActual != ZONA_ESPACIO)
+		recursos.skybox.SetCieloSolido(glm::vec3(0.0f), 0.0f);   // solo el oceano usa cielo despejado
+		if (zonaActual == ZONA_PLANETA_OCEANO)
+		{
+			// cielo nublado y gris azulado
+			AmbienteOceano ao = ObtenerAmbienteOceano(factorDia);
+			ambiente.colorNiebla = ao.colorNiebla;
+			ambiente.densidadNiebla = ao.densidadNiebla;
+			ambiente.tinteCielo = ao.tinteCielo;
+			ambiente.brumaHorizonte = ao.brumaHorizonte;
+			recursos.skybox.SetAmbiente(ambiente.tinteCielo, ambiente.brumaHorizonte);
+			recursos.skybox.SetCieloSolido(ao.colorCenit, ao.cieloSolido);   // cielo despejado azul claro
+		}
+		else if (zonaActual != ZONA_ESPACIO)
 		{
 			ambiente = ObtenerAmbiente(zonaActual == ZONA_PLANETA_ROCOSO ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA, factorDia);
 			recursos.skybox.SetAmbiente(ambiente.tinteCielo, ambiente.brumaHorizonte);
@@ -780,13 +756,16 @@ int main()
 
 		if (zonaActual == ZONA_ESPACIO)
 		{
-			glm::vec3 posNave, tanNave;
-			evaluarTramo(tramoActual, offsetTramo, posNave, tanNave);
+			glm::vec3 posNave, tanNave, arribaRival;
+			LugarJugador lugarRival;
+			// la nave rival espera en la meta hasta que el jugador sube a miNave (tecla K)
+			EstadoRival(tAnim, lugarRival, posNave, tanNave, arribaRival);
+			bool naveVisible = (lugarRival == LUGAR_ESPACIO);   // si no, va corriendo dentro de un planeta
 
 			glm::vec3 objetivo = glm::normalize(tanNave);
 			naveForward = glm::normalize(glm::mix(naveForward, objetivo, fminf(1.0f, 8.0f * deltaTime)));
 
-			glm::mat4 naveModelo = matrizOrientacion(posNave + glm::vec3(0.0f, 1.3f, 0.0f), naveForward, mundoArriba);
+			glm::mat4 naveModelo = matrizOrientacion(posNave, naveForward, mundoArriba);
 
 			glm::vec3 motor1Pos = glm::vec3(naveModelo * glm::vec4(0.5f, 0.10f, -2.72f, 1.0f));
 			glm::vec3 motor2Pos = glm::vec3(naveModelo * glm::vec4(-0.5f, 0.10f, -2.72f, 1.0f));
@@ -830,8 +809,25 @@ int main()
 				planetaSelvaticoModel.RenderModel();   // enlaza su textura (la del .mtl o planetaSelvaTexture.png)
 			}
 
-			dibujarGuia(guiaPuntos, glm::vec3(0.35f, 0.85f, 1.0f), guiaAncho, guiaLargo,
-				uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
+			// pista de carreras (marcas con luces que corren) y cinturon de asteroides
+			UniformsEspacio ue;
+			ue.model = uniformModel;
+			ue.color = uniformColor;
+			ue.especular = uniformSpecularIntensity;
+			ue.brillo = uniformShininess;
+			ue.emision = uniformEmision;
+			DibujarCinturon(eyePos, camera.getCameraDirection(), tAnim, ue);
+			DibujarPlanetaOceano(tAnim, ue);
+			DibujarPista(tAnim, ue);
+			DibujarBase(tAnim, ue);
+
+			// avatar (Paul en la base o miNave en la pista) y miNave estacionada en la base
+			UniformsJugador uj;
+			uj.model = uniformModel;
+			uj.color = uniformColor;
+			uj.especular = uniformSpecularIntensity;
+			uj.brillo = uniformShininess;
+			DibujarJugador(LUGAR_ESPACIO, tAnim, uj);
 			dibujarGuia(guiaSatelite, glm::vec3(1.0f, 0.35f, 0.85f), guiaSateliteAncho, guiaSateliteLargo,
 				uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 
@@ -839,7 +835,8 @@ int main()
 			glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
 			recursos.plainTexture.UseTexture();
 			materialBrillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-			recursos.naveModel.RenderModel();
+			if (naveVisible)
+				recursos.naveModel.RenderModel();
 
 			glm::vec3 satPos = posicionSatelite(estadoSatelite, thetaSatelite);
 			glm::vec3 satTan = tangenteSatelite(estadoSatelite, thetaSatelite);
@@ -895,16 +892,39 @@ int main()
 				* glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.10f, -2.92f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(pulso));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llama1));
-			geometria.llamaMesh->RenderMeshModel();
+			if (naveVisible)
+				geometria.llamaMesh->RenderMeshModel();
 
 			glm::mat4 llama2 = naveModelo
 				* glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.10f, -2.92f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(pulso));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(llama2));
-			geometria.llamaMesh->RenderMeshModel();
+			if (naveVisible)
+				geometria.llamaMesh->RenderMeshModel();
 
 			glDepthMask(GL_TRUE);
 			glDisable(GL_BLEND);
+		}
+		else if (zonaActual == ZONA_PLANETA_OCEANO)
+		{
+			// dentro del planeta oceano: mar con olas y la ola gigante; las dos naves vuelan sobre el agua
+			shaderList[0].SetDirectionalLight(&mainLight);
+			shaderList[0].SetPointLights(nullptr, 0);
+			shaderList[0].SetSpotLights(nullptr, 0);
+			UniformsEspacio ue;
+			ue.model = uniformModel;
+			ue.color = uniformColor;
+			ue.especular = uniformSpecularIntensity;
+			ue.brillo = uniformShininess;
+			ue.emision = uniformEmision;
+			DibujarOceano(eyePos, ue);
+			dibujarRivalEn(LUGAR_OCEANO, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
+			UniformsJugador uj;
+			uj.model = uniformModel;
+			uj.color = uniformColor;
+			uj.especular = uniformSpecularIntensity;
+			uj.brillo = uniformShininess;
+			DibujarJugador(LUGAR_OCEANO, tAnim, uj);
 		}
 		else
 		{
@@ -935,10 +955,26 @@ int main()
 			u.brillo = uniformShininess;
 			u.emision = uniformEmision;
 			DibujarSuperficie(superficie, eyePos, camera.getCameraDirection(), factorDia, tAnim, u);
+			UniformsJugador uj;
+			uj.model = uniformModel;
+			uj.color = uniformColor;
+			uj.especular = uniformSpecularIntensity;
+			uj.brillo = uniformShininess;
+			DibujarJugador(lugarJugador(), tAnim, uj);   // la nave del jugador sobre el camino
+			dibujarRivalEn(lugarJugador(), uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);   // y la rival
 
 			dibujarCapsulaRetorno(posCapsula, 4.0f,
 				uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 		}
+
+		// reloj en pantalla: 120 s del ciclo = 24 horas; el ciclo empieza al amanecer (6:00)
+		float horaDelDia = fmodf(6.0f + 24.0f * tAnim / duracionCicloDiaNoche, 24.0f);
+		int dia = 1 + (int)((tAnim + 0.25f * duracionCicloDiaNoche) / duracionCicloDiaNoche);   // cambia a medianoche
+		int clima = 0;
+		if (zonaActual == ZONA_PLANETA_SELVATICO) clima = 1;
+		else if (zonaActual == ZONA_PLANETA_ROCOSO) clima = 2;
+		else if (zonaActual == ZONA_PLANETA_OCEANO) clima = 3;   // despejado
+		DibujarReloj(mainWindow.getBufferWidth(), mainWindow.getBufferHeight(), horaDelDia, dia, clima);
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();

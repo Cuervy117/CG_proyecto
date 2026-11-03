@@ -19,6 +19,9 @@ public:
 	// Ambientacion del cielo: 'tinte' multiplica el cubemap y 'bruma' (rgb = color, a = intensidad)
 	// pinta el horizonte. Con tinte (1,1,1) y bruma.a = 0 el skybox se ve como siempre.
 	void SetAmbiente(const glm::vec3& tinte, const glm::vec4& bruma);
+	// Cielo despejado: degradado del color de la bruma (horizonte) a 'cenit' (arriba). 'cantidad' = 1
+	// lo reemplaza por completo; 0 deja el cubemap normal.
+	void SetCieloSolido(const glm::vec3& cenit, float cantidad);
 		
 	~Skybox();
 private:
@@ -26,9 +29,10 @@ private:
 	Shader* skyShader;
 	GLuint textureId;
 	GLuint uniformProjection, uniformView;
-	GLuint uniformTinte, uniformBruma;
+	GLuint uniformTinte, uniformBruma, uniformCieloSolido;
 	glm::vec3 tinteCielo;
 	glm::vec4 brumaHorizonte;
+	glm::vec4 cieloSolido;
 
 };
 

@@ -49,6 +49,15 @@ void DibujarSuperficie(TipoSuperficie tipo, const glm::vec3& posCamara, const gl
 // (no puede alejarse del camino más de cierta distancia) ni atraviese troncos, rocas, etc.
 glm::vec3 LimitarPosicion(TipoSuperficie tipo, const glm::vec3& posicion);
 
+// Carrera dentro del planeta (la nave va sobre el camino, del inicio hasta pasar el portal)
+float LargoCarreraSuperficie(TipoSuperficie tipo);
+void PuntoCarreraSuperficie(TipoSuperficie tipo, float distancia, float carril, float altura, glm::vec3& posicion, glm::vec3& adelante);
+glm::vec3 AjustarACamino(TipoSuperficie tipo, const glm::vec3& posicion, float altura, glm::vec3* adelante);
+
+// Modelo de Paul (para usarlo también como avatar del jugador); nullptr si no se cargó
+class Model;
+Model* ModeloPaul();
+
 // true cuando el jugador está pasando por el hueco del portal de salida de ese planeta
 bool CruzandoPortal(TipoSuperficie tipo, const glm::vec3& posicion);
 

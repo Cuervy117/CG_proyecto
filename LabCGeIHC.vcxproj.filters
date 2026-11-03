@@ -72,8 +72,20 @@
     <ClInclude Include="Input.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\world\Espacio.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\world\Reloj.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
     <ClInclude Include="src\game\world\Superficie.h">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\world\Jugador.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\world\Oceano.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +138,18 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\game\world\Superficie.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\world\Espacio.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\world\Reloj.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\world\Jugador.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\world\Oceano.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

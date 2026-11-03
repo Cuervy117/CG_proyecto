@@ -37,6 +37,10 @@
     <ClInclude Include="src\engine\stb_image.h" />
     <ClInclude Include="src\engine\Texture.h" />
     <ClInclude Include="src\engine\Window.h" />
+    <ClInclude Include="src\game\world\Espacio.h" />
+    <ClInclude Include="src\game\world\Jugador.h" />
+    <ClInclude Include="src\game\world\Oceano.h" />
+    <ClInclude Include="src\game\world\Reloj.h" />
     <ClInclude Include="src\game\world\Superficie.h" />
   </ItemGroup>
   <ItemGroup Label="A-engine-compile">
@@ -56,6 +60,10 @@
     <ClCompile Include="src\engine\SpotLight.cpp" />
     <ClCompile Include="src\engine\Texture.cpp" />
     <ClCompile Include="src\engine\Window.cpp" />
+    <ClCompile Include="src\game\world\Espacio.cpp" />
+    <ClCompile Include="src\game\world\Jugador.cpp" />
+    <ClCompile Include="src\game\world\Oceano.cpp" />
+    <ClCompile Include="src\game\world\Reloj.cpp" />
     <ClCompile Include="src\game\world\Superficie.cpp" />
   </ItemGroup>
   <ItemGroup Label="A-scene">
