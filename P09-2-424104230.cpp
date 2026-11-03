@@ -38,6 +38,7 @@
 #include "Scene.h"
 #include "SceneNode.h"
 #include "src/game/avatar/Avatar.h"
+#include "src/ui/Hud.h"
 
 static const float pi = 3.14159265358979323846f;
 static const float aRad = pi / 180.0f;
@@ -494,6 +495,9 @@ int main()
 	Window mainWindow(1366, 768);
 	mainWindow.Initialise();
 	cgame::InputCapture inputCapture(mainWindow);
+	cgame::Hud hud;
+	if (!hud.initialize())
+		printf("No se pudo iniciar el HUD de la demo.\n");
 
 	CreateObjects();
 	crearShaders();
@@ -587,6 +591,15 @@ int main()
 		director.update(dt, *nodoAvatar);
 		const glm::mat4 vista = director.view();
 		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
+		const char* nombreModo = "PLANETA";
+		switch (director.mode())
+		{
+		case CameraMode::Carrera: nombreModo = "CARRERA"; break;
+		case CameraMode::Vuelo: nombreModo = "VUELO"; break;
+		case CameraMode::Observacion: nombreModo = "OBSERVACION"; break;
+		default: break;
+		}
+		const char* accion = directionLength > 0.001f ? "CAMINANDO" : "WASD MOVER";
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -604,6 +617,9 @@ int main()
 		shaderList[0].SetSpotLights(nullptr, 0);
 
 		escena.render(shaderList[0], vista, projection);
+		hud.draw(static_cast<int>(mainWindow.getBufferWidth()),
+			static_cast<int>(mainWindow.getBufferHeight()),
+			nombreModo, "DEMO LOCAL", accion);
 
 		glUseProgram(0);
 

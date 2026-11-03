@@ -92,6 +92,7 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C1 / H-C5 | 2026-11-02 | Hora no anotada | Rek’Sai responde a WASD y a las cámaras F1–F4 | Conecté WASD con el movimiento de Rek’Sai para que camine al avanzar y se detenga al soltar las teclas. También conecté F1–F4 para cambiar entre las cuatro cámaras, que siguen al avatar en la demo. Después probé las teclas en mi PC y funcionaron. Todavía falta unirlo al programa/mapa común. | `P09-2-424104230.cpp`; commit [`5ae68e0`](https://github.com/Cuervy117/CG_proyecto/commit/5ae68e0) | ≈2 h 15 min para conectar; prueba de teclas registrada aparte | Controles y cámaras comprobados en la demo local; integración común pendiente |
 | H-C0 / H-C2 | 2026-11-02 | Hora no anotada | Abrí y revisé la demo en mi PC | Abrí la versión nueva de la demo OpenGL y confirmé que Rek’Sai se ve bien y completa. La compilé localmente con v145 porque mi PC no tiene el v143 que pide el proyecto. | `x64/Release/LabCGeIHC.local.exe` local; commit [`5ae68e0`](https://github.com/Cuervy117/CG_proyecto/commit/5ae68e0) | Sin registrar por ahora | Vista comprobada; falta validar con v143 e integrar al programa común |
 | H-C1 / H-C5 | 2026-11-02 | Hora no anotada | Probé WASD y las cámaras | Probé WASD para caminar y detener a Rek’Sai, y F1–F4 para cambiar entre las cámaras. Me funcionaron en la demo local. Todavía falta probarlo con v143 e integrarlo al programa/mapa común. | Demo local `x64/Release/LabCGeIHC.local.exe`; cambio en [`5ae68e0`](https://github.com/Cuervy117/CG_proyecto/commit/5ae68e0) | 5 min, tiempo que trabajé según mi registro | Prueba local completada; falta la integración común y la validación con v143 |
+| H-C6 | 2026-11-02 | Hora no anotada | HUD sencillo en la demo OpenGL | Agregué un panel que muestra el modo de cámara, el lugar de prueba y la acción: por ejemplo, “OBSERVACION”, “DEMO LOCAL” y “WASD MOVER”; al caminar cambia a “CAMINANDO”. Abrí la nueva demo y revisé que el panel aparezca. Todavía falta conectarlo a los lugares y acciones reales del mapa común. | `src/ui/Hud.h`, `src/ui/Hud.cpp`, `P09-2-424104230.cpp`; `LabCGeIHC.vcxproj` | Sin registrar por ahora; falta que confirme el tiempo | Se ve en mi demo local; integración al programa común pendiente |
 
 ### Estado de los hitos C al 2-nov
 
@@ -104,7 +105,7 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C3 — avatar en el mapa | **Pendiente**: Rek’Sai funciona en una escena de prueba, pero todavía no está en el mapa/programa principal. | Ponerla en P1, hacer que la cámara la siga en tercera persona y comprobarlo en el programa del equipo. |
 | H-C4 — pasar entre mapas | **Pendiente en esta rama**. | Hacer que E permita entrar a un planeta al acercarme en modo nave y volver al espacio desde una cápsula del planeta. |
 | H-C5 — modos F1–F4 | **Probados en mi demo**: F1 planeta, F2 carrera, F3 vuelo y F4 observación cambian la cámara. | Integrar y comprobar los modos en el programa común. |
-| H-C6 — información en pantalla | **Pendiente en esta rama**. | Mostrar en pantalla en qué modo y lugar estás y qué acción puedes hacer. |
+| H-C6 — información en pantalla | **Hecho en la demo local**: muestra el modo de cámara, “DEMO LOCAL” y la acción disponible. | Conectarlo a la ubicación y acción reales cuando lo una al programa/mapa común. |
 
 ### En sencillo: códigos y palabras que aparecen arriba
 
@@ -149,7 +150,7 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 | 2026-10-30 | Empezar a preparar a Rek’Sai | Empecé a separar y preparar el modelo para poder animarlo. El total que confirmé para ese trabajo fue de unas 3 h entre el 30 y el 31; no recuerdo cuánto fue cada día. | Parte de ≈3 h entre 30–31 oct; el total se anota una sola vez |
 | 2026-10-31 | Preparar el proyecto, controles y avatar | Dejé lista mi rama, junté localmente el trabajo de A, preparé los archivos de Rek’Sai y su textura y avancé los controles. También acomodé el modelo para verlo acostado, como corresponde. El programa todavía no abría porque faltaban archivos; lo resolví el 2-nov. | ≈1 h para clonar/preparar el proyecto y controles; además, este día forma parte de las ≈3 h de Rek’Sai anotadas entre 30–31 oct |
 | 2026-11-01 | Animaciones y contenido según rol | No trabajé en el proyecto ese día. | 0 h |
-| 2026-11-02 | Hacer que Rek’Sai se viera bien, caminara y respondiera a los controles | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, dejé la textura y la caminata de Rek’Sai, conecté WASD para moverla y F1–F4 para cambiar la cámara. También ajusté la cola y los brazos delanteros y subí el paquete al Drive compartido. Abrí la versión nueva en mi PC, vi que Rek’Sai se ve bien y probé los controles y las cámaras: sí funcionan. Me falta validar con v143 y unirla al programa/mapa común. | ≈3 h 20 min de trabajo registrado; incluye los 5 min de prueba de teclas. No conté aparte la revisión visual |
+| 2026-11-02 | Hacer que Rek’Sai se viera bien, caminara, respondiera a los controles y mostrara información | Arreglé un problema que hacía que se vieran partes sueltas o faltantes, dejé la textura y la caminata de Rek’Sai, conecté WASD para moverla y F1–F4 para cambiar la cámara. También ajusté la cola y los brazos delanteros y subí el paquete al Drive compartido. Abrí la versión nueva en mi PC, confirmé que Rek’Sai se ve bien y probé los controles y las cámaras: sí funcionan. También agregué un HUD sencillo que ya aparece en la demo. Me falta validar con v143 y unir todo al programa/mapa común. | ≈3 h 20 min ya registradas para el trabajo anterior; falta anotar el tiempo del HUD |
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
@@ -172,7 +173,8 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 - [ ] Poner Rek’Sai en P1/mapa principal, hacer que la cámara la siga y guardar una captura de la prueba común.
 - [ ] Animar la criatura tipo Kurama de N5 en Shinobi; B debe dejar primero el punto donde va colocada.
 - [ ] Hacer que E permita entrar/salir de los planetas y conectar F1 planeta, F2 carrera, F3 vuelo y F4 observación.
-- [ ] Mostrar en pantalla el modo, el planeta/lugar y la acción disponible.
+- [x] Mostrar en la demo local el modo, el lugar de prueba y la acción disponible.
+- [ ] Conectar el HUD a la ubicación y acción reales del programa/mapa común.
 - [x] Generar mi `AGENTS.md` local con datos comprobados (`PLAN_MAESTRO.md` §§14–15.1; no se commitea).
 - [x] Confirmar rama local `feat/c-avatar` y traer `origin/feat/a-motor` localmente.
 
