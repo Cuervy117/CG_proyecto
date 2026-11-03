@@ -163,7 +163,7 @@ bool Hud::initialize()
 	return m_vertexArray != 0 && m_vertexBuffer != 0;
 }
 
-void Hud::draw(int width, int height, const std::string& mode,
+void Hud::draw(int width, int height, const std::string& cameraView,
 	const std::string& location, const std::string& action)
 {
 	if (m_program == 0 || width <= 0 || height <= 0)
@@ -178,7 +178,7 @@ void Hud::draw(int width, int height, const std::string& mode,
 	std::vector<float> text;
 	addRectangle(background, 16.0f, 14.0f, 16.0f + panelWidth,
 		14.0f + panelHeight);
-	addText(text, "MODO: " + mode, x, y, cell);
+	addText(text, "CAMARA: " + cameraView, x, y, cell);
 	addText(text, "LUGAR: " + location, x, y + 25.0f, cell);
 	addText(text, "ACCION: " + action, x, y + 50.0f, cell);
 

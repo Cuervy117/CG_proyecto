@@ -391,28 +391,10 @@ static bool probarCameraDirector()
 		director.rig() != nullptr &&
 		vistaEn(director, glm::vec3(3.0f, 12.0f, 15.320508f));
 
-	const bool f1Ok =
-		director.setModeForKey(GLFW_KEY_F1) &&
-		director.mode() == CameraMode::Planeta;
-	const bool f2Ok =
-		director.setModeForKey(GLFW_KEY_F2) &&
-		director.mode() == CameraMode::Carrera;
-	const bool f3Ok =
-		director.setModeForKey(GLFW_KEY_F3) &&
-		director.mode() == CameraMode::Vuelo;
-	const bool f4Ok =
-		director.setModeForKey(GLFW_KEY_F4) &&
-		director.mode() == CameraMode::Observacion;
-
-	const CameraMode modoAnterior = director.mode();
-	const bool teclaInvalidaOk =
-		!director.setModeForKey(GLFW_KEY_F5) &&
-		director.mode() == modoAnterior;
-
 	const bool ok = planetaOk && mismoModo && mismoRig && carreraOk && vueloOk &&
-		observacionOk && f1Ok && f2Ok && f3Ok && f4Ok && teclaInvalidaOk;
+		observacionOk;
 
-	printf("A4.4 CameraDirector: %s (Planeta/Carrera/Vuelo/Observacion; F1-F4)\n",
+	printf("A4.4 CameraDirector: %s (rigs Planeta/Carrera/Vuelo/Observacion)\n",
 		ok ? "OK" : "FALLO");
 	fflush(stdout);
 	return ok;
@@ -567,11 +549,8 @@ int main()
 
 		const cgame::InputFrame& input = inputCapture.update(dt);
 		const cgame::ControlFrame controls = cgame::mapControls(input);
-		if (controls.planetMode) director.setMode(CameraMode::Planeta);
-		if (controls.raceMode) director.setMode(CameraMode::Carrera);
-		if (controls.flightMode) director.setMode(CameraMode::Vuelo);
-		if (controls.observationMode) director.setMode(CameraMode::Observacion);
-
+		// F1-F4 belong to the game experiences; this isolated preview has no
+		// world bindings yet, so it must not use them to switch camera rigs.
 		glm::vec3 avatarDirection(controls.movementXZ.x, 0.0f,
 			controls.movementXZ.y);
 		const float directionLength = glm::length(avatarDirection);
@@ -591,14 +570,6 @@ int main()
 		director.update(dt, *nodoAvatar);
 		const glm::mat4 vista = director.view();
 		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
-		const char* nombreModo = "PLANETA";
-		switch (director.mode())
-		{
-		case CameraMode::Carrera: nombreModo = "CARRERA"; break;
-		case CameraMode::Vuelo: nombreModo = "VUELO"; break;
-		case CameraMode::Observacion: nombreModo = "OBSERVACION"; break;
-		default: break;
-		}
 		const char* accion = directionLength > 0.001f ? "CAMINANDO" : "WASD MOVER";
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -619,7 +590,7 @@ int main()
 		escena.render(shaderList[0], vista, projection);
 		hud.draw(static_cast<int>(mainWindow.getBufferWidth()),
 			static_cast<int>(mainWindow.getBufferHeight()),
-			nombreModo, "DEMO LOCAL", accion);
+			"SEGUIMIENTO", "DEMO LOCAL", accion);
 
 		glUseProgram(0);
 

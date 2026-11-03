@@ -10,7 +10,7 @@ public:
 	~Hud();
 
 	bool initialize();
-	void draw(int width, int height, const std::string& mode,
+	void draw(int width, int height, const std::string& cameraView,
 		const std::string& location, const std::string& action);
 	void shutdown();
 
