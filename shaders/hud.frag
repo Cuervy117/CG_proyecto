@@ -1,5 +1,6 @@
 #version 330
-// Sin luces ni niebla: la textura multiplicada por un color (rgb = tinte, a = opacidad)
+// NUEVO (no viene en la practica): sin luces ni niebla, la textura multiplicada por un color
+// (rgb = tinte, a = opacidad). Lo transparente de la imagen se descarta.
 in vec2 TexCoord;
 out vec4 color;
 uniform sampler2D theTexture;

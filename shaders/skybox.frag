@@ -3,10 +3,11 @@ in vec3 TexCoords;
 out vec4 color;
 uniform samplerCube skybox;
 
-// Ambientacion por planeta (Skybox::SetAmbiente). Con los valores iniciales se ve igual que antes.
-uniform vec3 tinteCielo = vec3(1.0);       // multiplica el cubemap: cambia el tono del cielo
-uniform vec4 brumaHorizonte = vec4(0.0);   // rgb = color de la bruma, a = intensidad (0 = sin bruma)
-uniform vec4 cieloSolido = vec4(0.0);      // cielo despejado: rgb = color arriba, a = cuanto reemplaza al cubemap
+// NUEVO (no viene en la practica): ambientacion de cada lugar (Skybox::SetAmbiente y SetCieloSolido).
+// Con los valores iniciales el skybox se ve igual que en la practica.
+uniform vec3 tinteCielo = vec3(1.0);		// multiplica el cubemap: cambia el tono del cielo
+uniform vec4 brumaHorizonte = vec4(0.0);	// rgb = color de la bruma, a = intensidad (0 = sin bruma)
+uniform vec4 cieloSolido = vec4(0.0);		// cielo despejado: rgb = color arriba, a = cuanto reemplaza al cubemap
 
 void main()
 {

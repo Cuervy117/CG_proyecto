@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <stdio.h>
 #include <string>
@@ -31,8 +31,12 @@ public:
 	GLuint GetShininessLocation();
 	GLuint GetEyePositionLocation();
 	GLuint getColorLocation();
-	GLuint getOffsetLocation();   // Practica 9: uniform vec2 toffset del vertex shader
-	GLuint GetShaderID() { return shaderID; }   // id del programa, para pedir uniforms extra con glGetUniformLocation
+	GLuint getOffsetLocation();   //textura con movimiento: uniform vec2 toffset del vertex shader (practica 9)
+	// NUEVO: uniforms extra de shader_light.frag para la ambientacion de los planetas
+	GLuint getNieblaLocation();   // uniform vec4 niebla: rgb = color de la niebla, a = densidad
+	GLuint getEmisionLocation();  // uniform vec3 emision: brillo propio (cristales, luces de la pista)
+	// NUEVO: id del programa, para pedir uniforms que no tiene la clase (skybox y reloj)
+	GLuint GetShaderID() { return shaderID; }
 
 	void SetDirectionalLight(DirectionalLight * dLight);
 	void SetPointLights(PointLight * pLight, unsigned int lightCount);
@@ -47,7 +51,7 @@ private:
 	int pointLightCount;
 	int spotLightCount;
 	GLuint shaderID, uniformProjection, uniformModel, uniformColor, uniformView, uniformEyePosition,
-		uniformSpecularIntensity, uniformShininess, uniformTextureOffset;
+		uniformSpecularIntensity, uniformShininess, uniformTextureOffset, uniformNiebla, uniformEmision;
 
 	struct {
 		GLuint uniformcolor;

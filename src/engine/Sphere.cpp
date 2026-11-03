@@ -74,7 +74,7 @@ void Sphere::load() {
 	size_t stride;
 
 	size_t offset1 = 0;
-	size_t offset2 = 0;
+	size_t offset2 = sizeof(glm::vec3);
 	size_t offset3 = 0;
 
 		glBufferData(GL_ARRAY_BUFFER, vertexC.size() * sizeof(glm::vec3) * 2,

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include<string>
 #include<assimp/Importer.hpp>
@@ -17,30 +17,28 @@ public:
 
 	void LoadModel(const std::string& fileName);
 	void RenderModel();
-	// Igual que RenderModel(), pero antes de cada malla manda al shader el color difuso (Kd)
-	// de su material cuando ese material no trae textura (por ejemplo la capsula).
-	// 'tinte' multiplica ese color; con glm::vec3(1.0f) se ve tal cual se exporto de Blender.
-	void RenderModel(GLuint uniformColor, const glm::vec3& tinte);
-	// Dibuja todas las mallas con la textura que se le pasa, ignorando la de su .mtl
-	// (por ejemplo, el mismo asteroide como roca de la selva o como aguja del desierto).
-	void RenderModelConTextura(Texture& textura);
-
-	// Textura que se usa en los materiales que NO encontraron su imagen (por ejemplo, cuando el .mtl
-	// exportado por Blender dice texture_diffuse.png pero la imagen se renombro). nullptr = plain.png.
-	void SetTexturaRespaldo(Texture* textura) { texturaRespaldo = textura; }
-	bool usaTexturaPropia() const;   // true si algun material cargo su propia imagen
 	void ClearModel();
 
-	// utilidad (practica 9): saber si el modelo cargo algo y cuantas mallas trae
-	int getMeshCount() { return (int)MeshList.size(); }
+	// NUEVO: igual que RenderModel(), pero antes de cada malla manda al shader el color difuso (Kd)
+	// de su material cuando ese material no tiene textura. La cápsula de regreso no trae imágenes,
+	// solo colores en su .mtl (casco blanco, vidrio azul, franja oscura); con RenderModel() normal
+	// toda la cápsula saldría de un solo color. 'tinte' multiplica ese color (1,1,1 = sin cambio).
+	void RenderModel(GLuint uniformColor, glm::vec3 tinte);
 
-	// utilidades del proyecto: medidas reales de la geometria cargada
-	// (sirven para centrar y escalar el modelo sin volver a leer el .obj)
+	// NUEVO: dibuja todas las mallas con la textura que se le pasa e ignora la de su .mtl.
+	// Así el mismo asteroide sirve de roca con musgo, de aguja del desierto o de montaña.
+	void RenderModelConTextura(Texture& textura);
+
+	// NUEVO: medidas de la geometría ya cargada (caja envolvente de todos los vértices).
+	// Los modelos salen de Blender con tamaños y posiciones muy distintos (el planeta mide cientos de
+	// unidades y el asteroide menos de una). Con estas medidas se centran y se escalan en el main:
+	//   model = glm::scale(model, glm::vec3(radioDeseado / Modelo.getRadio()));
+	//   model = glm::translate(model, -Modelo.getCentro());
 	bool estaCargado() const { return !MeshList.empty(); }
 	int getNumTriangulos() const { return numTriangulos; }
-	glm::vec3 getCentro() const;   // centro de la caja envolvente
-	float getRadio() const;        // mitad del lado mas grande de la caja envolvente
-	glm::vec3 getTamano() const { return MeshList.empty() ? glm::vec3(0.0f) : (maximo - minimo); }   // largo, alto y ancho
+	glm::vec3 getCentro() const;	// centro de la caja envolvente
+	glm::vec3 getTamano() const;	// largo, alto y ancho de la caja envolvente
+	float getRadio() const;			// mitad del lado más grande de la caja envolvente
 
 	~Model();
 
@@ -52,12 +50,11 @@ private:
 	std::vector<Texture*>TextureList;
 	std::vector<unsigned int>meshTotex;
 
-	std::vector<glm::vec3> ColorList;   // color difuso (Kd) de cada material
-	std::vector<bool> TieneTextura;     // true si el material encontro su propia textura
-	std::string carpetaModelo;          // carpeta del archivo, ahi se buscan primero sus texturas
-	glm::vec3 minimo;                   // caja envolvente de todos los vertices
-	glm::vec3 maximo;
+	// NUEVO: datos extra de los materiales y de la geometría
+	std::vector<glm::vec3> ColorList;	// color difuso (Kd) de cada material
+	std::vector<bool> TieneTextura;		// true si el material encontró su propia imagen
+	glm::vec3 minimo;					// esquina mínima de la caja envolvente
+	glm::vec3 maximo;					// esquina máxima de la caja envolvente
 	int numTriangulos;
-	Texture* texturaRespaldo;
 };
 
