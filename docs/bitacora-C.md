@@ -104,7 +104,7 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | Criatura N5 tipo Kurama | **Pendiente**: es otra criatura, aparte de Rek’Sai; todavía no está hecha en esta rama. | Cuando B deje el punto N5 en Shinobi, preparar su caminata moviendo patas y colas. |
 | H-C3 — avatar en el mapa | **Pendiente**: Rek’Sai funciona en una escena de prueba, pero todavía no está en el mapa/programa principal. | Ponerla en P1, hacer que la cámara la siga en tercera persona y comprobarlo en el programa del equipo. |
 | H-C4 — pasar entre mapas | **Pendiente en esta rama**. | Hacer que E permita entrar a un planeta al acercarme en modo nave y volver al espacio desde una cápsula del planeta. |
-| H-C5 — modos F1–F4 | **Pendiente**: antes las teclas solo cambiaban vistas de cámara en la demo; eso no activa las experiencias del proyecto. | Conectarlas para que F1 planeta, F2 carrera, F3 vuelo y F4 observación hagan lo que pide el plan, usando el mundo y sus objetos. |
+| H-C5 — modos F1–F4 | **Pendiente**: el teclado ya reconoce las teclas, pero todavía no activa ninguna experiencia ni usa los objetos del mundo. La vista de cámara que probé antes era otra cosa. | Conectar F1 planeta, F2 carrera, F3 vuelo y F4 observación con sus acciones y objetos del proyecto. |
 | H-C6 — información en pantalla | **Prototipo local**: muestra la vista de cámara, “DEMO LOCAL” y la acción de WASD. | Mostrar el modo y la ubicación reales y la acción contextual en el programa común. |
 
 ### En sencillo: códigos y palabras que aparecen arriba
@@ -126,6 +126,8 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | OBJ / MTL / PNG | Archivo del modelo / archivo que describe su material / imagen de textura. |
 | v143 / v145 | Dos versiones de las herramientas de compilación; falta usar la misma que acordó el equipo. |
 | Rama | Una línea separada de trabajo en GitHub; la mía es `feat/c-avatar`. |
+
+En corto: F1–F4 ya son botones que el programa puede detectar, pero todavía no están conectados a los planetas, cápsulas, nave ni objetivos. Es como tener los botones puestos pero sin cable hacia lo que deben activar; no es que la experiencia ya funcione y solo falte prenderla. Por eso en la demo aislada no te llevan a ningún modo. Falta conectarlos cuando integremos las experiencias con el mundo común.
 
 ---
 
