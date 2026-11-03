@@ -91,7 +91,7 @@ void MeshColor::CreateMeshColor(GLfloat* vertices, unsigned int numOfVertices)
 
 
 
-void MeshModel::CreateMeshModel(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices)
+void MeshModel::CreateMeshModel(GLfloat* vertices, unsigned int* indices, unsigned int vertexFloatCount, unsigned int numOfIndices)
 {
 	indexCount = numOfIndices;
 
@@ -104,7 +104,7 @@ void MeshModel::CreateMeshModel(GLfloat* vertices, unsigned int* indices, unsign
 
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numOfVertices * 8, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexFloatCount, vertices, GL_STATIC_DRAW);
 	//geometría
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, 0);
 	glEnableVertexAttribArray(0);

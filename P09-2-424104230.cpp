@@ -1,5 +1,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 
+#include "Superficie.h"
+#include "Espacio.h"
+#include "Oceano.h"
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
@@ -63,7 +66,6 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 
 static const float PISO_Y = -2.0f;
-static const float PISO_ESCALA = 10.0f;
 
 static const glm::vec3 REKSAI_POS(0.0f, PISO_Y + 0.12f, 0.0f);
 static const float REKSAI_ESCALA = 2.2f;
@@ -488,6 +490,9 @@ int main()
 	LoadLlamas();
 	LoadSkyboxCupertin();
 	LoadNave();
+	InicializarSuperficies();
+	InicializarOceano();
+	InicializarEspacio();
 
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.45f, 0.85f,
@@ -495,12 +500,6 @@ int main()
 
 	Scene escena;
 	escena.setFallbackTexture(&recursos.plainTexture);
-
-	SceneNode* nodoPiso = escena.root.add(std::make_unique<SceneNode>("piso"));
-	nodoPiso->setMesh(geometria.pisoMesh);
-	nodoPiso->setTexture(&recursos.pisoTexture);
-	nodoPiso->position = glm::vec3(0.0f, PISO_Y, 0.0f);
-	nodoPiso->scale = glm::vec3(PISO_ESCALA, 1.0f, PISO_ESCALA);
 
 	cgame::Avatar rekSaiAvatar;
 	if (!rekSaiAvatar.attach(escena.root, "Models/reksai.obj",
@@ -529,12 +528,47 @@ int main()
 
 	CameraDirector director;
 	director.setMode(CameraMode::Planeta);
-	glm::vec3 posicionAvatar = REKSAI_POS;
+	enum class Zona { Selva, Roca, Oceano, Pista };
+	Zona zona = Zona::Selva;
+	glm::vec3 posicionAvatar = PosicionInicio(SUPERFICIE_SELVATICA);
+	bool enNave = false;
+	int tramo = 0;
+	float recorrido = DistanciaMeta(), carril = 0.0f;
+	glm::vec2 sobreOla(0.0f);
+	SceneNode* rival = escena.root.add(std::make_unique<SceneNode>("nave_rival"));
+	rival->setModel(&recursos.naveModel);
+	rival->scale = nodoNave->scale;
+	auto entrar = [&](Zona destino) {
+		zona = destino;
+		printf("Zona: %s\n", zona == Zona::Selva ? "Selva" : zona == Zona::Roca ? "Roca" : zona == Zona::Oceano ? "Oceano" : "Pista");
+		fflush(stdout);
+		enNave = zona == Zona::Pista || zona == Zona::Oceano;
+		if (zona == Zona::Selva || zona == Zona::Roca)
+			posicionAvatar = PosicionInicio(zona == Zona::Selva ? SUPERFICIE_SELVATICA : SUPERFICIE_ROCOSA);
+		if (zona == Zona::Oceano) {
+			float yaw;
+			InicioOceano(sobreOla.x, sobreOla.y, yaw);
+		}
+		recorrido = tramo == 0 ? DistanciaMeta() : 0.0f;
+		carril = 0.0f;
+		nodoNave->position = posicionAvatar + glm::vec3(3, 0.7f, 0);
+	};
+	entrar(zona);
 	const float velocidadAvatar = 2.5f;
 
 	const float aspecto = (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight();
 	const glm::mat4 projection = director.projection(aspecto);
 
+	Shader& shader = shaderList[0];
+	shader.UseShader();
+	GLint programa;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &programa);
+	const UniformsEspacio espacio = {shader.GetModelLocation(), shader.getColorLocation(),
+		shader.GetSpecularIntensityLocation(), shader.GetShininessLocation(),
+		static_cast<GLuint>(glGetUniformLocation(programa, "emision"))};
+	const UniformsSuperficie terreno = {espacio.model, espacio.color, shader.getOffsetLocation(),
+		espacio.especular, espacio.brillo, espacio.emision};
+	const GLint niebla = glGetUniformLocation(programa, "niebla");
 	GLfloat lastTime = (GLfloat)glfwGetTime();
 
 	while (!mainWindow.getShouldClose())
@@ -549,25 +583,55 @@ int main()
 
 		const cgame::InputFrame& input = inputCapture.update(dt);
 		const cgame::ControlFrame controls = cgame::mapControls(input);
-		// F1-F4 belong to the game experiences; this isolated preview has no
-		// world bindings yet, so it must not use them to switch camera rigs.
+		if (input.wasPressed(GLFW_KEY_F5)) entrar(Zona::Selva);
+		if (input.wasPressed(GLFW_KEY_F6)) entrar(Zona::Roca);
+		if (input.wasPressed(GLFW_KEY_F7)) entrar(Zona::Oceano);
+		if (input.wasPressed(GLFW_KEY_F8)) { tramo = 0; entrar(Zona::Pista); }
 		glm::vec3 avatarDirection(controls.movementXZ.x, 0.0f,
 			controls.movementXZ.y);
 		const float directionLength = glm::length(avatarDirection);
 		if (directionLength > 1.0f)
 			avatarDirection /= directionLength;
-		if (glm::length(avatarDirection) > 0.001f)
-		{
-			posicionAvatar += avatarDirection * velocidadAvatar * dt;
-			posicionAvatar.x = glm::clamp(posicionAvatar.x, -8.0f, 8.0f);
-			posicionAvatar.z = glm::clamp(posicionAvatar.z, -8.0f, 8.0f);
+		const TipoSuperficie superficie = zona == Zona::Selva ? SUPERFICIE_SELVATICA : SUPERFICIE_ROCOSA;
+		glm::vec3 frente(0,0,1), arriba(0,1,0);
+		if (zona == Zona::Pista) {
+			recorrido = glm::max(0.0f, recorrido + controls.movementXZ.y * 55.0f * dt);
+			carril = glm::clamp(carril + controls.movementXZ.x * 8.0f * dt, -3.0f, 3.0f);
+			PuntoEnPista(tramo, recorrido, carril, 1.0f, posicionAvatar, frente, arriba);
+			glm::vec3 rumbo;
+			PuntoEnPista(tramo, fmodf(now * 18.0f, LargoTramo(tramo)), -2, 1, rival->position, rumbo, arriba);
+			rival->rotationEuler.y = atan2f(rumbo.x, rumbo.z);
+			if (recorrido >= LargoTramo(tramo))
+				entrar(tramo == 0 ? Zona::Roca : tramo == 1 ? Zona::Selva : Zona::Oceano);
+		} else if (zona == Zona::Oceano) {
+			sobreOla += controls.movementXZ * (24.0f * dt);
+			sobreOla = LimitarOceano(sobreOla.x, sobreOla.y);
+			PuntoOla(sobreOla.x, sobreOla.y, 1.0f, posicionAvatar, frente, arriba);
+			if (LlegoALaCresta(posicionAvatar)) { tramo = 0; entrar(Zona::Pista); }
+		} else {
+			if (controls.ascendOrInteractPressed && (enNave || glm::distance(posicionAvatar, nodoNave->position) < 5.0f))
+				{
+				enNave = !enNave;
+				printf("Jugador: %s\n", enNave ? "a bordo" : "a pie");
+				fflush(stdout);
+			}
+			posicionAvatar = LimitarPosicion(superficie, posicionAvatar + avatarDirection * (enNave ? 18.0f : velocidadAvatar) * dt);
+			if (directionLength > 0.001f) frente = avatarDirection;
+			if (CruzandoPortal(superficie, posicionAvatar)) { tramo = zona == Zona::Roca ? 1 : 2; entrar(Zona::Pista); }
+		}
+		nodoAvatar->visible = !enNave;
+		nodoNave->visible = true;
+		rival->visible = zona == Zona::Pista;
+		if (enNave) {
+			nodoNave->position = posicionAvatar + arriba * 0.7f;
+			nodoNave->rotationEuler.y = atan2f(frente.x, frente.z);
 		}
 		rekSaiAvatar.setPosition(posicionAvatar);
 		rekSaiAvatar.update(dt, avatarDirection,
 			directionLength > 0.001f ? velocidadAvatar : 0.0f);
 
 		escena.updateWorld();
-		director.update(dt, *nodoAvatar);
+		director.update(dt, enNave ? *nodoNave : *nodoAvatar);
 		const glm::mat4 vista = director.view();
 		const glm::vec3 ojo = glm::vec3(glm::inverse(vista)[3]);
 		const char* accion = directionLength > 0.001f ? "CAMINANDO" : "WASD MOVER";
@@ -587,10 +651,27 @@ int main()
 		shaderList[0].SetPointLights(&luzHolocron, 1);
 		shaderList[0].SetSpotLights(nullptr, 0);
 
-		escena.render(shaderList[0], vista, projection);
+		const bool enSuperficie = zona == Zona::Selva || zona == Zona::Roca;
+		const TipoSuperficie actual = zona == Zona::Selva ? SUPERFICIE_SELVATICA : SUPERFICIE_ROCOSA;
+		const float dia = 0.5f + 0.5f * cosf(now * 0.05236f);
+		if (enSuperficie) {
+			const auto ambiente = ObtenerAmbiente(actual, dia);
+			glUniform4f(niebla, ambiente.colorNiebla.x, ambiente.colorNiebla.y, ambiente.colorNiebla.z, ambiente.densidadNiebla);
+		} else glUniform4f(niebla, 0, 0, 0, 0);
+		glUniform3f(espacio.emision, 0, 0, 0);
+		escena.render(shader, vista, projection);
+		glm::vec3 mirada = -glm::vec3(glm::inverse(vista)[2]);
+		if (enSuperficie) DibujarSuperficie(actual, ojo, mirada, dia, now, terreno);
+		else if (zona == Zona::Oceano) DibujarOceano(ojo, espacio);
+		else {
+			DibujarPista(now, espacio);
+			DibujarBase(now, espacio);
+			DibujarCinturon(ojo, mirada, now, espacio);
+			DibujarPlanetaOceano(now, espacio);
+		}
 		hud.draw(static_cast<int>(mainWindow.getBufferWidth()),
 			static_cast<int>(mainWindow.getBufferHeight()),
-			"SEGUIMIENTO", "DEMO LOCAL", accion);
+			zona == Zona::Selva ? "SELVA" : zona == Zona::Roca ? "ROCA" : zona == Zona::Oceano ? "OCEANO" : "PISTA", "F5-F8 ZONA", enNave ? "WASD NAVE" : accion);
 
 		glUseProgram(0);
 

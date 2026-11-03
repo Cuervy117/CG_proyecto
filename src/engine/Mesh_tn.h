@@ -37,7 +37,7 @@ class MeshModel
 public:
 	MeshModel();
 
-	void CreateMeshModel(GLfloat *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numOfIndices);
+	void CreateMeshModel(GLfloat *vertices, unsigned int *indices, unsigned int vertexFloatCount, unsigned int numOfIndices);
 	void RenderMeshModel();
 	void ClearMeshModel();
 

@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\world\Espacio.h" />
+    <ClInclude Include="src\game\world\Superficie.h" />
+    <ClInclude Include="src\game\world\Oceano.h" />
     <ClInclude Include="src\engine\Camera.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -101,6 +104,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\world\Espacio.cpp" />
+    <ClCompile Include="src\game\world\Superficie.cpp" />
+    <ClCompile Include="src\game\world\Oceano.cpp" />
     <ClCompile Include="src\engine\Camera.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>

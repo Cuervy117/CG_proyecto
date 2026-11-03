@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup Label="A-engine">
+    <ClInclude Include="src\game\world\Espacio.h" />
+    <ClInclude Include="src\game\world\Superficie.h" />
+    <ClInclude Include="src\game\world\Oceano.h" />
     <ClInclude Include="src\engine\Camera.h" />
     <ClInclude Include="src\engine\CommonValues.h" />
     <ClInclude Include="src\engine\Create.hpp" />
@@ -39,6 +42,9 @@
     <ClInclude Include="src\engine\Window.h" />
   </ItemGroup>
   <ItemGroup Label="A-engine-compile">
+    <ClCompile Include="src\game\world\Espacio.cpp" />
+    <ClCompile Include="src\game\world\Superficie.cpp" />
+    <ClCompile Include="src\game\world\Oceano.cpp" />
     <ClCompile Include="src\engine\Camera.cpp" />
     <ClCompile Include="src\engine\Create.cpp" />
     <ClCompile Include="src\engine\DirectionalLight.cpp" />

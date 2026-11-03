@@ -309,7 +309,7 @@ bool Avatar::attach(SceneNode& parent, const std::string& objPath,
         PartGeometry& part = parts[static_cast<std::size_t>(i)];
         auto mesh = std::make_unique<MeshModel>();
         mesh->CreateMeshModel(part.vertices.data(), part.indices.data(),
-            static_cast<unsigned int>(part.vertices.size() / 8),
+            static_cast<unsigned int>(part.vertices.size()),
             static_cast<unsigned int>(part.indices.size()));
 
         auto node = std::make_unique<SceneNode>(names[i]);

@@ -1,3 +1,4 @@
+#include <cfloat>
 #include "Model.h"
 #include <unordered_map>
 #include <algorithm>
@@ -65,7 +66,7 @@ static std::string resolverRutaTextura(const std::string& rutaImportada,
 	return "Textures/" + archivo;
 }
 
-Model::Model()
+Model::Model() : minimo(FLT_MAX), maximo(-FLT_MAX)
 {
 }
 
@@ -78,7 +79,7 @@ void Model::LoadModel(const std::string & fileName)
 
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
-	if (!scene)
+	if (!scene || !scene->mRootNode)
 	{
 		printf("Fallo en cargar el modelo: %s (%s)\n", fileName.c_str(), importer.GetErrorString());
 		return;
@@ -115,11 +116,44 @@ void Model::RenderModel()
 		unsigned int materialIndex = meshTotex[i];
 		if (materialIndex < TextureList.size() && TextureList[materialIndex])
 		{
-			TextureList[materialIndex]->UseTexture();
+			(texturaRespaldo && !TieneTextura[materialIndex] ? texturaRespaldo : TextureList[materialIndex])->UseTexture();
 		}
 		MeshList[i]->RenderMeshModel();
 	}
 }
+
+void Model::RenderModelConTextura(Texture& textura)
+{
+	textura.UseTexture();
+	for (unsigned int i = 0; i < MeshList.size(); i++)
+	{
+		MeshList[i]->RenderMeshModel();
+	}
+}
+
+bool Model::usaTexturaPropia() const
+{
+	for (size_t i = 0; i < TieneTextura.size(); i++)
+		if (TieneTextura[i])
+			return true;
+	return false;
+}
+
+glm::vec3 Model::getCentro() const
+{
+	if (MeshList.empty())
+		return glm::vec3(0.0f);
+	return (minimo + maximo) * 0.5f;
+}
+
+float Model::getRadio() const
+{
+	if (MeshList.empty())
+		return 1.0f;
+	glm::vec3 semiejes = (maximo - minimo) * 0.5f;
+	return fmaxf(fmaxf(semiejes.x, semiejes.y), fmaxf(semiejes.z, 0.001f));
+}
+
 
 Model::~Model()
 {
@@ -143,6 +177,9 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 	std::vector<unsigned int> indices;
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
+		const glm::vec3 punto(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+		minimo = glm::min(minimo, punto);
+		maximo = glm::max(maximo, punto);
 		vertices.insert(vertices.end(), { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z });
 		if (mesh->mTextureCoords[0])
 		{
@@ -163,6 +200,7 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 		}
 	}
 
+	numTriangulos += static_cast<int>(indices.size() / 3);
 	MeshModel* newMesh = new MeshModel();
 	newMesh->CreateMeshModel(&vertices[0], &indices[0], vertices.size(), indices.size());
 	MeshList.push_back(newMesh);
@@ -172,6 +210,7 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 void Model::LoadMaterials(const aiScene * scene)
 {
 	std::unordered_map<std::string, Texture*> loadedTextures;
+	TieneTextura.resize(scene->mNumMaterials);
 	TextureList.resize(scene->mNumMaterials);
 	for (unsigned int i = 0; i < scene->mNumMaterials; i++)
 	{
@@ -221,6 +260,7 @@ void Model::LoadMaterials(const aiScene * scene)
 			}
 		}
 
+		TieneTextura[i] = TextureList[i] != nullptr;
 		if (!TextureList[i])
 		{
 			Texture* fallback = new Texture("Textures/plain.png");
