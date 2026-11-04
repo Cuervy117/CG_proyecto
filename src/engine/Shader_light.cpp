@@ -1,4 +1,4 @@
-#include "Shader_light.h"
+﻿#include "Shader_light.h"
 
 Shader::Shader()
 {
@@ -8,7 +8,9 @@ Shader::Shader()
 	uniformColor = 0;
 	pointLightCount = 0;
 	spotLightCount = 0;
-	uniformTextureOffset = 0;   // Practica 9
+	uniformTextureOffset = 0;
+	uniformNiebla = 0;
+	uniformEmision = 0;
 }
 
 void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
@@ -92,7 +94,9 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
 	uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition");
 	uniformColor = glGetUniformLocation(shaderID, "color");
-	uniformTextureOffset = glGetUniformLocation(shaderID, "toffset");   // Practica 9
+	uniformTextureOffset = glGetUniformLocation(shaderID, "toffset");   //textura con movimiento
+	uniformNiebla = glGetUniformLocation(shaderID, "niebla");     // NUEVO
+	uniformEmision = glGetUniformLocation(shaderID, "emision");   // NUEVO
 
 	uniformPointLightCount = glGetUniformLocation(shaderID, "pointLightCount");
 
@@ -199,9 +203,19 @@ GLuint Shader::GetEyePositionLocation()
 	return uniformEyePosition;
 }
 
-GLuint Shader::getOffsetLocation()   // Practica 9: ubicacion de toffset (textura animada)
+GLuint Shader::getOffsetLocation()
 {
 	return uniformTextureOffset;
+}
+
+GLuint Shader::getNieblaLocation()
+{
+	return uniformNiebla;
+}
+
+GLuint Shader::getEmisionLocation()
+{
+	return uniformEmision;
 }
 
 GLuint Shader::getColorLocation()
@@ -261,7 +275,9 @@ void Shader::ClearShader()
 	uniformProjection = 0;
 	uniformColor = 0;
 	uniformView = 0;
-	uniformTextureOffset = 0;   // Practica 9
+	uniformTextureOffset = 0;
+	uniformNiebla = 0;
+	uniformEmision = 0;
 
 }
 

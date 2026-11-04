@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup Label="A-engine">
     <ClInclude Include="src\game\world\Espacio.h" />
+    <ClInclude Include="src\game\world\Jugador.h" />
+    <ClInclude Include="src\game\world\Reloj.h" />
     <ClInclude Include="src\game\world\Superficie.h" />
     <ClInclude Include="src\game\world\Oceano.h" />
     <ClInclude Include="src\engine\Camera.h" />
@@ -42,7 +44,10 @@
     <ClInclude Include="src\engine\Window.h" />
   </ItemGroup>
   <ItemGroup Label="A-engine-compile">
+    <ClCompile Include="P09-424104230.cpp" />
     <ClCompile Include="src\game\world\Espacio.cpp" />
+    <ClCompile Include="src\game\world\Jugador.cpp" />
+    <ClCompile Include="src\game\world\Reloj.cpp" />
     <ClCompile Include="src\game\world\Superficie.cpp" />
     <ClCompile Include="src\game\world\Oceano.cpp" />
     <ClCompile Include="src\engine\Camera.cpp" />

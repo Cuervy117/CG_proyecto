@@ -1,6 +1,6 @@
 # CGICH — Proyecto final 2027-1
 
-Entrega: **7-nov-2026 antes de las 12:00 CDMX**. Lee [PLAN_MAESTRO.md](PLAN_MAESTRO.md): contratos §5, hitos §6, controles §8 y propiedad §10/§16. Los PDFs de docs/ son las referencias originales. El ejecutable actual es la base de prácticas; el contenido final está pendiente.
+Entrega: **7-nov-2026 antes de las 12:00 CDMX**. Lee [PLAN_MAESTRO.md](PLAN_MAESTRO.md): contratos §5, hitos §6, controles §8 y propiedad §10/§16. Los PDFs de docs/ son las referencias originales. En `develop` se integran el mundo, las cámaras y el avatar articulado.
 
 | Integrante | Rol | Rama |
 |---|---|---|
@@ -15,8 +15,7 @@ Requiere VS2022 o Build Tools, C++ de escritorio, v143, Windows SDK y Git. Tras 
 ```powershell
 git clone https://github.com/Cuervy117/CG_proyecto.git
 cd CG_proyecto
-git switch feat/b-mundo
-# Venancio: git switch feat/c-avatar
+git switch develop
 ```
 
 Obtén de David `cgich-dependencias-2026-10-30-base.zip` y su `.sha256`. La ubicación compartida está pendiente de acordar; el paquete se prepara localmente en artefactos/. No está en GitHub. Son librerías y assets heredados de arranque, no contenido final autorizado.
@@ -33,6 +32,21 @@ Copy-Item -LiteralPath .\glew32.dll,.\glfw3.dll,.\assimp-vc143-mt.dll -Destinati
 ```
 
 ExecutionPolicy Bypass solo aplica a ese proceso. Para recompilar todo añade -Rebuild. Mantén raíz como directorio de trabajo: assets usan rutas relativas. No uses los .bat antiguos de build/, que apuntan a fuentes anteriores al movimiento a src/. Cada integrante ejecuta y registra captura, errores y horas reales: compilar no valida visualmente.
+
+## Probar el mundo integrado
+
+Ejecuta desde la raíz con los modelos y texturas del paquete actualizado superpuestos en `Models/` y `Textures/`. La escena comienza en la base espacial con Rek’Sai a pie.
+
+| Controles | Acción |
+|---|---|
+| F1 / F2 / F3 / F4 | Planeta a pie, persecución de carrera, vuelo, observación |
+| Tab / rueda | Cambiar objetivo de observación y acercar o alejar la cámara |
+| F5 / F6 / F7 / F8 | Accesos directos a selva, roca, océano y espacio |
+| WASD / ratón | Movimiento y orientación |
+| J / E | Embarcar o desembarcar junto a la nave / interactuar con el tránsito entre zonas |
+| 2 / 3 | Puerta de la cápsula / paneles del satélite |
+| F / L / K | Linterna / faro de nave / foco de base |
+| C / F9 | Alternar cámara libre / liberar o capturar el cursor |
 
 ## Trabajo diario
 

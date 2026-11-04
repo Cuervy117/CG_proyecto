@@ -35,11 +35,10 @@ void PointLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientcolor
 	glUniform1f(exponentLocation, exponent);
 }
 
-void PointLight::SetPos(glm::vec3 newPos)
-{
-	position = newPos;
-}
-
 PointLight::~PointLight()
 {
+}
+void PointLight::SetPos(glm::vec3 pos)
+{
+	position = pos;
 }

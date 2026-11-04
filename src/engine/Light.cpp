@@ -17,3 +17,14 @@ Light::Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLflo
 Light::~Light()
 {
 }
+
+void Light::SetColor(glm::vec3 newColor)
+{
+	color = newColor;
+}
+
+void Light::SetIntensity(GLfloat aIntensity, GLfloat dIntensity)
+{
+	ambientIntensity = aIntensity;
+	diffuseIntensity = dIntensity;
+}

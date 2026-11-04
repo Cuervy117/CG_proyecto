@@ -1,9 +1,20 @@
-#include "Skybox.h"
+﻿#include "Skybox.h"
 
 
 
 Skybox::Skybox()
 {
+	skyMesh = nullptr;
+	skyShader = nullptr;
+	textureId = 0;
+	uniformProjection = 0;
+	uniformView = 0;
+	uniformTinte = 0;
+	uniformBruma = 0;
+	uniformCieloSolido = 0;
+	tinteCielo = glm::vec3(1.0f);
+	brumaHorizonte = glm::vec4(0.0f);
+	cieloSolido = glm::vec4(0.0f);
 }
 
 Skybox::Skybox(std::vector<std::string> faceLocations)
@@ -12,6 +23,13 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	skyShader->CreateFromFiles("shaders/skybox.vert", "shaders/skybox.frag");
 	uniformProjection = skyShader->GetProjectionLocation();
 	uniformView = skyShader->GetViewLocation();
+	// NUEVO: uniforms de ambientación de skybox.frag (ver Skybox.h)
+	uniformTinte = glGetUniformLocation(skyShader->GetShaderID(), "tinteCielo");
+	uniformBruma = glGetUniformLocation(skyShader->GetShaderID(), "brumaHorizonte");
+	uniformCieloSolido = glGetUniformLocation(skyShader->GetShaderID(), "cieloSolido");
+	tinteCielo = glm::vec3(1.0f);
+	brumaHorizonte = glm::vec4(0.0f);
+	cieloSolido = glm::vec4(0.0f);
 
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
@@ -22,13 +40,13 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 		unsigned char *texData = stbi_load(faceLocations[i].c_str(), &width, &height, &bitDepth, 0); //el tipo unsigned char es para un array de bytes de la imagen, obtener datos de la imagen 
 		if (!texData)
 		{
-			printf("No se encontr� : %s", faceLocations[i].c_str());
+			printf("No se encontro : %s\n", faceLocations[i].c_str());
 			return;
 		}
 		//para cambiar el origen a la esquina inferior izquierda como necesitamos
 		//stbi_set_flip_vertically_on_load(true);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X +i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData); //SIN CANAL ALPHA A ENOS QUE QUERAMOS AGREGAR EFECTO DE PARALLAX
-		stbi_image_free(texData); //para liberar la informaci�n de la imagen
+		stbi_image_free(texData); //para liberar la información de la imagen
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -81,12 +99,27 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	skyShader->UseShader();
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	// NUEVO: ambientación del lugar actual
+	glUniform3f(uniformTinte, tinteCielo.x, tinteCielo.y, tinteCielo.z);
+	glUniform4f(uniformBruma, brumaHorizonte.x, brumaHorizonte.y, brumaHorizonte.z, brumaHorizonte.w);
+	glUniform4f(uniformCieloSolido, cieloSolido.x, cieloSolido.y, cieloSolido.z, cieloSolido.w);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 	//skyShader->Validate();
 	skyMesh->RenderMeshModel();
 	glDepthMask(true);
 
+}
+
+void Skybox::SetAmbiente(glm::vec3 tinte, glm::vec4 bruma)
+{
+	tinteCielo = tinte;
+	brumaHorizonte = bruma;
+}
+
+void Skybox::SetCieloSolido(glm::vec3 cenit, float cantidad)
+{
+	cieloSolido = glm::vec4(cenit, cantidad);
 }
 
 

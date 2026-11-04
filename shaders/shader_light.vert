@@ -14,7 +14,7 @@ uniform mat4 model;
 uniform mat4 projection;
 uniform mat4 view;
 uniform vec3 color;
-uniform vec2 toffset;   // Practica 9: desplazamiento de UV para textura animada
+uniform vec2 toffset;	//textura con movimiento (practica 9): desplazamiento de las coordenadas UV
 
 
 void main()
@@ -22,9 +22,9 @@ void main()
 	gl_Position = projection * view * model * vec4(pos, 1.0);
 	vCol = vec4(0.0, 1.0, 0.0, 1.0f);
 	vColor=vec4(color,1.0f);
-	TexCoord = tex + toffset;   // Practica 9: con toffset = (0,0) se comporta igual que antes
-	//para tomar las Transformaciones geométricas y la transpuesta es para que las escalas se inviertan en caso de escalas no uniformes en las normales
+	TexCoord = tex + toffset;	//con toffset = (0,0) la textura queda quieta
+	//para tomar las Transformaciones geometricas y la transpuesta es para que las escalas se inviertan en caso de escalas no uniformes en las normales
 	Normal = mat3(transpose(inverse(model))) * norm;
 	
-	FragPos = (model * vec4(pos, 1.0)).xyz; //para obtener un vec3 sólo posición con respecto al origen en orden xyz: Swizzling 
+	FragPos = (model * vec4(pos, 1.0)).xyz; //para obtener un vec3 solo posicion con respecto al origen en orden xyz: Swizzling 
 }

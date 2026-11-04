@@ -8,8 +8,9 @@ in vec4 vColor;
 
 out vec4 color;
 
-const int MAX_POINT_LIGHTS = 3;
-const int MAX_SPOT_LIGHTS = 4;
+//deben ser iguales a los de CommonValues.h
+const int MAX_POINT_LIGHTS = 5;
+const int MAX_SPOT_LIGHTS = 8;
 
 struct Light
 {
@@ -59,22 +60,22 @@ uniform Material material;
 
 uniform vec3 eyePosition;
 
-// Ambientacion de las superficies de los planetas. Los valores iniciales hacen que en el
-// espacio (donde no se mandan) el shader se comporte exactamente igual que antes.
-uniform vec4 niebla = vec4(0.0);   // rgb = color de la niebla, a = densidad (0 = sin niebla)
-uniform vec3 emision = vec3(0.0);  // brillo propio que no depende de las luces (cristales)
+// NUEVO (no viene en la practica): ambientacion de las superficies de los planetas.
+// Con los valores iniciales el shader se comporta igual que el de la practica (en el espacio no se usan).
+uniform vec4 niebla = vec4(0.0);	// rgb = color de la niebla, a = densidad (0 = sin niebla)
+uniform vec3 emision = vec3(0.0);	// brillo propio que no depende de las luces (cristales, luces de la pista)
 
 vec4 CalcLightByDirection(Light light, vec3 direction)
 {
 	vec4 ambientcolor = vec4(light.color, 1.0f) * light.ambientIntensity;
-	//producto punto: coseno del ángulo entre los dos vectores y normalizar para que sus módulos sean 1
+	//producto punto: coseno del angulo entre los dos vectores y normalizar para que sus modulos sean 1
 	float diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f);
 	vec4 diffusecolor = vec4(light.color * light.diffuseIntensity * diffuseFactor, 1.0f);
 	
 	vec4 specularcolor = vec4(0, 0, 0, 0);
 	
 	if(diffuseFactor > 0.0f)
-	{//si hay diffuse color entonces existe specular color; dependemos de la posición de la cámara
+	{//si hay diffuse color entonces existe specular color; dependemos de la posicion de la camara
 		vec3 fragToEye = normalize(eyePosition - FragPos);
 		vec3 reflectedVertex = normalize(reflect(direction, normalize(Normal)));
 		
@@ -130,13 +131,6 @@ vec4 CalcSpotLight(SpotLight sLight)
 
 
 
-
-
-
-
-
-
-
 vec4 CalcPointLights()
 {
 	vec4 totalcolor = vec4(0, 0, 0, 0);
@@ -169,10 +163,11 @@ void main()
 	//color = texture(theTexture, TexCoord)*vColor;
 	color = colorTextura*vColor*finalcolor;
 
-	// brillo propio: se suma despues de la iluminacion, asi brilla aunque sea de noche
+	// NUEVO: brillo propio. Se suma despues de la iluminacion, asi brilla aunque sea de noche
 	color.rgb += emision * colorTextura.rgb;
 
-	// niebla exponencial cuadrada: casi nada cerca y se cierra rapido a lo lejos
+	// NUEVO: niebla exponencial cuadrada: casi nada cerca y se cierra rapido a lo lejos
+	//   factor = 1 - e^(-(distancia * densidad)^2)
 	if (niebla.a > 0.0)
 	{
 		float distancia = length(eyePosition - FragPos);
