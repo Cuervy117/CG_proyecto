@@ -38,7 +38,17 @@ void Chase::update(float dt, const SceneNode& target)
 	const float distanciaSegura = (distancia > 0.01f) ? distancia : 0.01f;
 
 	m_target = base + glm::vec3(0.0f, alturaObjetivo, 0.0f) + frente * adelanto;
-	m_pos = base - frente * distanciaSegura + glm::vec3(0.0f, altura, 0.0f);
+	if (glm::dot(miradaMouse, miradaMouse) > 0.25f)
+	{
+		// gira alrededor de la nave con el mouse, a la misma distancia de siempre
+		const float subida = altura - alturaObjetivo;
+		const float radio = std::sqrt(distanciaSegura * distanciaSegura + subida * subida);
+		m_pos = m_target - glm::normalize(miradaMouse) * radio;
+	}
+	else
+	{
+		m_pos = base - frente * distanciaSegura + glm::vec3(0.0f, altura, 0.0f);
+	}
 }
 
 glm::mat4 Chase::view() const

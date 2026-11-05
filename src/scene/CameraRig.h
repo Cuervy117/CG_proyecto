@@ -14,6 +14,11 @@ public:
 
 	glm::mat4 projection(float aspect) const;
 
+	// Direccion de la camara controlada con el mouse (la de 'camera' en el main). Las camaras del
+	// avatar (FollowXZ, Chase y Flight) giran alrededor del objetivo en esa direccion; si se deja
+	// en (0, 0, 0) se comportan como antes, sin girar con el mouse.
+	glm::vec3 miradaMouse{0.0f};
+
 	float fov = 45.0f;
 	float nearZ = 0.1f;
 	float farZ = 2000.0f;

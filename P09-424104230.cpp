@@ -25,6 +25,7 @@ Teclas:
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
 
+#include <fstream>
 #include "Input.hpp"
 #include "CameraDirector.h"
 #include "Orbit.h"
@@ -545,8 +546,14 @@ int main()
 	float yawInicio = jugador.ColocarJugadorEnBase();
 	Scene escenaAvatar;
 	cgame::Avatar avatar;
-	jugador.avatarArticulado = avatar.attach(escenaAvatar.root, "Models/reksai.obj", "Textures/reksai.png", jugador.PosicionJugador(), 2.2f);
-	if (!jugador.avatarArticulado) return 1;
+	// Rek'Sai está en Models/reksai/ (como en el repositorio); también se acepta directo en Models/
+	const char* rutaReksai = std::ifstream("Models/reksai/reksai.obj").good() ? "Models/reksai/reksai.obj" : "Models/reksai.obj";
+	jugador.avatarArticulado = avatar.attach(escenaAvatar.root, rutaReksai, "Textures/reksai.png", jugador.PosicionJugador(), 2.2f);
+	if (!jugador.avatarArticulado)
+	{
+		printf("[ERROR] No se pudo cargar el avatar Rek'Sai (%s). Revisa que exista ese archivo.\n", rutaReksai);
+		return 1;
+	}
 	SceneNode objetivo("objetivo");
 	escenaAvatar.updateWorld();
 	if (!VerificarEscenaIntegrada(*avatar.root(), objetivo)) return 1;
@@ -780,6 +787,10 @@ int main()
 					: superficie.PosicionInicio(zonaActual == ZONA_PLANETA_ROCOSO ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA);
 		}
 		objetivo.updateWorld();
+		// la cámara del avatar también gira con el mouse: su rig usa la dirección de 'camera'
+		// (la misma con la que W A S D mueven al avatar); la de observación (F4) gira sola
+		if (director.rig() != nullptr)
+			director.rig()->miradaMouse = (director.mode() == CameraMode::Observacion) ? glm::vec3(0.0f) : camera.getCameraDirection();
 		director.update(deltaTime, objetivo);
 		const glm::mat4 vista = camaraLibre ? camera.calculateViewMatrix() : director.view();
 		projection = director.projection(float(mainWindow.getBufferWidth()) / mainWindow.getBufferHeight());

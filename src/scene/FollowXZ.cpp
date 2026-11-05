@@ -4,6 +4,8 @@
 
 #include <gtc/matrix_transform.hpp>
 
+#include <cmath>
+
 FollowXZ::FollowXZ(float alturaInicial, float distanciaInicial,
 	float alturaObjetivoInicial)
 	: altura(alturaInicial),
@@ -20,7 +22,19 @@ void FollowXZ::update(float dt, const SceneNode& target)
 	const float distanciaSegura = (distancia > 0.01f) ? distancia : 0.01f;
 
 	m_target = base + glm::vec3(0.0f, alturaObjetivo, 0.0f);
-	m_pos = base + glm::vec3(0.0f, altura, -distanciaSegura);
+	if (glm::dot(miradaMouse, miradaMouse) > 0.25f)
+	{
+		// gira alrededor del avatar con el mouse, a la misma distancia de siempre
+		const float subida = altura - alturaObjetivo;
+		const float radio = std::sqrt(distanciaSegura * distanciaSegura + subida * subida);
+		m_pos = m_target - glm::normalize(miradaMouse) * radio;
+		if (m_pos.y < base.y + 0.5f)
+			m_pos.y = base.y + 0.5f;   // no se mete bajo el suelo
+	}
+	else
+	{
+		m_pos = base + glm::vec3(0.0f, altura, -distanciaSegura);
+	}
 }
 
 glm::mat4 FollowXZ::view() const
