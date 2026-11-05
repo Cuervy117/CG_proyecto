@@ -24,15 +24,19 @@ Textures/
 include/
 lib/
 glm/
+Dependencias/
 *.dll
 *.obj
 *.fbx
 *.glb
 *.blend
+*.mtl
+*.zip
 
 # Capturas de trabajo y bundle de traspaso
 capturas_*/
 artefactos/
+/RekSai OpenGL - Animacion/
 
 # Herramientas / editor
 .processed_tasks.json
@@ -41,6 +45,7 @@ reksai_referencia.jpg
 
 # Documentos locales (cada integrante genera su AGENTS.md; ver PLAN §16.6-16.7)
 /AGENTS.md
+/LEEME.txt
 /manifest-dependencies.json
 /CAPTURAS_P09.md
 /P09_ANIMACION_BASICA.md
