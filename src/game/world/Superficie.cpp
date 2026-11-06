@@ -712,7 +712,23 @@ void Superficie::GenerarDesierto(Mundo& m)
 	ColocarNPC(m, NPC_ESCORPION,      ANIM_OCHO,      70.0f,-1.0f, 1.5f, 3.9f, 2.0f, 2.0f, 0.05f,0.7f, 0.0f, 0.0f);
 	ColocarNPC(m, NPC_CERBERO,        ANIM_ELIPSE,   104.0f, 1.0f, 6.0f, 3.8f, 5.0f, 1.5f, 0.12f,0.4f, 0.0f, 0.0f);
 	ColocarNPC(m, NPC_SERPIENTE_ALAS, ANIM_LISSAJOUS,138.0f,-1.0f, 7.0f, 5.4f, 5.0f, 2.5f, 1.5f, 0.35f,7.0f, 0.0f);
-	ColocarPortal(m, 180.0f, 11.0f);   // un tramo después del último NPC
+	// Fauna del Vacío: del claro de llegada al portal, alternando orillas.
+	ColocarNPC(m, NPC_VOIDMITE,    ANIM_REBOTE,  28.0f,-1.0f, 1.6f, 1.7f, 0.8f, 0.0f, 0.2f, 1.0f, 0.0f, 0.0f);
+	// Tres nidos en las orillas. Cada grub comparte su claro con dos mites
+	// que rebotan en fases distintas, dejando libre el centro del camino.
+	struct Nido { float s, lado, altura, fase; };
+	const Nido nidos[] = {{54, 1, 3.4f, 0}, {98, -1, 2.9f, 1.4f}, {132, 1, 3.7f, 2.8f}};
+	for (const Nido& n : nidos)
+	{
+		ColocarNPC(m, NPC_VOIDGRUB, ANIM_RESPIRA, n.s, n.lado, n.altura, 2.8f,
+			0, 0, 0, 0.7f, 0, n.fase);
+		for (int extremo : {-1, 1})
+			ColocarNPC(m, NPC_VOIDMITE, ANIM_REBOTE, n.s + extremo * 6.0f, n.lado,
+				extremo < 0 ? 1.2f : 1.5f, 1.7f, 0.6f, 0, 0.2f, 1.1f, 0, n.fase + extremo);
+	}
+	ColocarNPC(m, NPC_VOID_SPAWN,  ANIM_OCHO,    88.0f,-1.0f, 2.4f, 2.6f, 2.0f, 1.0f, 0.1f, 0.7f, 0.0f, 0.0f);
+	ColocarNPC(m, NPC_RIFT_HERALD, ANIM_RESPIRA,151.0f, 1.0f, 7.2f, 6.0f, 0.0f, 0.0f, 0.0f, 0.4f, 0.0f, 0.0f);
+	ColocarPortal(m, 180.0f, 11.0f);
 	// Paul se esconde detrás del portal: se deja libre la zona donde se asoma
 	glm::vec2 ladoPortal(-m.portal.adelante.y, m.portal.adelante.x);
 	m.claros.push_back({ m.portal.centro + m.portal.adelante * 3.0f + ladoPortal * 4.0f, 8.0f });
@@ -983,7 +999,11 @@ void Superficie::PrepararModelosSuperficie(TipoSuperficie tipo)
 		{ NPC_MONSTRUO_NEGRO, "Models/npcRoca/monstruoNegro.obj" },
 		{ NPC_ESCORPION, "Models/npcRoca/escorpion.obj" },
 		{ NPC_CERBERO, "Models/npcRoca/Cerbero.obj" },
-		{ NPC_SERPIENTE_ALAS, "Models/npcRoca/serpienteAlas.obj" }
+		{ NPC_SERPIENTE_ALAS, "Models/npcRoca/serpienteAlas.obj" },
+		{ NPC_VOIDMITE, "Models/reksai/voidmite.obj" },
+		{ NPC_VOIDGRUB, "Models/reksai/voidgrub.obj" },
+		{ NPC_VOID_SPAWN, "Models/reksai/void_spawn.obj" },
+		{ NPC_RIFT_HERALD, "Models/reksai/rift_herald.obj" }
 	};
 	const RecursoNPC* recursos = (tipo == SUPERFICIE_SELVATICA) ? selva : roca;
 	const size_t cantidad = (tipo == SUPERFICIE_SELVATICA)

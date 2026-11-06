@@ -56,6 +56,7 @@ enum ModeloNPC
 	NPC_CERBERO,
 	NPC_SERPIENTE_ALAS,
 	NPC_PAUL,				// se esconde detrás del portal del planeta rocoso
+	NPC_VOIDMITE, NPC_VOIDGRUB, NPC_VOID_SPAWN, NPC_RIFT_HERALD,
 	NUM_MODELOS_NPC
 };
 

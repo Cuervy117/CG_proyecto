@@ -17,6 +17,7 @@ npcRoca/Cerbero npcRoca/escorpion npcRoca/monstruoNegro npcRoca/serpienteAlas
 npcSelva/caballoDelfin npcSelva/calamardoGuapo npcSelva/naruto npcSelva/pulpo
 npcSelva/tigreFuego npcSelva/zorroBlanco pista/pista planetaOceano/planetaOceano
 planetaRoca/planetaRoca planetaSelva/planetaSelvatico portal/asteroide reksai/reksai rocket/rocket
+reksai/voidmite reksai/voidgrub reksai/void_spawn reksai/rift_herald
 """.split()
 DIRECT_TEXTURES = """
 arbolTexture asteroideTexture baseTexture fuego hud_reloj hud_digitos hud_iconos humo
