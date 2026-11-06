@@ -129,9 +129,11 @@ def main():
     if subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT).strip():
         raise RuntimeError("Empaquetar desde un checkout limpio para identificar el código.")
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    # Windows PowerShell debe resolver sus propios módulos aun si Python se inició desde pwsh.
+    ps_env = {k: v for k, v in os.environ.items() if k.upper() != "PSMODULEPATH"}
     for script in ("Verify-Project-Assets.ps1", "Build.ps1"):
         subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                        ROOT / "scripts" / script], cwd=ROOT, check=True)
+                        ROOT / "scripts" / script], cwd=ROOT, env=ps_env, check=True)
     with tempfile.TemporaryDirectory(dir=out.parent) as temp:
         archive = Path(temp) / out.name
         rows = []
