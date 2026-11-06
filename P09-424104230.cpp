@@ -1002,7 +1002,10 @@ int main(int argc, char** argv)
 			director.rig()->miradaMouse = camera.getCameraDirection();
 		}
 		director.update(deltaTime, objetivo);
-		const glm::mat4 vista = camaraLibre && !enR4 ? camera.calculateViewMatrix() : director.view();
+		// En modo Planeta se conserva la órbita del mouse alrededor del avatar. R4 mantiene
+		// la vista de su rig de observación aunque la cámara libre esté activa.
+		const glm::mat4 vista = ((camaraLibre || director.mode() == CameraMode::Planeta) && !enR4)
+			? camera.calculateViewMatrix() : director.view();
 		projection = director.projection(float(mainWindow.getBufferWidth()) / mainWindow.getBufferHeight());
 		if (zonaAnterior != zonaActual || modoAnterior != director.mode() || control.nextObservationTarget) {
 			printf("Zona=%d camara=%d objetivo=%d nave=%d\n", int(zonaActual), int(director.mode()), observado, jugador.JugadorEnNave());
@@ -1380,13 +1383,18 @@ int main(int argc, char** argv)
 		const char* modos[] = {"PLANETA", "CARRERA", "VUELO", "OBSERVACION"};
 		const char* zonas[] = {"ESPACIO", "ROCA", "SELVA", "OCEANO"};
 		char estadoHud[80];
+		// La hora y el día ya aparecen en el reloj gráfico; el HUD conserva el estado
+		// contextual y el del cohete sin duplicarlos.
 		const char* estadoCohete = "";
 		if (zonaVista == ZONA_ESPACIO && (!enR4 || observado == CoheteBase))
 			estadoCohete = espacio.TextoEstadoCohete(COHETE_BASE);
 		else if (zonaVista == ZONA_PLANETA_SELVATICO)
 			estadoCohete = espacio.TextoEstadoCohete(COHETE_SHINOBI);
-		snprintf(estadoHud, sizeof(estadoHud), "%s  %s  DIA %d  %02d:%02d", enR4 ? encuadres[observado].nombre : (jugador.JugadorEnNave() ? "NAVE" : "REKSAI"),
-			estadoCohete, dia, int(horaDelDia), int(horaDelDia * 60) % 60);
+		const char* estadoAvatar = enR4 ? encuadres[observado].nombre : (jugador.JugadorEnNave() ? "NAVE" : "REKSAI");
+		if (estadoCohete[0] != '\0')
+			snprintf(estadoHud, sizeof(estadoHud), "%s  %s", estadoAvatar, estadoCohete);
+		else
+			snprintf(estadoHud, sizeof(estadoHud), "%s", estadoAvatar);
 		hud.draw(mainWindow.getBufferWidth(), mainWindow.getBufferHeight(), camaraLibre && !enR4 ? "LIBRE" : modos[static_cast<int>(director.mode())], zonas[zonaVista], estadoHud);
 		if (!enR4) reloj.DibujarReloj((int)mainWindow.getBufferWidth(), (int)mainWindow.getBufferHeight(), horaDelDia, dia, clima);
 
