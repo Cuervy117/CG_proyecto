@@ -169,18 +169,19 @@ void Hud::draw(int width, int height, const std::string& cameraView,
 	if (m_program == 0 || width <= 0 || height <= 0)
 		return;
 
-	constexpr float cell = 3.0f;
-	const float x = 30.0f;
-	const float y = 27.0f;
-	const float panelWidth = static_cast<float>(std::min(width - 32, 450));
-	const float panelHeight = 87.0f;
+	constexpr float cell = 2.0f;
+	const float x = 26.0f;
+	const float panelHeight = 58.0f;
+	const float panelWidth = static_cast<float>(std::max(0, std::min(width - 32, 340)));
+	const float panelTop = static_cast<float>(height) - panelHeight - 14.0f;
+	const float y = panelTop + 10.0f;
 	std::vector<float> background;
 	std::vector<float> text;
-	addRectangle(background, 16.0f, 14.0f, 16.0f + panelWidth,
-		14.0f + panelHeight);
+	addRectangle(background, 16.0f, panelTop, 16.0f + panelWidth,
+		panelTop + panelHeight);
 	addText(text, "CAMARA: " + cameraView, x, y, cell);
-	addText(text, "LUGAR: " + location, x, y + 25.0f, cell);
-	addText(text, "ACCION: " + action, x, y + 50.0f, cell);
+	addText(text, "LUGAR: " + location, x, y + 16.0f, cell);
+	addText(text, "ESTADO: " + action, x, y + 32.0f, cell);
 
 	const GLboolean depthWasEnabled = glIsEnabled(GL_DEPTH_TEST);
 	GLboolean depthMaskWasEnabled = GL_TRUE;

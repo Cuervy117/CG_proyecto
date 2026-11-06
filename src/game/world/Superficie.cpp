@@ -29,7 +29,7 @@ const float PROBABILIDAD_LUMINOSA_BOSQUE = 0.0f;
 const float RADIO_JUGADOR = 0.9f;			// para no meterse en troncos ni rocas
 // distancia máxima a la que se dibuja cada tipo (la niebla tapa lo que queda más lejos)
 const float DISTANCIA_MAXIMA[NUM_TIPOS_OBJETO] = { 150.0f, 70.0f, 100.0f, 320.0f, 160.0f, 220.0f, 1.0e9f };
-const glm::vec3 COLOR_ROCA(1.10f, 0.62f, 0.46f);
+const glm::vec3 COLOR_ROCA(0.80f, 0.64f, 0.95f);
 const float PI_SUPERFICIE = 3.14159265f;
 
 
@@ -40,6 +40,8 @@ Superficie::Superficie()
 	hayRoca = false;
 	for (int i = 0; i < NUM_MODELOS_NPC; i++)
 		hayNPC[i] = false;
+	modelosSuperficieListos[SUPERFICIE_SELVATICA] = false;
+	modelosSuperficieListos[SUPERFICIE_ROCOSA] = false;
 	hayPortal = false;
 	paulValido = false;
 	revelacionPaul = 0.0f;
@@ -710,7 +712,23 @@ void Superficie::GenerarDesierto(Mundo& m)
 	ColocarNPC(m, NPC_ESCORPION,      ANIM_OCHO,      70.0f,-1.0f, 1.5f, 3.9f, 2.0f, 2.0f, 0.05f,0.7f, 0.0f, 0.0f);
 	ColocarNPC(m, NPC_CERBERO,        ANIM_ELIPSE,   104.0f, 1.0f, 6.0f, 3.8f, 5.0f, 1.5f, 0.12f,0.4f, 0.0f, 0.0f);
 	ColocarNPC(m, NPC_SERPIENTE_ALAS, ANIM_LISSAJOUS,138.0f,-1.0f, 7.0f, 5.4f, 5.0f, 2.5f, 1.5f, 0.35f,7.0f, 0.0f);
-	ColocarPortal(m, 180.0f, 11.0f);   // un tramo después del último NPC
+	// Fauna del Vacío: del claro de llegada al portal, alternando orillas.
+	ColocarNPC(m, NPC_VOIDMITE,    ANIM_REBOTE,  28.0f,-1.0f, 1.6f, 1.7f, 0.8f, 0.0f, 0.2f, 1.0f, 0.0f, 0.0f);
+	// Tres nidos en las orillas. Cada grub comparte su claro con dos mites
+	// que rebotan en fases distintas, dejando libre el centro del camino.
+	struct Nido { float s, lado, altura, fase; };
+	const Nido nidos[] = {{54, 1, 3.4f, 0}, {98, -1, 2.9f, 1.4f}, {132, 1, 3.7f, 2.8f}};
+	for (const Nido& n : nidos)
+	{
+		ColocarNPC(m, NPC_VOIDGRUB, ANIM_RESPIRA, n.s, n.lado, n.altura, 2.8f,
+			0, 0, 0, 0.7f, 0, n.fase);
+		for (int extremo : {-1, 1})
+			ColocarNPC(m, NPC_VOIDMITE, ANIM_REBOTE, n.s + extremo * 6.0f, n.lado,
+				extremo < 0 ? 1.2f : 1.5f, 1.7f, 0.6f, 0, 0.2f, 1.1f, 0, n.fase + extremo);
+	}
+	ColocarNPC(m, NPC_VOID_SPAWN,  ANIM_OCHO,    88.0f,-1.0f, 2.4f, 2.6f, 2.0f, 1.0f, 0.1f, 0.7f, 0.0f, 0.0f);
+	ColocarNPC(m, NPC_RIFT_HERALD, ANIM_RESPIRA,151.0f, 1.0f, 7.2f, 6.0f, 0.0f, 0.0f, 0.0f, 0.4f, 0.0f, 0.0f);
+	ColocarPortal(m, 180.0f, 11.0f);
 	// Paul se esconde detrás del portal: se deja libre la zona donde se asoma
 	glm::vec2 ladoPortal(-m.portal.adelante.y, m.portal.adelante.x);
 	m.claros.push_back({ m.portal.centro + m.portal.adelante * 3.0f + ladoPortal * 4.0f, 8.0f });
@@ -811,10 +829,52 @@ void Superficie::GenerarDesierto(Mundo& m)
 	}
 
 	m.mosaicoPiso = 9.0f;
-	m.texturaPiso = &sueloRocosoTexture;
-	m.texturaCamino = &sueloRocosoTexture;
-	m.colorPiso = glm::vec3(1.05f, 0.56f, 0.40f);		// tierra rojiza
-	m.colorCamino = glm::vec3(1.22f, 0.86f, 0.66f);	// arena más clara pisada
+	m.texturaPiso = &pizarraTexture;
+	m.texturaCamino = &pizarraTexture;
+	m.colorPiso = glm::vec3(0.66f, 0.69f, 0.82f);
+	m.colorCamino = glm::vec3(1.02f, 1.03f, 1.16f);
+}
+
+void Superficie::CrearFisuras(const Mundo& mundo)
+{
+	std::vector<GLfloat> vertices;
+	std::vector<unsigned int> indices;
+	Aleatorio rnd(20261106u);
+	// Cintas cortas y afiladas a ras de suelo. Se dibujan juntas, sin colisión.
+	auto veta = [&](glm::vec2 p, glm::vec2 rumbo, float largo, float ancho) {
+		glm::vec2 normal(-rumbo.y, rumbo.x);
+		const unsigned int inicio = static_cast<unsigned int>(vertices.size() / 8);
+		for (int i = 0; i <= 4; ++i) {
+			const float t = i / 4.0f;
+			glm::vec2 c = p + rumbo * largo * t;
+			if (i > 0 && i < 4) c += normal * rnd.rango(-0.45f, 0.45f);
+			for (float lado : {-1.0f, 1.0f}) {
+				glm::vec2 q = c + normal * (lado * ancho * (1.0f-t));
+				vertices.insert(vertices.end(), {q.x, 0.035f, q.y, 0,0, 0,-1,0});
+			}
+			if (i < 4) {
+				unsigned int k = inicio + 2*i;
+				indices.insert(indices.end(), {k,k+1,k+2, k+1,k+3,k+2});
+			}
+		}
+	};
+	auto grietas = [&](glm::vec2 centro, glm::vec2 afuera) {
+		float eje = atan2f(afuera.y, afuera.x);
+		for (float giro : {-0.95f, 0.2f, 1.1f}) {
+			float angulo = eje + giro + rnd.rango(-0.2f, 0.2f);
+			glm::vec2 rumbo(cosf(angulo), sinf(angulo));
+			float largo = rnd.rango(3.4f, 5.4f);
+			veta(centro, rumbo, largo, 0.14f);
+			veta(centro + rumbo*largo*0.5f, glm::vec2(cosf(angulo+0.7f), sinf(angulo+0.7f)), largo*0.45f, 0.07f);
+		}
+	};
+	for (const NPC& npc : mundo.npcs)
+		if (npc.modelo == NPC_VOIDGRUB) grietas(npc.centro, npc.afuera);
+	glm::vec2 lateral(-mundo.portal.adelante.y, mundo.portal.adelante.x);
+	for (float lado : {-1.0f, 1.0f})
+		grietas(mundo.portal.centro + lateral * (lado * mundo.portal.ancho * 0.5f), lado*lateral);
+	fisuras.CreateMeshModel(vertices.data(), indices.data(), static_cast<unsigned int>(vertices.size()),
+		static_cast<unsigned int>(indices.size()));
 }
 
 // =============================================================================================
@@ -911,10 +971,10 @@ glm::mat4 Superficie::MatrizNPC(const NPC& n, float tiempo, glm::vec2& posicion)
 }
 
 // =============================================================================================
-void Superficie::InicializarSuperficies()
+bool Superficie::InicializarSuperficies()
 {
 	if (inicializado)
-		return;
+		return true;
 
 	// texturas
 	arbolTexture = Texture("Textures/arbolTexture.png");
@@ -923,6 +983,8 @@ void Superficie::InicializarSuperficies()
 	sueloSelvaTexture.LoadTextureA();
 	sueloRocosoTexture = Texture("Textures/sueloRocoso.png");
 	sueloRocosoTexture.LoadTextureA();
+	pizarraTexture = Texture("Textures/Vacio/pizarra.png");
+	if (!pizarraTexture.LoadTextureA()) return false;
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 
@@ -934,48 +996,14 @@ void Superficie::InicializarSuperficies()
 	Roca_M.LoadModel("Models/asteroide/Rocky_Asteroid_6.obj");
 	hayRoca = Roca_M.estaCargado();
 
-	// NPCs del planeta selvático (cada .obj pesa decenas de MB: tardan en cargar)
-	printf("Cargando los NPCs ...\n");
-	modelosNPC[NPC_NARUTO] = Model();
-	modelosNPC[NPC_NARUTO].LoadModel("Models/npcSelva/naruto.obj");
-	modelosNPC[NPC_ZORRO_BLANCO] = Model();
-	modelosNPC[NPC_ZORRO_BLANCO].LoadModel("Models/npcSelva/zorroBlanco.obj");
-	modelosNPC[NPC_CABALLO_DELFIN] = Model();
-	modelosNPC[NPC_CABALLO_DELFIN].LoadModel("Models/npcSelva/caballoDelfin.obj");
-	modelosNPC[NPC_PULPO] = Model();
-	modelosNPC[NPC_PULPO].LoadModel("Models/npcSelva/pulpo.obj");
-	modelosNPC[NPC_TIGRE_FUEGO] = Model();
-	modelosNPC[NPC_TIGRE_FUEGO].LoadModel("Models/npcSelva/tigreFuego.obj");
-	modelosNPC[NPC_CALAMARDO_GUAPO] = Model();
-	modelosNPC[NPC_CALAMARDO_GUAPO].LoadModel("Models/npcSelva/calamardoGuapo.obj");
-	// NPCs del planeta rocoso
-	modelosNPC[NPC_MONSTRUO_NEGRO] = Model();
-	modelosNPC[NPC_MONSTRUO_NEGRO].LoadModel("Models/npcRoca/monstruoNegro.obj");
-	modelosNPC[NPC_ESCORPION] = Model();
-	modelosNPC[NPC_ESCORPION].LoadModel("Models/npcRoca/escorpion.obj");
-	modelosNPC[NPC_CERBERO] = Model();
-	modelosNPC[NPC_CERBERO].LoadModel("Models/npcRoca/Cerbero.obj");
-	modelosNPC[NPC_SERPIENTE_ALAS] = Model();
-	modelosNPC[NPC_SERPIENTE_ALAS].LoadModel("Models/npcRoca/serpienteAlas.obj");
-	modelosNPC[NPC_PAUL] = Model();
-	modelosNPC[NPC_PAUL].LoadModel("Models/npcRoca/Paul.obj");
-	for (int i = 0; i < NUM_MODELOS_NPC; i++)
-		hayNPC[i] = modelosNPC[i].estaCargado();
-
 	// portal de salida (el archivo se llama asteroide.obj pero tiene el portal)
 	Portal_M = Model();
 	Portal_M.LoadModel("Models/portal/asteroide.obj");
 	hayPortal = Portal_M.estaCargado();
 
-	// Si Paul.obj trae la misma malla que el portal (en Blender se exportó el objeto equivocado)
-	// se dibujaría un segundo portal: en ese caso Paul no se usa hasta que se re-exporte.
-	paulValido = hayNPC[NPC_PAUL];
-	if (paulValido && hayPortal && modelosNPC[NPC_PAUL].getNumTriangulos() == Portal_M.getNumTriangulos()
-		&& glm::length(modelosNPC[NPC_PAUL].getTamano() - Portal_M.getTamano()) < 0.01f)
-	{
-		printf("[AVISO] Models/npcRoca/Paul.obj tiene la misma malla que el portal. No se dibuja.\n");
-		paulValido = false;
-	}
+	// Paul.obj es una exportación duplicada del portal. No se carga: Rek'Sai es el avatar vigente.
+	paulValido = false;
+	printf("[OK] Se omitio Models/npcRoca/Paul.obj: corresponde al portal y no se utiliza.\n");
 
 	// los tres racimos de cristales hechos con código
 	for (int i = 0; i < 3; i++)
@@ -983,6 +1011,7 @@ void Superficie::InicializarSuperficies()
 
 	GenerarSelva(mundos[SUPERFICIE_SELVATICA]);
 	GenerarDesierto(mundos[SUPERFICIE_ROCOSA]);
+	CrearFisuras(mundos[SUPERFICIE_ROCOSA]);
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -995,6 +1024,46 @@ void Superficie::InicializarSuperficies()
 			(i == SUPERFICIE_SELVATICA) ? "selvatica" : "rocosa", m.largo, (int)m.objetos.size(), (int)m.npcs.size());
 	}
 	inicializado = true;
+	return true;
+}
+
+void Superficie::PrepararModelosSuperficie(TipoSuperficie tipo)
+{
+	if (!inicializado || modelosSuperficieListos[tipo])
+		return;
+
+	struct RecursoNPC { ModeloNPC modelo; const char* ruta; };
+	static const RecursoNPC selva[] = {
+		{ NPC_NARUTO, "Models/npcSelva/naruto.obj" },
+		{ NPC_ZORRO_BLANCO, "Models/npcSelva/zorroBlanco.obj" },
+		{ NPC_CABALLO_DELFIN, "Models/npcSelva/caballoDelfin.obj" },
+		{ NPC_PULPO, "Models/npcSelva/pulpo.obj" },
+		{ NPC_TIGRE_FUEGO, "Models/npcSelva/tigreFuego.obj" },
+		{ NPC_CALAMARDO_GUAPO, "Models/npcSelva/calamardoGuapo.obj" }
+	};
+	static const RecursoNPC roca[] = {
+		{ NPC_MONSTRUO_NEGRO, "Models/npcRoca/monstruoNegro.obj" },
+		{ NPC_ESCORPION, "Models/npcRoca/escorpion.obj" },
+		{ NPC_CERBERO, "Models/npcRoca/Cerbero.obj" },
+		{ NPC_SERPIENTE_ALAS, "Models/npcRoca/serpienteAlas.obj" },
+		{ NPC_VOIDMITE, "Models/reksai/voidmite.obj" },
+		{ NPC_VOIDGRUB, "Models/reksai/voidgrub.obj" },
+		{ NPC_VOID_SPAWN, "Models/reksai/void_spawn.obj" },
+		{ NPC_RIFT_HERALD, "Models/reksai/rift_herald.obj" }
+	};
+	const RecursoNPC* recursos = (tipo == SUPERFICIE_SELVATICA) ? selva : roca;
+	const size_t cantidad = (tipo == SUPERFICIE_SELVATICA)
+		? sizeof(selva) / sizeof(selva[0]) : sizeof(roca) / sizeof(roca[0]);
+	printf("Cargando %zu NPCs de la superficie %s bajo demanda ...\n", cantidad,
+		(tipo == SUPERFICIE_SELVATICA) ? "selvatica" : "rocosa");
+	for (size_t i = 0; i < cantidad; ++i)
+	{
+		const int indice = recursos[i].modelo;
+		modelosNPC[indice] = Model();
+		modelosNPC[indice].LoadModel(recursos[i].ruta);
+		hayNPC[indice] = modelosNPC[indice].estaCargado();
+	}
+	modelosSuperficieListos[tipo] = true;
 }
 
 // NUEVO: recorte por cono. Solo se dibuja lo que está cerca y frente a la cámara (un cono horizontal
@@ -1015,7 +1084,7 @@ bool Superficie::Visible(glm::vec2 posicion, float radio, float distanciaMaxima,
 	return true;
 }
 
-void Superficie::DibujarObjeto(const Objeto& o)
+void Superficie::DibujarObjeto(const Objeto& o, Texture& texturaRoca)
 {
 	// se cambia el material solo cuando cambia el tipo de objeto
 	if (o.tipo != tipoActual)
@@ -1059,7 +1128,7 @@ void Superficie::DibujarObjeto(const Objeto& o)
 	}
 	else if (o.tipo == OBJ_AGUJA || o.tipo == OBJ_ROCA || o.tipo == OBJ_MONTANA)
 	{
-		Roca_M.RenderModelConTextura(sueloRocosoTexture);
+		Roca_M.RenderModelConTextura(texturaRoca);
 		triangulos += Roca_M.getNumTriangulos();
 	}
 	else if (o.tipo == OBJ_CRISTAL)
@@ -1107,6 +1176,14 @@ void Superficie::DibujarSuperficie(TipoSuperficie tipo, glm::vec3 posCamara, glm
 	glUniform3f(uniformColor, m.colorCamino.x, m.colorCamino.y, m.colorCamino.z);
 	m.mallaCamino->RenderMeshModel();
 	glDisable(GL_POLYGON_OFFSET_FILL);
+	if (tipo == SUPERFICIE_ROCOSA) {
+		plainTexture.UseTexture();
+		glUniform3f(uniformColor, 0.14f, 0.025f, 0.15f);
+		float pulso = 0.73f + 0.12f * sinf(1.45f * tiempo);
+		glUniform3f(uniformEmision, pulso, 0.12f * pulso, 0.65f * pulso);
+		fisuras.RenderMeshModel();
+		glUniform3f(uniformEmision, 0, 0, 0);
+	}
 
 	// datos del recorte por cono (ver Visible)
 	camaraPiso = glm::vec2(posCamara.x, posCamara.z);
@@ -1148,7 +1225,8 @@ void Superficie::DibujarSuperficie(TipoSuperficie tipo, glm::vec3 posCamara, glm
 		model = glm::scale(model, glm::vec3(escala));
 		model = glm::translate(model, PiesDelModelo(Portal_M));
 		float pulso = 0.6f + 0.4f * sinf(2.2f * tiempo);
-		glUniform3f(uniformEmision, 0.45f * pulso, 0.50f * pulso, 0.75f * pulso);   // la galaxia del portal brilla
+		const glm::vec3 acento = tipo == SUPERFICIE_ROCOSA ? glm::vec3(0.85f,0.13f,0.67f) : glm::vec3(0.45f,0.50f,0.75f);
+		glUniform3fv(uniformEmision, 1, glm::value_ptr(acento * pulso));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Portal_M.RenderModel();
 		glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
@@ -1203,13 +1281,13 @@ void Superficie::DibujarSuperficie(TipoSuperficie tipo, glm::vec3 posCamara, glm
 	{
 		if (triangulos > PRESUPUESTO_TRIANGULOS)
 			break;   // lo que falta está más lejos que todo lo ya dibujado
-		DibujarObjeto(m.objetos[visibles[i].second]);
+		DibujarObjeto(m.objetos[visibles[i].second], tipo == SUPERFICIE_ROCOSA ? pizarraTexture : sueloRocosoTexture);
 	}
 
 	// montañas: siempre (son pocas y están tan lejos que la niebla decide cuánto se ven)
 	for (size_t i = 0; i < m.objetos.size(); i++)
 		if (m.objetos[i].tipo == OBJ_MONTANA)
-			DibujarObjeto(m.objetos[i]);
+			DibujarObjeto(m.objetos[i], tipo == SUPERFICIE_ROCOSA ? pizarraTexture : sueloRocosoTexture);
 
 	glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
 }
@@ -1337,11 +1415,11 @@ AmbienteSuperficie Superficie::ObtenerAmbiente(TipoSuperficie tipo, float factor
 	}
 	else
 	{
-		// polvo rojizo del desierto; de noche se ve el cielo estrellado
-		a.colorNiebla = glm::vec3(0.72f, 0.38f, 0.24f) * luz;
+		// La bruma índigo separa las sierras; el brillo magenta queda en las fisuras.
+		a.colorNiebla = glm::vec3(0.22f, 0.19f, 0.36f) * luz;
 		a.densidadNiebla = 1.0f / 300.0f;
-		a.tinteCielo = glm::vec3(1.0f, 0.80f, 0.82f) * (0.55f + 0.45f * factorDia);
-		a.brumaHorizonte = glm::vec4(a.colorNiebla, 0.85f);
+		a.tinteCielo = glm::vec3(0.97f, 0.96f, 1.0f) * (0.48f + 0.52f * factorDia);
+		a.brumaHorizonte = glm::vec4(a.colorNiebla, 0.46f);
 	}
 	return a;
 }

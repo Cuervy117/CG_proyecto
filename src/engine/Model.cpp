@@ -1,4 +1,6 @@
 ﻿#include <algorithm>
+#include <chrono>
+#include <cstdio>
 #include <fstream>
 #include "Model.h"
 #include <unordered_map>
@@ -78,6 +80,8 @@ Model::Model()
 
 void Model::LoadModel(const std::string & fileName)
 {
+	const auto inicioCarga = std::chrono::steady_clock::now();
+	const int triangulosAntes = numTriangulos;
 	const std::string ruta = normalizarRuta(fileName);
 	modelDirectory = ruta.substr(0, ruta.find_last_of('/'));
 	Assimp::Importer importer;//					Pasa de Polygons y Quads a triangulos, modifica orden para el origen, generar normales si el  objeto no tiene, trata vértices iguales como 1 solo
@@ -86,11 +90,20 @@ void Model::LoadModel(const std::string & fileName)
 	if (!scene || !scene->mRootNode)
 	{	
 		// NUEVO (corrección): en la práctica faltaba el %s del motivo, por eso nunca se veía el error
-		printf("Fallo en cargar el modelo: %s\n   Motivo: %s\n", fileName.c_str(), importer.GetErrorString());
+		const double ms = std::chrono::duration<double, std::milli>(
+			std::chrono::steady_clock::now() - inicioCarga).count();
+		printf("Fallo en cargar el modelo: %s\n   Motivo: %s (%.1f ms)\n",
+			fileName.c_str(), importer.GetErrorString(), ms);
+		fflush(stdout);
 		return;
 	}
 	LoadNode(scene->mRootNode, scene);
 	LoadMaterials(scene);
+	const double ms = std::chrono::duration<double, std::milli>(
+		std::chrono::steady_clock::now() - inicioCarga).count();
+	printf("[carga] %s | %d tris | %.1f ms\n",
+		ruta.c_str(), numTriangulos - triangulosAntes, ms);
+	fflush(stdout);
 	}
 
 void Model::ClearModel()

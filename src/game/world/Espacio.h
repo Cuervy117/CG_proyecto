@@ -49,6 +49,45 @@ struct Asteroide
 	bool grande;
 };
 
+const int PARTICULAS_HUMO_COHETE = 16;
+
+enum UbicacionCohete
+{
+	COHETE_BASE = 0,
+	COHETE_SHINOBI
+};
+
+enum EstadoCohete
+{
+	COHETE_EN_PLATAFORMA = 0,
+	COHETE_IGNICION,
+	COHETE_ASCENSO,
+	COHETE_ORBITA,
+	COHETE_REINICIO
+};
+
+struct ParticulaHumo
+{
+	glm::vec3 posicion = glm::vec3(0.0f);
+	glm::vec3 velocidad = glm::vec3(0.0f);
+	float vida = 0.0f;
+	float vidaMax = 1.0f;
+	float tamano = 1.0f;
+};
+
+struct Cohete
+{
+	EstadoCohete estado = COHETE_EN_PLATAFORMA;
+	float tiempoEstado = 0.0f;
+	float altura = 0.0f;
+	float alturaReinicio = 0.0f;
+	glm::vec3 origen = glm::vec3(0.0f);
+	glm::vec3 posicion = glm::vec3(0.0f);
+	float acumuladorHumo = 0.0f;
+	int siguienteParticula = 0;
+	ParticulaHumo humo[PARTICULAS_HUMO_COHETE];
+};
+
 // NUEVO: generador de números pseudoaleatorios (xorshift). Con la misma semilla siempre da los mismos
 // números, así el cinturón de asteroides siempre sale igual (rand() puede cambiar entre compiladores).
 struct AleatorioEspacio
@@ -68,7 +107,7 @@ class Espacio
 public:
 	Espacio();
 	// Carga la pista y los asteroides (con OpenGL ya iniciado). Necesita al océano para sus datos.
-	void InicializarEspacio(Oceano* oceanoPlaneta);
+	bool InicializarEspacio(Oceano* oceanoPlaneta);
 
 	// Pista (pista.obj), sus luces, la línea de meta y los arcos de entrada a cada atmósfera
 	void DibujarPista(float tiempo, GLuint modelLocation, GLuint colorLocation,
@@ -81,6 +120,18 @@ public:
 		GLuint specularIntensityLocation, GLuint shininessLocation, GLuint emisionLocation);
 	// centro del piso de la base, dirección de la carrera, su derecha y el radio de la plataforma
 	void DatosBase(glm::vec3& centro, glm::vec3& adelante, glm::vec3& derecha, float& radio);
+
+	// Cohete D1: plataforma de despegue en la base espacial y en el planeta selvático
+	bool LanzarCohete(UbicacionCohete sitio);
+	void ActualizarCohetes(float dt);
+	void DibujarCohete(UbicacionCohete sitio, glm::vec3 posCamara, float tiempo,
+		GLuint modelLocation, GLuint colorLocation, GLuint specularIntensityLocation,
+		GLuint shininessLocation, GLuint emisionLocation);
+	glm::vec3 CentroCohete(UbicacionCohete sitio) const;
+	bool CoheteDisponible() const { return hayCohete; }
+	const char* TextoEstadoCohete(UbicacionCohete sitio) const;
+	bool CoheteEncendido(UbicacionCohete sitio) const;
+	glm::vec3 PosicionLlama(UbicacionCohete sitio) const;
 
 	// Recorrido de la pista (lo usa la nave rival): tramos 0, 1 y 2; la meta está en el tramo 0
 	float LargoTramo(int tramo);
@@ -107,6 +158,12 @@ private:
 	void AgregarVertice(std::vector<GLfloat>& v, glm::vec3 p, float s, float t, glm::vec3 n);
 	glm::vec3 PuntoBase(float angulo, float radio, float y);
 	void ConstruirBase();
+	void InicializarCohete();
+	void ConstruirPlataformaCohete();
+	void ReiniciarHumo(Cohete& cohete);
+	void ActualizarHumo(Cohete& cohete, float dt, bool encendido);
+	void DibujarBillboard(glm::vec3 centro, glm::vec3 posCamara, float ancho, float alto,
+		glm::vec3 color, glm::vec3 emision);
 	float DistanciaAPista(glm::vec3 q);
 	void GenerarCinturon();
 	void DibujarMarca(glm::vec3 centro, glm::vec3 ejeX, glm::vec3 ejeY, glm::vec3 normal, float ancho, float largo, glm::vec3 color);
@@ -132,6 +189,16 @@ private:
 	MeshModel* mallaBase;
 	MeshModel* mallaPilares;
 	glm::vec3 centroBase, adelanteBase, derechaBase;
+
+	Model Cohete_M;
+	bool hayCohete;
+	MeshModel* mallaPlataformaCohete;
+	Texture fuegoTexture;
+	Texture humoTexture;
+	bool hayFuego, hayHumo;
+	Cohete cohetes[2];
+	AleatorioEspacio rndCohete{ 20261106u };
+
 	Material Material_pista;
 	Material Material_marca;
 	Material Material_asteroide;

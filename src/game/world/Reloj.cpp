@@ -74,7 +74,7 @@ void Reloj::Dibujar(MeshModel* cuadro, Texture& textura, float x, float y, float
 	cuadro->RenderMeshModel();
 }
 
-void Reloj::InicializarReloj()
+bool Reloj::InicializarReloj()
 {
 	// shader propio del HUD (como el del skybox, que también usa la clase Shader)
 	shaderHud = new Shader();
@@ -98,6 +98,9 @@ void Reloj::InicializarReloj()
 	listo = ok;
 	if (ok)
 		printf("[OK] Reloj en pantalla listo\n");
+	else
+		fprintf(stderr, "[ERROR] No se pudieron cargar las texturas del reloj.\n");
+	return ok;
 }
 
 void Reloj::DibujarReloj(int anchoVentana, int altoVentana, float horaDelDia, int dia, int clima)

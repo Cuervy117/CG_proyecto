@@ -1,0 +1,12 @@
+﻿T0 B: Private=475.2 MB Working=155.7 MB Responding=True
+T0 captura: C:\Users\David\AppData\Local\Temp\opencode\qa_shots\B_t0_espacio.png
+T1 B primera: loaded=True wall=1.08s maxPrivate=503.5 MB maxWorking=178.5 MB nonResponding=False
+T1 B: Private=599.4 MB Working=173.6 MB Responding=True
+T1 captura: C:\Users\David\AppData\Local\Temp\opencode\qa_shots\B_1_spawn.png
+T1 captura NPC: C:\Users\David\AppData\Local\Temp\opencode\qa_shots\B_2_npc.png
+T2 captura espacio: C:\Users\David\AppData\Local\Temp\opencode\qa_shots\B_3_espacio.png
+T2 B: Private=595.5 MB Working=169.7 MB Responding=True
+T4 B reentrada: wall=2.26s nuevasCargas=0 Private=595.5 MB Working=169.7 MB
+T4 captura: C:\Users\David\AppData\Local\Temp\opencode\qa_shots\B_4_reentrada.png
+T3 B segunda zona: loaded=True wall=1.70s nuevasCargas=7 Private=774.7 MB Working=182.2 MB
+T3 captura: C:\Users\David\AppData\Local\Temp\opencode\qa_shots\B_5_segunda.png

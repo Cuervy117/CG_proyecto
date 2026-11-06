@@ -26,6 +26,7 @@ Comprueba hash y extrae directamente en raíz; sustituye C:\ruta por la ubicaci�
 Get-FileHash 'C:\ruta\cgich-dependencias-2026-10-30-base.zip' -Algorithm SHA256
 Expand-Archive -LiteralPath 'C:\ruta\cgich-dependencias-2026-10-30-base.zip' -DestinationPath .
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Verify-Dependencies.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Verify-Project-Assets.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Build.ps1
 Copy-Item -LiteralPath .\glew32.dll,.\glfw3.dll,.\assimp-vc143-mt.dll -Destination .\x64\Release\
 .\x64\Release\LabCGeIHC.exe
@@ -40,13 +41,17 @@ Ejecuta desde la raíz con los modelos y texturas del paquete actualizado superp
 | Controles | Acción |
 |---|---|
 | F1 / F2 / F3 / F4 | Planeta a pie, persecución de carrera, vuelo, observación |
-| Tab / rueda | Cambiar objetivo de observación y acercar o alejar la cámara |
+| W / S y A / D en carrera (F2) | Acelerar o frenar y cambiar de carril con miNave. Las otras dos naves repiten la vuelta por roca, selva y océano. |
+| Ratón en F1 / F2 / F3 | En F1 gira alrededor del avatar a altura constante. En F2 orbita respecto al rumbo de miNave. En F3 sigue la mirada de vuelo. |
+| Tab / rueda | En F4, avanzar al siguiente objetivo disponible y ajustar el zoom |
 | F5 / F6 / F7 / F8 | Accesos directos a selva, roca, océano y espacio |
 | WASD / ratón | Movimiento y orientación |
 | J / E | Embarcar o desembarcar junto a la nave / interactuar con el tránsito entre zonas |
 | 2 / 3 | Puerta de la cápsula / paneles del satélite |
 | F / L / K | Linterna / faro de nave / foco de base |
 | C / F9 | Alternar cámara libre / liberar o capturar el cursor |
+
+**Recorrido R4.** Pulsa F4 para observar el cohete de Shinobi y 1 para lanzarlo. Tab recorre el hangar espacial con sus dos cápsulas, el planeta rocoso, el selvático, el satélite y el cohete de la base antes de volver al lanzamiento. La cámara muestra la zona del objetivo y el jugador conserva su posición durante la observación. F1, F2 y F3 retoman sus recorridos habituales.
 
 ## Trabajo diario
 
@@ -63,6 +68,22 @@ Si falta upstream: `git push -u origin feat/b-mundo` (o tu rama). A coordina mer
 
 ## Recursos y publicación
 
-David genera recursos con `scripts/Package-Dependencies.ps1 -Version <version-nueva>`; no sobreescribe versiones. Compartir ZIP/hash por Drive/USB y registrar aquí la ubicación acordada. No subir assets/DLLs/ZIPs a Git. El manifiesto identifica el paquete; al editar recursos se publica otra versión.
+El planeta Vacío usa un cubemap propio y una textura mineral en `Textures/Vacio/`. Los siete PNG viajan en el paquete de recursos compartido por Drive y el empaquetador los incluye ya generados en el juego distribuido. El cubemap de Cupertin diurno sigue asignado a Shinobi.
+
+### Candidato ejecutable Windows x64
+
+Desde un checkout limpio con los assets del proyecto, VS 2022/v143, su redistribuible x64 y Python 3, ejecuta `python scripts/Package-Release.py v0.2.0-rc.1`. El script compila Release y genera el ZIP y su SHA-256 en `artefactos/`. Para otra versión, cambia el nombre del candidato.
+
+En el equipo de prueba (Windows x64 con OpenGL 3.3), compara el hash del ZIP con su archivo `.sha256`, extrae todo y ejecuta desde la carpeta extraída:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Verify-Release.ps1
+.\Jugar.cmd --probar-release
+.\Jugar.cmd
+```
+
+La prueba automática dibuja las cuatro zonas y comprueba carrera, lanzamiento y hangar. Finaliza con código 0 si pasa. El manifiesto `release.json` identifica el commit y los archivos de esa distribución.
+
+David genera recursos con `scripts/Package-Dependencies.ps1 -Version <version-nueva>`; no sobreescribe versiones. Compartir ZIP/hash por Drive/USB y registrar aquí la ubicación acordada. No subir assets/DLLs/ZIPs a Git. El manifiesto identifica el paquete; al editar recursos se publica otra versión. Las ocho texturas críticas nuevas se validan con `manifest-project-assets.json` y `scripts/Verify-Project-Assets.ps1`; su carpeta fuente es [Textures en Drive](https://drive.google.com/drive/folders/1794f4lffbV-lYnVEKhLvxA8gr8vDi-iH).
 
 La preparación del 30-oct conserva el main remoto inicial y la base local por merge. La rama remota david no se modifica. main/develop/feat/* quedan preparadas localmente. Ver [publicación](docs/PREPARAR_PUSH.md).

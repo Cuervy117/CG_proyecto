@@ -1,0 +1,77 @@
+[carga] Models/Fighter_03_Obj/Fighter_03.obj | 4536 tris | 126.6 ms
+[carga] Models/asteroide/Stylized_Planets.obj | 12752 tris | 42.6 ms
+Textura no encontrada: Textures/L1_Bake1_PBR_Diffuse
+Fallo en cargar la Textura :Textures/L1_Bake1_PBR_Diffuse
+[carga] Models/satelite/satelite_base.fbx | 25222 tris | 50.6 ms
+Textura no encontrada: Textures/L1_Bake1_PBR_Diffuse
+Fallo en cargar la Textura :Textures/L1_Bake1_PBR_Diffuse
+[carga] Models/satelite/satelite_panel_der.fbx | 264 tris | 2.1 ms
+Textura no encontrada: Textures/L1_Bake1_PBR_Diffuse
+Fallo en cargar la Textura :Textures/L1_Bake1_PBR_Diffuse
+[carga] Models/satelite/satelite_panel_izq.fbx | 264 tris | 2.1 ms
+Textura no encontrada: Textures/L1_Bake1_PBR_Diffuse
+Fallo en cargar la Textura :Textures/L1_Bake1_PBR_Diffuse
+[carga] Models/satelite/satelite_aspa_g.fbx | 328 tris | 1.8 ms
+[OK] Modelos iniciales del espacio cargados; planetas y capsula quedan bajo demanda.
+[carga] Models/arbol/arbol.obj | 1300 tris | 93.7 ms
+[carga] Models/asteroide/Rocky_Asteroid_6.obj | 11996 tris | 34.5 ms
+[carga] Models/portal/asteroide.obj | 500000 tris | 1450.3 ms
+[OK] Se omitio Models/npcRoca/Paul.obj: corresponde al portal y no se utiliza.
+[OK] Superficie rocosa: camino de 558 unidades, 369 objetos, 4 NPCs
+[OK] Superficie selvatica: camino de 577 unidades, 546 objetos, 6 NPCs
+[OK] Pista: tramos de 262 (meta en 154), 174 y 139 unidades
+[carga] Models/pista/pista.obj | 4584 tris | 23.2 ms
+[OK] Pista: Models/pista/pista.obj (4584 triangulos)
+Cargando Models/asteroide/asteroide.obj ...
+[carga] Models/asteroide/asteroide.obj | 500000 tris | 1484.0 ms
+[carga] Models/asteroide/Rocky_Asteroid_6.obj | 11996 tris | 40.1 ms
+[OK] Base de inicio: plataforma de radio 15 bajo la pista, 34 unidades antes de la meta
+[OK] Cinturon de asteroides: 150 asteroides
+[OK] Reloj en pantalla listo
+[carga] Models/planetaOceano/planetaOceano.obj | 4096 tris | 20.7 ms
+[OK] Planeta oceano: Models/planetaOceano/planetaOceano.obj
+Textura no encontrada: Textures/aguaOceanoTexture.png
+[OK] Oceano por dentro: ola de 165 de alto a 520 unidades de donde se aparece
+[AVISO] No hay modelo para el avatar (ni Models/avatar/avatar.obj ni Paul.obj)
+Cargando Models/miNave/miNave.obj ...
+[carga] Models/miNave/miNave.obj | 500000 tris | 1644.3 ms
+[OK] miNave: Models/miNave/miNave.obj (500000 triangulos)
+H-A1 jerarquia: OK (hijo 1.000, 2.000, 2.000)
+A3.2 FollowXZ: OK (camara 3.000, 4.000, -12.000; objetivo 3.000, 2.000, -2.000)
+A4.1 Chase: OK (camara -7.000, 5.000, -2.000; objetivo 5.000, 2.000, -2.000)
+A4.2 Flight: OK (camara -11.000, 16.000, -3.000; objetivo 9.000, 12.000, -3.000; inclinada y 10.528/13.368)
+A4.3 Orbit: OK (camara 5.000, 22.000, 14.321; distancia 20.000; yaw 0.120)
+A4.4 CameraDirector: OK (rigs Planeta/Carrera/Vuelo/Observacion)
+A3.3 pivotes: OK (pivote 2.000, 0.000, 2.000; hoja 1.000, 0.000, 1.000)
+A3.3 camara-raiz: OK (camara 5.000, 6.000, -9.000; objetivo 5.000, 2.000, 3.000)
+A4.1 Chase RekSai: OK (avatar 30.386, -12.362, -43.928; camara 30.386, -7.362, -53.928)
+A4.2 Flight nave: OK (nave 0.000, 0.000, 0.000; camara 0.000, 6.000, -16.000; mallas 5)
+A4.3 Orbit nave: OK (nave 0.000, 0.000, 0.000; camara 0.000, 12.000, 17.321; mallas 5)
+[QA] Inicio: jugador=(30.4, -12.4, -43.9) camara=(30.4, -6.4, -43.9) dRoca=54.8 dSelva=162.7
+[carga] Models/capsula/capsulaCuerpo.obj | 16340 tris | 39.7 ms
+[carga] Models/capsula/capsulaPuerta.obj | 1296 tris | 7.3 ms
+Cargando Models/planetaSelva/planetaSelvatico.obj bajo demanda ...
+[carga] Models/planetaSelva/planetaSelvatico.obj | 1000000 tris | 2734.3 ms
+Cargando 6 NPCs de la superficie selvatica bajo demanda ...
+[carga] Models/npcSelva/naruto.obj | 1000000 tris | 3034.3 ms
+[carga] Models/npcSelva/zorroBlanco.obj | 500000 tris | 1464.7 ms
+[carga] Models/npcSelva/caballoDelfin.obj | 200000 tris | 605.2 ms
+[carga] Models/npcSelva/pulpo.obj | 200000 tris | 631.2 ms
+[carga] Models/npcSelva/tigreFuego.obj | 1000000 tris | 2975.0 ms
+[carga] Models/npcSelva/calamardoGuapo.obj | 500000 tris | 1464.9 ms
+[QA] Recursos selvatica: capsula=1 puerta=1 planeta=1 total=13116.1 ms
+Zona=2 camara=0 objetivo=0 nave=0
+Zona=0 camara=0 objetivo=0 nave=0
+Zona=0 camara=3 objetivo=0 nave=0
+Zona=0 camara=3 objetivo=1 nave=0
+[QA] Recursos selvatica: capsula=1 puerta=1 planeta=1 total=0.0 ms
+Zona=2 camara=3 objetivo=1 nave=0
+Cargando Models/planetaRoca/planetaRoca.obj bajo demanda ...
+[carga] Models/planetaRoca/planetaRoca.obj | 1000000 tris | 2705.1 ms
+Cargando 4 NPCs de la superficie rocosa bajo demanda ...
+[carga] Models/npcRoca/monstruoNegro.obj | 500000 tris | 1476.9 ms
+[carga] Models/npcRoca/escorpion.obj | 500000 tris | 1420.8 ms
+[carga] Models/npcRoca/Cerbero.obj | 200000 tris | 664.0 ms
+[carga] Models/npcRoca/serpienteAlas.obj | 200000 tris | 721.3 ms
+[QA] Recursos rocosa: capsula=1 puerta=1 planeta=1 total=7079.4 ms
+Zona=1 camara=3 objetivo=1 nave=0

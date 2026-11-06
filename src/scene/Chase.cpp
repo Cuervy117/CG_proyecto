@@ -29,6 +29,14 @@ Chase::Chase(float distanciaInicial, float alturaInicial,
 {
 }
 
+void Chase::Orbitar(float dx, float dy)
+{
+	// Ángulos relativos al rumbo: al doblar la pista la cámara sigue a miNave.
+	giro = std::remainder(giro - glm::radians(0.25f * dx), glm::radians(360.0f));
+	inclinacion = glm::clamp(inclinacion - glm::radians(0.25f * dy),
+		-glm::radians(80.0f), glm::radians(80.0f));
+}
+
 void Chase::update(float dt, const SceneNode& target)
 {
 	(void)dt;
@@ -38,7 +46,13 @@ void Chase::update(float dt, const SceneNode& target)
 	const float distanciaSegura = (distancia > 0.01f) ? distancia : 0.01f;
 
 	m_target = base + glm::vec3(0.0f, alturaObjetivo, 0.0f) + frente * adelanto;
-	m_pos = base - frente * distanciaSegura + glm::vec3(0.0f, altura, 0.0f);
+	const float subida = altura - alturaObjetivo;
+	const float radio = std::hypot(distanciaSegura, subida);
+	const float pitch = glm::clamp(std::atan2(subida, distanciaSegura) + inclinacion, 0.0f, glm::radians(80.0f));
+	const float yaw = std::atan2(frente.x, frente.z) + giro;
+	const glm::vec3 horizontal(std::sin(yaw), 0, std::cos(yaw));
+	m_pos = base + m_up * (alturaObjetivo + radio * std::sin(pitch))
+		- horizontal * (radio * std::cos(pitch));
 }
 
 glm::mat4 Chase::view() const

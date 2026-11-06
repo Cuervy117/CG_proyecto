@@ -162,9 +162,10 @@ bool Jugador::IntentarAbordarNave(float tiempo, float& yawCamara)
 
 void Jugador::SeleccionarNave(float tiempo)
 {
-	if (!hayNave || enNave) return;
+	if (!hayNave || (enNave && carrera)) return;
+	if (!carrera) inicioCarrera = tiempo;
 	enNave = abordo = carrera = true;
-	inicioCarrera = tiempo;
+	naveEstacionada = false;
 	velocidadNave = 0;
 	espacio->SalidaEnMeta(posicion, adelanteNave, arribaNave, ALTURA_NAVE, CARRIL);
 	rumbo = atan2f(adelanteNave.x, adelanteNave.z);
@@ -238,7 +239,7 @@ float Jugador::ColocarJugadorAlSalir(int planeta)
 // NUEVO (animación compleja): la nave rival recorre la vuelta completa con velocidad constante.
 // d = VELOCIDAD_RIVAL * (segundos de carrera), módulo el largo total de la vuelta; luego se busca en
 // qué etapa va (pista, planeta rocoso, pista, selvático, pista, océano, pista) y su punto ahí.
-void Jugador::EstadoRival(float tiempo, LugarJugador& lugar, glm::vec3& pos, glm::vec3& adelante, glm::vec3& arriba)
+void Jugador::EstadoRival(RivalCarrera rival, float tiempo, LugarJugador& lugar, glm::vec3& pos, glm::vec3& adelante, glm::vec3& arriba)
 {
 	// vuelta completa: meta -> rocoso -> pista -> selvático -> pista -> océano -> pista -> meta
 	float meta = espacio->DistanciaMeta();
@@ -253,7 +254,11 @@ void Jugador::EstadoRival(float tiempo, LugarJugador& lugar, glm::vec3& pos, glm
 	float total = 0.0f;
 	for (int i = 0; i < 7; i++)
 		total += largos[i];
-	float d = fmodf(VELOCIDAD_RIVAL * TiempoDeCarrera(tiempo), fmaxf(total, 1.0f));
+	// Parrilla escalonada y carriles opuestos. El desfase se conserva al cruzar la meta.
+	const bool segundo = rival == RivalCarrera::Segundo;
+	const float lado = segundo ? -1.0f : 1.0f;
+	const float desfase = segundo ? 18.0f : 6.0f;
+	float d = fmodf(desfase + VELOCIDAD_RIVAL * TiempoDeCarrera(tiempo), fmaxf(total, 1.0f));
 	int etapa = 0;
 	while (etapa < 6 && d >= largos[etapa])
 	{
@@ -264,37 +269,37 @@ void Jugador::EstadoRival(float tiempo, LugarJugador& lugar, glm::vec3& pos, glm
 	if (etapa == 0)
 	{
 		lugar = LUGAR_ESPACIO;
-		espacio->PuntoEnPista(0, meta + d, CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
+		espacio->PuntoEnPista(0, meta + d, lado * CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
 	}
 	else if (etapa == 1)
 	{
 		lugar = LUGAR_ROCOSO;
-		superficie->PuntoCarreraSuperficie(SUPERFICIE_ROCOSA, d, CARRIL_RIVAL_CAMINO, ALTURA_NAVE_CAMINO, pos, adelante);
+		superficie->PuntoCarreraSuperficie(SUPERFICIE_ROCOSA, d, lado * CARRIL_RIVAL_CAMINO, ALTURA_NAVE_CAMINO, pos, adelante);
 	}
 	else if (etapa == 2)
 	{
 		lugar = LUGAR_ESPACIO;
-		espacio->PuntoEnPista(1, d, CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
+		espacio->PuntoEnPista(1, d, lado * CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
 	}
 	else if (etapa == 3)
 	{
 		lugar = LUGAR_SELVATICO;
-		superficie->PuntoCarreraSuperficie(SUPERFICIE_SELVATICA, d, CARRIL_RIVAL_CAMINO, ALTURA_NAVE_CAMINO, pos, adelante);
+		superficie->PuntoCarreraSuperficie(SUPERFICIE_SELVATICA, d, lado * CARRIL_RIVAL_CAMINO, ALTURA_NAVE_CAMINO, pos, adelante);
 	}
 	else if (etapa == 4)
 	{
 		lugar = LUGAR_ESPACIO;
-		espacio->PuntoEnPista(2, d, CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
+		espacio->PuntoEnPista(2, d, lado * CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
 	}
 	else if (etapa == 5)
 	{
 		lugar = LUGAR_OCEANO;
-		oceano->PuntoCarreraOceano(d, CARRIL_RIVAL_AGUA, ALTURA_NAVE_AGUA, pos, adelante, arriba);
+		oceano->PuntoCarreraOceano(d, lado * CARRIL_RIVAL_AGUA, ALTURA_NAVE_AGUA, pos, adelante, arriba);
 	}
 	else
 	{
 		lugar = LUGAR_ESPACIO;
-		espacio->PuntoEnPista(0, d, CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
+		espacio->PuntoEnPista(0, d, lado * CARRIL_RIVAL_PISTA, 1.3f, pos, adelante, arriba);
 	}
 }
 
@@ -365,13 +370,15 @@ void Jugador::ActualizarJugador(bool* keys, GLfloat deltaTime, LugarJugador luga
 	glm::vec3 derechaH = glm::normalize(glm::cross(adelanteH, glm::vec3(0.0f, 1.0f, 0.0f)));
 	float ejeAdelante = (keys[GLFW_KEY_W] ? 1.0f : 0.0f) - (keys[GLFW_KEY_S] ? 1.0f : 0.0f);
 	float ejeLado = (keys[GLFW_KEY_D] ? 1.0f : 0.0f) - (keys[GLFW_KEY_A] ? 1.0f : 0.0f);
+	float ejeVertical = (keys[GLFW_KEY_E] ? 1.0f : 0.0f) - (keys[GLFW_KEY_Q] ? 1.0f : 0.0f);
 	float distancia, alturaMira;
 
 	if (vueloLibre && lugar == LUGAR_ESPACIO && enNave)
 	{
 		adelanteNave = glm::normalize(frente);
 		arribaNave = glm::normalize(glm::cross(derechaH, adelanteNave));
-		posicion += (adelanteNave * ejeAdelante + derechaH * ejeLado) * VELOCIDAD_NAVE_MAX * deltaTime;
+		posicion += (adelanteNave * ejeAdelante + derechaH * ejeLado
+			+ glm::vec3(0.0f, 1.0f, 0.0f) * ejeVertical) * VELOCIDAD_NAVE_MAX * deltaTime;
 		rumbo = atan2f(frente.x, frente.z);
 		distancia = 15.0f;
 		alturaMira = 3.0f;

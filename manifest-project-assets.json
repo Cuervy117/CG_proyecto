@@ -1,0 +1,55 @@
+{
+  "version": "2026-11-05-drive-textures",
+  "sourceFolder": "https://drive.google.com/drive/folders/1794f4lffbV-lYnVEKhLvxA8gr8vDi-iH",
+  "algorithm": "SHA256",
+  "files": [
+    {
+      "path": "Textures/planetaOceanoTexture.png",
+      "driveFileId": "1CpPyNxwdD91pD_ojRMaEtSuVJtSoOnX9",
+      "size": 174456,
+      "sha256": "586E8FD02B41EEDC3774EF4397AD14DC2E6345BA30B5AEB13AACED75D2F884A4"
+    },
+    {
+      "path": "Textures/pistaTexture.png",
+      "driveFileId": "1GS4SvMOz0Qq9dLCWLha-slovnZ56O04h",
+      "size": 160207,
+      "sha256": "1D4A611039F424FCEECFAE58E1F6260E4C7F1E136E19F6B756D98E86E24AAA63"
+    },
+    {
+      "path": "Textures/hud_reloj.png",
+      "driveFileId": "1bBGWQyPFw78Fc7OMBbq7oaUIavTRwmOL",
+      "size": 29736,
+      "sha256": "14BF07F3E29866BDCC16ECE1A0EDC1E76054425CD30BF78A9E5BC1F01CA6A861"
+    },
+    {
+      "path": "Textures/hud_iconos.png",
+      "driveFileId": "1W5F3Hkbq1uSQbcQOWVeqeg5UYksi8BSq",
+      "size": 8685,
+      "sha256": "33BD6C8E6ADE1FEF8118528D7B7B261461B2C1AD41974EC0D3181F72B1F87B3E"
+    },
+    {
+      "path": "Textures/hud_digitos.png",
+      "driveFileId": "1TJChnFyXuYp7SLelkaQM4SAMuhHM_XTl",
+      "size": 59735,
+      "sha256": "B9B99EB1C3F18F5562CA735A810A4DEB38F1C006778C7309218CA5C56DB09A6D"
+    },
+    {
+      "path": "Textures/baseTexture.png",
+      "driveFileId": "1NFK3pILfbWhgtXx2oiejAkiwBwKJHK-a",
+      "size": 206340,
+      "sha256": "176DCD6B6992B502A2467E6FF54D43B5B3319E245FD6E7F0180BE18BD7314D5F"
+    },
+    {
+      "path": "Textures/planetaRocaTexture.png",
+      "driveFileId": "1qBrYdvPHv4Xs1tgZHqUyzKM9HxdBZWlM",
+      "size": 5620240,
+      "sha256": "41C5845678C906050502855CC2FA57E6A2B3BF59F0DAC5D1E293C25D5AB40512"
+    },
+    {
+      "path": "Textures/planetaSelvaTexture.png",
+      "driveFileId": "1rHdyt8-KvsLG91B1qySiQaHqANo1arJs",
+      "size": 5009775,
+      "sha256": "5C2F3280ADCD3DB36053E6A1197A2C3CCC03C2F10FAB306BFD0A440756463094"
+    }
+  ]
+}

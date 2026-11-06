@@ -56,6 +56,7 @@ enum ModeloNPC
 	NPC_CERBERO,
 	NPC_SERPIENTE_ALAS,
 	NPC_PAUL,				// se esconde detrás del portal del planeta rocoso
+	NPC_VOIDMITE, NPC_VOIDGRUB, NPC_VOID_SPAWN, NPC_RIFT_HERALD,
 	NUM_MODELOS_NPC
 };
 
@@ -190,7 +191,9 @@ class Superficie
 public:
 	Superficie();
 	// Carga modelos y texturas y genera los dos mundos (con OpenGL ya iniciado)
-	void InicializarSuperficies();
+	bool InicializarSuperficies();
+	// Carga solo los NPC que pertenecen a la superficie solicitada. Se llama al entrar por primera vez.
+	void PrepararModelosSuperficie(TipoSuperficie tipo);
 
 	// Dibuja piso, camino, objetos y NPCs del planeta. El shader_light debe estar activo y con luces.
 	// 'tiempo' (segundos) mueve las animaciones de los NPCs.
@@ -254,7 +257,8 @@ private:
 	// --- dibujo ---
 	glm::mat4 MatrizNPC(const NPC& n, float tiempo, glm::vec2& posicion);
 	bool Visible(glm::vec2 posicion, float radio, float distanciaMaxima, float& dist);
-	void DibujarObjeto(const Objeto& o);
+	void DibujarObjeto(const Objeto& o, Texture& texturaRoca);
+	void CrearFisuras(const Mundo& mundo);
 	float InicioCarrera(const Mundo& m);
 
 	Mundo mundos[2];
@@ -265,12 +269,15 @@ private:
 	bool hayArbol, hayRoca;
 	Model modelosNPC[NUM_MODELOS_NPC];
 	bool hayNPC[NUM_MODELOS_NPC];
+	bool modelosSuperficieListos[2];
 	Model Portal_M;
 	bool hayPortal;
 	bool paulValido;			// false si Paul.obj no se cargó o trae la malla equivocada
 	float revelacionPaul;		// 0 = escondido detrás del portal, 1 = asomado
 	Texture sueloSelvaTexture;
 	Texture sueloRocosoTexture;
+	Texture pizarraTexture;
+	MeshModel fisuras;
 	Texture arbolTexture;
 	Texture plainTexture;
 	bool hayTexArbol;

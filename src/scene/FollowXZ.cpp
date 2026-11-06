@@ -4,6 +4,8 @@
 
 #include <gtc/matrix_transform.hpp>
 
+#include <cmath>
+
 FollowXZ::FollowXZ(float alturaInicial, float distanciaInicial,
 	float alturaObjetivoInicial)
 	: altura(alturaInicial),
@@ -20,7 +22,12 @@ void FollowXZ::update(float dt, const SceneNode& target)
 	const float distanciaSegura = (distancia > 0.01f) ? distancia : 0.01f;
 
 	m_target = base + glm::vec3(0.0f, alturaObjetivo, 0.0f);
-	m_pos = base + glm::vec3(0.0f, altura, -distanciaSegura);
+	// En R1 sólo cambia el azimut. Mantener la altura evita hundir la cámara
+	// al llevar el ratón al límite vertical.
+	glm::vec3 horizontal(miradaMouse.x, 0, miradaMouse.z);
+	if (glm::dot(horizontal, horizontal) < 1.0e-8f)
+		horizontal = glm::vec3(0, 0, 1);
+	m_pos = base + m_up * altura - glm::normalize(horizontal) * distanciaSegura;
 }
 
 glm::mat4 FollowXZ::view() const

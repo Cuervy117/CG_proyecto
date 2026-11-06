@@ -26,7 +26,7 @@ class Reloj
 public:
 	Reloj();
 	// Carga el shader del HUD y sus texturas (con OpenGL ya iniciado)
-	void InicializarReloj();
+	bool InicializarReloj();
 	// horaDelDia: de 0 a 24. dia: contador de días.
 	// clima: 0 = espacio, 1 = selva (nublado), 2 = desierto, 3 = océano (despejado).
 	// De 6:00 a 18:00 el letrero dice DÍA con un sol; de 18:00 a 6:00 dice NOCHE con una luna.

@@ -30,5 +30,8 @@ extern Model SateliteAspa_M;		// aspa (rotor)
 extern Skybox skybox;
 
 void LoadTextures();	// plain y fuego de los motores
-void LoadModels();		// nave rival, planetas, cápsula y satélite
-void LoadSkybox();		// skybox del espacio (nebulosa)
+void LoadModels();		// modelos necesarios para la zona inicial (espacio)
+void LoadPlanetaRocoso();	// carga diferida al entrar al planeta rocoso
+void LoadPlanetaSelvatico();	// carga diferida al entrar al planeta selvático
+void LoadCapsulaModels();	// carga diferida compartida por las superficies
+bool LoadSkybox();

@@ -14,6 +14,9 @@ public:
 
 	glm::mat4 projection(float aspect) const;
 
+	// Dirección de mirada para FollowXZ y Flight. Chase usa ángulos relativos a la nave.
+	glm::vec3 miradaMouse{0.0f};
+
 	float fov = 45.0f;
 	float nearZ = 0.1f;
 	float farZ = 2000.0f;
