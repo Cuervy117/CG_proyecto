@@ -1,0 +1,36 @@
+Cohete D1 - evidencia de implementacion y QA
+Fecha: 2026-11-06
+Build: Release x64, 0 errores (warnings heredados de Window.h y HUD).
+Ejecutable: x64\Release\LabCGeIHC.exe, ejecutado desde la raiz del repo.
+
+Assets:
+- Models/rocket/rocket.obj: 302734 triangulos, cargado correctamente.
+- Textures/fuego.png: usada por la llama.
+- Textures/humo.png: generada 128x128 RGBA; humo activo.
+
+Base espacial:
+- Tecla 1 desde la base: Zona=0 camara=3 objetivo=3 nave=0.
+- HUD observado: COHETE ASCENSO, COHETE ORBITA, COHETE LISTO.
+- Capturas: cohete_20261106_espacio_ascenso.png, cohete_20261106_espacio_orbita.png,
+  cohete_20261106_espacio_listo.png.
+- Log: cohete_20261106_espacio.log.
+
+P2 Shinobi:
+- F5 -> Zona=2; tecla 1 -> Zona=2 camara=3 objetivo=3 nave=0.
+- HUD observado: COHETE LISTO, COHETE ASCENSO, COHETE ORBITA.
+- Capturas: cohete_20261106_shinobi_ascenso.png, cohete_20261106_shinobi_orbita.png,
+  cohete_20261106_shinobi_listo.png.
+- Log: cohete_20261106_shinobi.log.
+
+Controles y regresion:
+- Tab en observacion: objetivo 3 -> 0 -> 1 -> 2 -> 3, sin crash.
+- Tecla 1 en orbita: reinicio a plataforma; HUD COHETE LISTO; permite relanzar.
+- F5 conserva la entrada a P2; F8 y los modos de camara no se modificaron.
+- Sin commit ni push.
+
+Notas:
+- La plataforma de P2 quedo en coordenadas locales (8, 0, 0), dentro del claro y con
+  separacion del camino; el cohete se ve en la camara de observacion.
+- La plataforma espacial quedo en centroBase + derechaBase*9 - adelanteBase*6.
+- Las texturas faltantes L1_Bake1_PBR_Diffuse y aguaOceanoTexture.png son preexistentes
+  y usan el fallback del cargador; no afectan al cohete.

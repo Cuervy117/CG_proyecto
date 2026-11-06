@@ -191,6 +191,8 @@ public:
 	Superficie();
 	// Carga modelos y texturas y genera los dos mundos (con OpenGL ya iniciado)
 	void InicializarSuperficies();
+	// Carga solo los NPC que pertenecen a la superficie solicitada. Se llama al entrar por primera vez.
+	void PrepararModelosSuperficie(TipoSuperficie tipo);
 
 	// Dibuja piso, camino, objetos y NPCs del planeta. El shader_light debe estar activo y con luces.
 	// 'tiempo' (segundos) mueve las animaciones de los NPCs.
@@ -265,6 +267,7 @@ private:
 	bool hayArbol, hayRoca;
 	Model modelosNPC[NUM_MODELOS_NPC];
 	bool hayNPC[NUM_MODELOS_NPC];
+	bool modelosSuperficieListos[2];
 	Model Portal_M;
 	bool hayPortal;
 	bool paulValido;			// false si Paul.obj no se cargó o trae la malla equivocada

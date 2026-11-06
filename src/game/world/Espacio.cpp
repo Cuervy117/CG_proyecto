@@ -63,6 +63,19 @@ const float GROSOR_BASE = 1.8f;
 const float BASE_BAJO_PISTA = 16.0f;		// qué tan abajo del camino queda el piso de la base
 const float BASE_ANTES_DE_META = 34.0f;		// a cuántas unidades antes de la meta
 
+// Cohete D1 y su plataforma de despegue
+const float RADIO_PLATAFORMA_COHETE = 4.0f;
+const float ALTURA_PLATAFORMA_COHETE = 0.30f;
+const float ESCALA_COHETE = 0.55f;
+const float COHETE_ALTURA_ORBITA = 90.0f;
+const float COHETE_DURACION_IGNICION = 1.2f;
+const float COHETE_DURACION_ASCENSO = 5.0f;
+const float COHETE_DURACION_REINICIO = 0.6f;
+const float COHETE_OFFSET_DERECHA = 9.0f;
+const float COHETE_OFFSET_ADELANTE = -6.0f;
+const glm::vec3 COHETE_POSICION_SHINOBI(8.0f, 0.0f, 0.0f);
+const int LADOS_PLATAFORMA_COHETE = 40;
+
 // Cinturón de asteroides (los dos modelos vienen en Models/asteroide)
 const int CANTIDAD_ASTEROIDES = 150;
 const int MAX_ASTEROIDES_GRANDES = 6;					// asteroide.obj pesa 500 mil triángulos: solo unos cuantos
@@ -87,6 +100,10 @@ Espacio::Espacio()
 	centroBase = glm::vec3(0.0f);
 	adelanteBase = glm::vec3(0.0f, 0.0f, 1.0f);
 	derechaBase = glm::vec3(1.0f, 0.0f, 0.0f);
+	hayCohete = false;
+	mallaPlataformaCohete = nullptr;
+	hayFuego = false;
+	hayHumo = false;
 	Material_pista = Material(0.3f, 8.0f);
 	Material_marca = Material(0.2f, 4.0f);
 	Material_asteroide = Material(0.4f, 16.0f);
@@ -391,10 +408,10 @@ void Espacio::PuntoDeAparicion(const Tramo& tramo, float s, float alturaOjos, gl
 }
 
 // =============================================================================================
-void Espacio::InicializarEspacio(Oceano* oceanoPlaneta)
+bool Espacio::InicializarEspacio(Oceano* oceanoPlaneta)
 {
 	if (inicializado)
-		return;
+		return true;
 	oceano = oceanoPlaneta;
 	ConstruirTramo(tramos[0], CONTROL_TRAMO_A, (int)(sizeof(CONTROL_TRAMO_A) / sizeof(CONTROL_TRAMO_A[0])), INDICE_META, &sMeta);
 	ConstruirTramo(tramos[1], CONTROL_TRAMO_B, (int)(sizeof(CONTROL_TRAMO_B) / sizeof(CONTROL_TRAMO_B[0])), -1, nullptr);
@@ -403,18 +420,17 @@ void Espacio::InicializarEspacio(Oceano* oceanoPlaneta)
 
 	// texturas
 	pistaTexture = Texture("Textures/pistaTexture.png");
-	if (!pistaTexture.LoadTextureA()) {
-		pistaTexture = Texture("Textures/plain.png");
-		pistaTexture.LoadTextureA();
-	}
+	bool texturasCriticas = pistaTexture.LoadTextureA();
 	asteroideTexture = Texture("Textures/asteroideTexture.png");
 	asteroideTexture.LoadTextureA();
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 	baseTexture = Texture("Textures/baseTexture.png");
-	if (!baseTexture.LoadTextureA()) {
-		baseTexture = Texture("Textures/plain.png");
-		baseTexture.LoadTextureA();
+	texturasCriticas = baseTexture.LoadTextureA() && texturasCriticas;
+	if (!texturasCriticas)
+	{
+		fprintf(stderr, "[ERROR] No se pudieron cargar las texturas de la pista o de la base.\n");
+		return false;
 	}
 
 	// la pista es un modelo .obj (hecho con las mismas curvas); si no está, se arma aquí con código
@@ -462,7 +478,9 @@ void Espacio::InicializarEspacio(Oceano* oceanoPlaneta)
 	};
 	cuadroMarca = new MeshModel();
 	cuadroMarca->CreateMeshModel(vertices, indices, 32, 6);
+	InicializarCohete();
 	inicializado = true;
+	return true;
 }
 
 void Espacio::DibujarPista(float tiempo, GLuint modelLocation, GLuint colorLocation,
@@ -733,7 +751,376 @@ void Espacio::SalidaDePlaneta(int planeta, glm::vec3& posicion, float& yaw, floa
 		PuntoDeAparicion(tramos[1], DistanciaAPlaneta(tramos[1], CENTRO_ROCOSO, ATMOSFERA_ROCOSO + 8.0f, false), alturaOjos, posicion, yaw, pitch);
 }
 
+void Espacio::ConstruirPlataformaCohete()
+{
+	const glm::vec3 Y(0.0f, 1.0f, 0.0f);
+	std::vector<GLfloat> v;
+	std::vector<unsigned int> idx;
+	const int lados = LADOS_PLATAFORMA_COHETE;
+
+	AgregarVertice(v, Y, 0.5f, 0.5f, Y);
+	for (int k = 0; k <= lados; k++)
+	{
+		float a = 2.0f * PI_ESPACIO * k / lados;
+		glm::vec3 p(cosf(a), 1.0f, sinf(a));
+		AgregarVertice(v, p, 0.5f + 0.5f * cosf(a), 0.5f + 0.5f * sinf(a), Y);
+	}
+	for (int k = 0; k < lados; k++)
+	{
+		unsigned int t[] = { 0u, (unsigned)(1 + k), (unsigned)(2 + k) };
+		idx.insert(idx.end(), t, t + 3);
+	}
+
+	unsigned int inicio = (unsigned int)(v.size() / 8);
+	for (int k = 0; k <= lados; k++)
+	{
+		float a = 2.0f * PI_ESPACIO * k / lados;
+		glm::vec3 radial(cosf(a), 0.0f, sinf(a));
+		float s = 0.5f + 0.47f * cosf(a), t = 0.5f + 0.47f * sinf(a);
+		AgregarVertice(v, glm::vec3(cosf(a), 1.0f, sinf(a)), s, t, radial);
+		AgregarVertice(v, glm::vec3(cosf(a), 0.0f, sinf(a)), s, t, radial);
+	}
+	for (int k = 0; k < lados; k++)
+	{
+		unsigned int a0 = inicio + 2 * k, a1 = a0 + 1, b0 = a0 + 2, b1 = a0 + 3;
+		unsigned int t[] = { a0, a1, b0, b0, a1, b1 };
+		idx.insert(idx.end(), t, t + 6);
+	}
+
+	unsigned int centroFondo = (unsigned int)(v.size() / 8);
+	AgregarVertice(v, glm::vec3(0.0f), 0.5f, 0.5f, -Y);
+	for (int k = 0; k <= lados; k++)
+	{
+		float a = 2.0f * PI_ESPACIO * k / lados;
+		AgregarVertice(v, glm::vec3(cosf(a), 0.0f, sinf(a)), 0.5f + 0.2f * cosf(a), 0.5f + 0.2f * sinf(a), -Y);
+	}
+	for (int k = 0; k < lados; k++)
+	{
+		unsigned int t[] = { centroFondo, centroFondo + 2 + k, centroFondo + 1 + k };
+		idx.insert(idx.end(), t, t + 3);
+	}
+
+	mallaPlataformaCohete = new MeshModel();
+	mallaPlataformaCohete->CreateMeshModel(v.data(), idx.data(), (unsigned int)v.size(), (unsigned int)idx.size());
+}
+
+void Espacio::ReiniciarHumo(Cohete& cohete)
+{
+	for (int i = 0; i < PARTICULAS_HUMO_COHETE; i++)
+	{
+		cohete.humo[i].posicion = glm::vec3(0.0f);
+		cohete.humo[i].velocidad = glm::vec3(0.0f);
+		cohete.humo[i].vida = 0.0f;
+		cohete.humo[i].vidaMax = 1.0f;
+		cohete.humo[i].tamano = 0.0f;
+	}
+	cohete.acumuladorHumo = 0.0f;
+	cohete.siguienteParticula = 0;
+}
+
+void Espacio::ActualizarHumo(Cohete& cohete, float dt, bool encendido)
+{
+	for (int i = 0; i < PARTICULAS_HUMO_COHETE; i++)
+	{
+		ParticulaHumo& p = cohete.humo[i];
+		if (p.vida <= 0.0f)
+			continue;
+		p.vida -= dt;
+		p.posicion += p.velocidad * dt;
+		p.velocidad.y += 0.5f * dt;
+		p.tamano += 0.7f * dt;
+	}
+
+	if (!encendido || !hayHumo)
+		return;
+
+	cohete.acumuladorHumo += dt;
+	while (cohete.acumuladorHumo >= 0.08f)
+	{
+		cohete.acumuladorHumo -= 0.08f;
+		ParticulaHumo& p = cohete.humo[cohete.siguienteParticula];
+		cohete.siguienteParticula = (cohete.siguienteParticula + 1) % PARTICULAS_HUMO_COHETE;
+		glm::vec3 lateral = glm::vec3(rndCohete.rango(-1.8f, 1.8f), 0.0f, rndCohete.rango(-1.8f, 1.8f));
+		p.posicion = cohete.posicion + glm::vec3(0.0f, rndCohete.rango(0.4f, 1.4f), 0.0f) + lateral;
+		p.velocidad = lateral * 0.8f + glm::vec3(0.0f, rndCohete.rango(0.8f, 1.6f), 0.0f);
+		p.vida = rndCohete.rango(1.4f, 2.2f);
+		p.vidaMax = p.vida;
+		p.tamano = rndCohete.rango(2.2f, 3.6f);
+	}
+}
+
+void Espacio::InicializarCohete()
+{
+	Cohete_M = Model();
+	Cohete_M.LoadModel("Models/rocket/rocket.obj");
+	hayCohete = Cohete_M.estaCargado();
+	if (hayCohete)
+		printf("[OK] Cohete: Models/rocket/rocket.obj (%d triangulos)\n", Cohete_M.getNumTriangulos());
+
+	fuegoTexture = Texture("Textures/fuego.png");
+	hayFuego = fuegoTexture.LoadTextureA();
+	if (!hayFuego)
+		printf("[AVISO] No se encontro Textures/fuego.png: la llama usara un color plano\n");
+
+	humoTexture = Texture("Textures/humo.png");
+	hayHumo = humoTexture.LoadTextureA();
+	if (!hayHumo)
+		printf("[AVISO] No se encontro Textures/humo.png: el humo queda desactivado\n");
+
+	ConstruirPlataformaCohete();
+
+	cohetes[COHETE_BASE].origen = centroBase + derechaBase * COHETE_OFFSET_DERECHA
+		+ adelanteBase * COHETE_OFFSET_ADELANTE;
+	cohetes[COHETE_SHINOBI].origen = COHETE_POSICION_SHINOBI;
+
+	for (int i = 0; i < 2; i++)
+	{
+		Cohete& c = cohetes[i];
+		c.estado = COHETE_EN_PLATAFORMA;
+		c.tiempoEstado = 0.0f;
+		c.altura = 0.0f;
+		c.alturaReinicio = 0.0f;
+		c.posicion = c.origen + glm::vec3(0.0f, ALTURA_PLATAFORMA_COHETE, 0.0f);
+		ReiniciarHumo(c);
+	}
+}
+
+bool Espacio::LanzarCohete(UbicacionCohete sitio)
+{
+	if (sitio != COHETE_BASE && sitio != COHETE_SHINOBI)
+		return false;
+	Cohete& c = cohetes[sitio];
+	if (c.estado == COHETE_EN_PLATAFORMA)
+	{
+		c.estado = COHETE_IGNICION;
+		c.tiempoEstado = 0.0f;
+		c.altura = 0.0f;
+		c.posicion = c.origen + glm::vec3(0.0f, ALTURA_PLATAFORMA_COHETE, 0.0f);
+		ReiniciarHumo(c);
+		return true;
+	}
+	if (c.estado == COHETE_ORBITA)
+	{
+		c.estado = COHETE_REINICIO;
+		c.tiempoEstado = 0.0f;
+		c.alturaReinicio = c.altura;
+		return false;
+	}
+	return false;
+}
+
+void Espacio::ActualizarCohetes(float dt)
+{
+	const glm::vec3 Y(0.0f, 1.0f, 0.0f);
+	for (int i = 0; i < 2; i++)
+	{
+		Cohete& c = cohetes[i];
+		if (c.estado == COHETE_EN_PLATAFORMA)
+		{
+			c.posicion = c.origen + Y * ALTURA_PLATAFORMA_COHETE;
+		}
+		else if (c.estado == COHETE_IGNICION)
+		{
+			c.tiempoEstado += dt;
+			float vibracion = 0.025f * sinf(70.0f * c.tiempoEstado);
+			c.posicion = c.origen + glm::vec3(vibracion, ALTURA_PLATAFORMA_COHETE, vibracion * 0.7f);
+			if (c.tiempoEstado >= COHETE_DURACION_IGNICION)
+			{
+				c.estado = COHETE_ASCENSO;
+				c.tiempoEstado = 0.0f;
+				c.altura = 0.0f;
+			}
+		}
+		else if (c.estado == COHETE_ASCENSO)
+		{
+			c.tiempoEstado += dt;
+			float t = glm::clamp(c.tiempoEstado / COHETE_DURACION_ASCENSO, 0.0f, 1.0f);
+			c.altura = COHETE_ALTURA_ORBITA * t * t;
+			c.posicion = c.origen + Y * (ALTURA_PLATAFORMA_COHETE + c.altura);
+			if (t >= 1.0f)
+			{
+				c.estado = COHETE_ORBITA;
+				c.tiempoEstado = 0.0f;
+				c.altura = COHETE_ALTURA_ORBITA;
+			}
+		}
+		else if (c.estado == COHETE_ORBITA)
+		{
+			c.tiempoEstado += dt;
+			c.altura = COHETE_ALTURA_ORBITA + 0.45f * sinf(1.1f * c.tiempoEstado);
+			c.posicion = c.origen + Y * (ALTURA_PLATAFORMA_COHETE + c.altura);
+		}
+		else if (c.estado == COHETE_REINICIO)
+		{
+			c.tiempoEstado += dt;
+			float t = glm::clamp(c.tiempoEstado / COHETE_DURACION_REINICIO, 0.0f, 1.0f);
+			c.altura = c.alturaReinicio * (1.0f - t);
+			c.posicion = c.origen + Y * (ALTURA_PLATAFORMA_COHETE + c.altura);
+			if (t >= 1.0f)
+			{
+				c.estado = COHETE_EN_PLATAFORMA;
+				c.tiempoEstado = 0.0f;
+				c.altura = 0.0f;
+				c.posicion = c.origen + Y * ALTURA_PLATAFORMA_COHETE;
+				ReiniciarHumo(c);
+			}
+		}
+		ActualizarHumo(c, dt, CoheteEncendido((UbicacionCohete)i));
+	}
+}
+
+glm::vec3 Espacio::CentroCohete(UbicacionCohete sitio) const
+{
+	if (sitio != COHETE_BASE && sitio != COHETE_SHINOBI)
+		return glm::vec3(0.0f);
+	return cohetes[sitio].posicion;
+}
+
+bool Espacio::CoheteEncendido(UbicacionCohete sitio) const
+{
+	if (sitio != COHETE_BASE && sitio != COHETE_SHINOBI)
+		return false;
+	return cohetes[sitio].estado == COHETE_IGNICION || cohetes[sitio].estado == COHETE_ASCENSO;
+}
+
+glm::vec3 Espacio::PosicionLlama(UbicacionCohete sitio) const
+{
+	return CentroCohete(sitio) + glm::vec3(0.0f, 0.35f, 0.0f);
+}
+
+const char* Espacio::TextoEstadoCohete(UbicacionCohete sitio) const
+{
+	if (sitio != COHETE_BASE && sitio != COHETE_SHINOBI)
+		return "";
+	switch (cohetes[sitio].estado)
+	{
+	case COHETE_IGNICION: return "COHETE IGNICION";
+	case COHETE_ASCENSO: return "COHETE ASCENSO";
+	case COHETE_ORBITA: return "COHETE ORBITA";
+	case COHETE_REINICIO: return "COHETE REINICIO";
+	default: return "COHETE LISTO";
+	}
+}
+
+void Espacio::DibujarBillboard(glm::vec3 centro, glm::vec3 posCamara, float ancho, float alto,
+	glm::vec3 color, glm::vec3 emision)
+{
+	if (cuadroMarca == nullptr)
+		return;
+	glm::vec3 haciaCamara = posCamara - centro;
+	if (glm::dot(haciaCamara, haciaCamara) < 1.0e-6f)
+		haciaCamara = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 normal = glm::normalize(haciaCamara);
+	glm::vec3 derecha = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), normal);
+	if (glm::dot(derecha, derecha) < 1.0e-6f)
+		derecha = glm::vec3(1.0f, 0.0f, 0.0f);
+	derecha = glm::normalize(derecha);
+	glm::vec3 arriba = glm::normalize(glm::cross(normal, derecha));
+
+	glm::mat4 model(1.0f);
+	model[0] = glm::vec4(derecha, 0.0f);
+	model[1] = glm::vec4(arriba, 0.0f);
+	model[2] = glm::vec4(-normal, 0.0f);
+	model[3] = glm::vec4(centro, 1.0f);
+	model = glm::scale(model, glm::vec3(ancho, alto, 1.0f));
+	glUniform3f(uniformColor, color.x, color.y, color.z);
+	glUniform3f(uniformEmision, emision.x, emision.y, emision.z);
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	cuadroMarca->RenderMeshModel();
+}
+
+void Espacio::DibujarCohete(UbicacionCohete sitio, glm::vec3 posCamara, float tiempo,
+	GLuint modelLocation, GLuint colorLocation, GLuint specularIntensityLocation,
+	GLuint shininessLocation, GLuint emisionLocation)
+{
+	if (!inicializado || mallaPlataformaCohete == nullptr)
+		return;
+	if (sitio != COHETE_BASE && sitio != COHETE_SHINOBI)
+		return;
+
+	uniformModel = modelLocation;
+	uniformColor = colorLocation;
+	uniformSpecularIntensity = specularIntensityLocation;
+	uniformShininess = shininessLocation;
+	uniformEmision = emisionLocation;
+
+	Cohete& cohete = cohetes[sitio];
+	const glm::vec3 Y(0.0f, 1.0f, 0.0f);
+
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), cohete.origen);
+	model = glm::scale(model, glm::vec3(RADIO_PLATAFORMA_COHETE, ALTURA_PLATAFORMA_COHETE, RADIO_PLATAFORMA_COHETE));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
+	glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
+	Material_pista.UseMaterial(uniformSpecularIntensity, uniformShininess);
+	baseTexture.UseTexture();
+	mallaPlataformaCohete->RenderMeshModel();
+
+	if (!hayCohete)
+		return;
+
+	model = glm::translate(glm::mat4(1.0f), cohete.posicion);
+	model = glm::scale(model, glm::vec3(ESCALA_COHETE));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
+	glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
+	Material_pista.UseMaterial(uniformSpecularIntensity, uniformShininess);
+	Cohete_M.RenderModel(uniformColor, glm::vec3(1.0f));
+
+	if (hayHumo)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthMask(GL_FALSE);
+		humoTexture.UseTexture();
+		Material_marca.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		for (int i = 0; i < PARTICULAS_HUMO_COHETE; i++)
+		{
+			const ParticulaHumo& p = cohete.humo[i];
+			if (p.vida <= 0.0f)
+				continue;
+			float vida = glm::clamp(p.vida / p.vidaMax, 0.0f, 1.0f);
+			float tamano = p.tamano * (1.5f - 0.35f * vida);
+			glm::vec3 color(0.68f, 0.68f, 0.70f);
+			DibujarBillboard(p.posicion, posCamara, tamano, tamano, color, glm::vec3(0.03f));
+		}
+		glDepthMask(GL_TRUE);
+		glDisable(GL_BLEND);
+	}
+
+	if (CoheteEncendido(sitio))
+	{
+		float fuerza = 1.0f;
+		if (cohete.estado == COHETE_IGNICION)
+			fuerza = glm::clamp(cohete.tiempoEstado / COHETE_DURACION_IGNICION, 0.0f, 1.0f);
+		float pulso = 0.9f + 0.1f * sinf(28.0f * tiempo);
+		glm::vec3 baseLlama = cohete.posicion + Y * 0.25f;
+		float ancho = 1.15f * fuerza * pulso;
+		float alto = 3.4f * fuerza * pulso;
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		glDepthMask(GL_FALSE);
+		if (hayFuego)
+			fuegoTexture.UseTexture();
+		else
+			plainTexture.UseTexture();
+		Material_marca.UseMaterial(uniformSpecularIntensity, uniformShininess);
+
+		DibujarBillboard(baseLlama, posCamara, ancho, alto,
+			glm::vec3(1.0f, 0.75f, 0.35f), glm::vec3(1.0f, 0.42f, 0.08f) * fuerza);
+		DibujarBillboard(baseLlama + Y * 0.35f, posCamara, ancho * 0.55f, alto * 0.55f,
+			glm::vec3(1.0f, 0.95f, 0.65f), glm::vec3(1.0f, 0.75f, 0.25f) * fuerza);
+
+		glDepthMask(GL_TRUE);
+		glDisable(GL_BLEND);
+	}
+	glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
+}
+
 Espacio::~Espacio()
 {
+	delete mallaPlataformaCohete;
+	mallaPlataformaCohete = nullptr;
 }
 

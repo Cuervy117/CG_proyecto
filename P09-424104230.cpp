@@ -28,13 +28,16 @@ Teclas:
 #include "Input.hpp"
 #include "CameraDirector.h"
 #include "Orbit.h"
+#include "Chase.h"
 #include "Scene.h"
 #include "src/game/avatar/Avatar.h"
 #include "src/ui/Hud.h"
 bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include <stdio.h>
 #include <string.h>
+#include <chrono>
 #include <cmath>
+#include <fstream>
 #include <vector>
 #include <math.h>
 
@@ -130,6 +133,35 @@ static const char* vShader = "shaders/shader_light.vert";
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
 
+// Estas texturas forman parte del paquete minimo del proyecto. Si falta una, detener el
+// arranque evita que el cargador de modelos la oculte usando Textures/plain.png.
+static bool VerificarTexturasCriticas()
+{
+	const char* rutas[] = {
+		"Textures/planetaOceanoTexture.png",
+		"Textures/planetaRocaTexture.png",
+		"Textures/planetaSelvaTexture.png",
+		"Textures/pistaTexture.png",
+		"Textures/baseTexture.png",
+		"Textures/hud_reloj.png",
+		"Textures/hud_digitos.png",
+		"Textures/hud_iconos.png"
+	};
+	bool completas = true;
+	for (const char* ruta : rutas)
+	{
+		std::ifstream archivo(ruta, std::ios::binary);
+		if (!archivo.good())
+		{
+			fprintf(stderr, "[ERROR] Falta textura critica: %s\n", ruta);
+			completas = false;
+		}
+	}
+	if (!completas)
+		fprintf(stderr, "Ejecuta scripts/Verify-Project-Assets.ps1 desde la raiz del proyecto.\n");
+	return completas;
+}
+
 // NUEVO: lugar donde está el jugador. Solo se dibuja el lugar activo: el espacio o la superficie de
 // un planeta (al entrar a un planeta se cambia de "mapa", no se camina sobre la esfera).
 enum ZonaActiva
@@ -217,6 +249,36 @@ void CalcularPuntosCapsula()
 		glm::vec3 minimoPuerta = CapsulaPuerta_M.getCentro() - 0.5f * CapsulaPuerta_M.getTamano();
 		pivoteBisagraPuerta = minimoPuerta + bisagraDesdeMinimoPuerta;
 	}
+}
+
+// NUEVO: carga bajo demanda compartida por F5/F6 y por la entrada normal del jugador (E o atmósfera).
+// Las funciones de Load.cpp y Superficie tienen guardas, así que llamarla varias veces es seguro.
+void PrepararRecursosSuperficie(ZonaActiva destino)
+{
+	if (destino != ZONA_PLANETA_ROCOSO && destino != ZONA_PLANETA_SELVATICO)
+		return;
+
+	const auto inicio = std::chrono::steady_clock::now();
+	const TipoSuperficie tipo = (destino == ZONA_PLANETA_SELVATICO)
+		? SUPERFICIE_SELVATICA : SUPERFICIE_ROCOSA;
+
+	LoadCapsulaModels();
+	CalcularPuntosCapsula();
+	if (tipo == SUPERFICIE_SELVATICA) LoadPlanetaSelvatico();
+	else LoadPlanetaRocoso();
+	superficie.PrepararModelosSuperficie(tipo);
+
+	const bool planetaCargado = (tipo == SUPERFICIE_SELVATICA)
+		? PlanetaSelvatico_M.estaCargado() : PlanetaRocoso_M.estaCargado();
+	const double ms = std::chrono::duration<double, std::milli>(
+		std::chrono::steady_clock::now() - inicio).count();
+	printf("[QA] Recursos %s: capsula=%d puerta=%d planeta=%d total=%.1f ms\n",
+		(tipo == SUPERFICIE_SELVATICA) ? "selvatica" : "rocosa",
+		CapsulaCuerpo_M.estaCargado() ? 1 : 0,
+		CapsulaPuerta_M.estaCargado() ? 1 : 0,
+		planetaCargado ? 1 : 0,
+		ms);
+	fflush(stdout);
 }
 
 // NUEVO: matriz de modelo a partir de una posición y una dirección (como Orientar de la práctica 9-1).
@@ -376,21 +438,23 @@ void CambiarModoCamara()
 }
 
 // Nave rival dentro de un planeta o del océano (en el espacio se dibuja con sus llamas y luces)
-void DibujarRivalEn(LugarJugador lugar, GLuint uniformModel, GLuint uniformColor,
+void DibujarRivalEn(RivalCarrera rival, LugarJugador lugar, GLuint uniformModel, GLuint uniformColor,
 	GLuint uniformSpecularIntensity, GLuint uniformShininess)
 {
 	glm::vec3 pos, adelante, arriba;
 	LugarJugador lugarRival;
-	jugador.EstadoRival(tiempoAnimacion, lugarRival, pos, adelante, arriba);
+	jugador.EstadoRival(rival, tiempoAnimacion, lugarRival, pos, adelante, arriba);
 	if (lugarRival != lugar)
 		return;
 	glm::mat4 model(1.0);
 	model = MatrizOrientacion(pos, adelante, arriba);
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
+	const glm::vec3 tinte = rival == RivalCarrera::Segundo ? glm::vec3(1.0f, 0.48f, 0.15f) : glm::vec3(1);
+	glUniform3fv(uniformColor, 1, glm::value_ptr(tinte));
 	plainTexture.UseTexture();
 	Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 	Nave_M.RenderModel();
+	glUniform3f(uniformColor, 1, 1, 1);
 }
 
 // NUEVO: salir de la atmósfera del planeta actual. El jugador aparece sobre la pista de carreras, en
@@ -446,6 +510,7 @@ void ActualizarZona()
 
 		if (distRocoso < atmosferaRocoso || (pulsoE && distRocoso < atmosferaRocoso * 1.6f))
 		{
+			PrepararRecursosSuperficie(ZONA_PLANETA_ROCOSO);
 			zonaActual = ZONA_PLANETA_ROCOSO;
 			glm::vec3 inicio = superficie.PosicionInicio(SUPERFICIE_ROCOSA);
 			float yaw = jugador.ColocarJugadorEnPlaneta(LUGAR_ROCOSO, inicio, superficie.YawInicio(SUPERFICIE_ROCOSA));   // sigue en su nave
@@ -453,6 +518,7 @@ void ActualizarZona()
 		}
 		else if (distSelvatico < atmosferaSelvatico || (pulsoE && distSelvatico < atmosferaSelvatico * 1.6f))
 		{
+			PrepararRecursosSuperficie(ZONA_PLANETA_SELVATICO);
 			zonaActual = ZONA_PLANETA_SELVATICO;
 			glm::vec3 inicio = superficie.PosicionInicio(SUPERFICIE_SELVATICA);
 			float yaw = jugador.ColocarJugadorEnPlaneta(LUGAR_SELVATICO, inicio, superficie.YawInicio(SUPERFICIE_SELVATICA));   // sigue en su nave
@@ -517,8 +583,85 @@ void DibujarGuiaSatelite(glm::vec3 color, GLuint uniformModel, GLuint uniformCol
 }
 
 
+// Las paradas comparten las coordenadas del dibujo. La zona observada es
+// independiente de la del jugador, que conserva su posición durante R4.
+enum ParadaR4 { Lanzamiento, Hangar, Vacio, Shinobi, Satelite, CoheteBase, TotalParadas };
+struct EncuadreR4 { const char* nombre; ZonaActiva zona; float distancia, minima, pitch, altura; };
+const EncuadreR4 encuadres[TotalParadas] = {
+	{"D1 SHINOBI", ZONA_PLANETA_SELVATICO, 45, 18, 1.15f, 7.5f},
+	{"HANGAR", ZONA_ESPACIO, 65, 34, 0.24f, 3},
+	{"VACIO", ZONA_ESPACIO, 55, 22, 0.35f, 0},
+	{"SHINOBI", ZONA_ESPACIO, 60, 24, 0.35f, 0},
+	{"SATELITE", ZONA_ESPACIO, 24, 10, 0.35f, 0},
+	{"COHETE BASE", ZONA_ESPACIO, 55, 18, 0.12f, 8}
+};
+const glm::vec3 centroHangar(-55, 25, -25);
+
+bool ParadaDisponible(ParadaR4 parada)
+{
+	switch (parada) {
+	case Lanzamiento: case CoheteBase: return espacio.CoheteDisponible();
+	case Vacio: return PlanetaRocoso_M.estaCargado() || Planeta_M.estaCargado();
+	case Shinobi: return PlanetaSelvatico_M.estaCargado() || Planeta_M.estaCargado();
+	case Satelite: return SateliteBase_M.estaCargado();
+	default: return true; // El hangar es procedural y siempre está presente.
+	}
+}
+
+ParadaR4 SiguienteParada(ParadaR4 actual)
+{
+	do { actual = static_cast<ParadaR4>((actual + 1) % TotalParadas); }
+	while (!ParadaDisponible(actual));
+	return actual;
+}
+
+glm::vec3 CentroObservado(ParadaR4 parada)
+{
+	switch (parada) {
+	case Lanzamiento: return espacio.CentroCohete(COHETE_SHINOBI);
+	case CoheteBase: return espacio.CentroCohete(COHETE_BASE);
+	case Vacio: return posPlanetaRocoso;
+	case Shinobi: return posPlanetaSelvatico;
+	case Satelite: return PosicionSatelite(estadoSatelite, thetaSatelite);
+	default: return centroHangar;
+	}
+}
+
+void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmision,
+	GLuint uEspecular, GLuint uBrillo)
+{
+	Material_brillante.UseMaterial(uEspecular, uBrillo);
+	plainTexture.UseTexture();
+	auto pieza = [&](bool redonda, glm::vec3 local, glm::vec3 tam, glm::vec3 color, float luz = 0.20f) {
+		glm::mat4 m = glm::translate(glm::mat4(1), centroHangar + local);
+		m = glm::scale(m, tam);
+		glUniformMatrix4fv(uModelo, 1, GL_FALSE, glm::value_ptr(m));
+		glUniform3fv(uColor, 1, glm::value_ptr(color));
+		glUniform3f(uEmision, luz * color.r, luz * color.g, luz * color.b);
+		if (redonda) esfera.render(); else meshListModel[2]->RenderMeshModel();
+	};
+	const glm::vec3 casco(0.65f, 0.71f, 0.82f), baliza(0.1f, 0.85f, 1);
+	pieza(true, {0,-3,0}, {22,2,17}, casco);     // disco de atraque
+	pieza(true, {0,8,0}, {19,3,14}, casco);      // cúpula elevada sobre la boca (+Z)
+	pieza(false, {0,2,-9}, {32,9,2}, casco);
+	for (float lado : {-1.0f, 1.0f}) {
+		pieza(false, {lado*15,2,0}, {3,9,18}, casco);
+		pieza(false, {lado*13.4f,2,8}, {0.5f,7,1}, baliza, 0.9f);
+	}
+	// Dos cápsulas en carriles separados cruzan la boca en sentidos opuestos.
+	for (int i = 0; i < 2; ++i) {
+		float fase = 0.42f * tiempoAnimacion + i * 3.14159265f;
+		glm::vec3 nave(i ? 5.0f : -5.0f, 1.2f, 12.0f + 17.0f * cosf(fase));
+		pieza(true, nave, {1.8f,1.3f,3.3f}, i ? glm::vec3(0.9f,0.48f,0.18f) : casco);
+		pieza(true, nave + glm::vec3(0,0.9f,0), {1.2f,0.7f,1.7f}, baliza, 0.45f);
+	}
+	glUniform3f(uEmision, 0,0,0);
+	glUniform3f(uColor, 1,1,1);
+}
+
 int main()
 {
+	if (!VerificarTexturasCriticas()) return 1;
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	if (mainWindow.Initialise()) return 1;
 	cgame::InputCapture captura(mainWindow);
@@ -532,12 +675,11 @@ int main()
 	LoadTextures();
 	LoadModels();
 	LoadSkybox();
-	CalcularPuntosCapsula();
 
 	// NUEVO: módulos del escenario (cada uno carga sus propios modelos y texturas)
 	superficie.InicializarSuperficies();	// selva y desierto de los planetas
-	espacio.InicializarEspacio(&oceano);	// pista de carreras, cinturón de asteroides y base
-	reloj.InicializarReloj();				// reloj en pantalla
+	if (!espacio.InicializarEspacio(&oceano)) return 1;	// pista de carreras, cinturón de asteroides y base
+	if (!reloj.InicializarReloj()) return 1;				// reloj en pantalla
 	oceano.InicializarOceano();				// planeta océano (por fuera y por dentro)
 
 	// el avatar empieza en la base, junto a la pista y antes de la meta, con miNave al lado
@@ -552,12 +694,18 @@ int main()
 	if (!VerificarEscenaIntegrada(*avatar.root(), objetivo)) return 1;
 	CameraDirector director;
 	director.setMode(CameraMode::Planeta);
-	int observado = 0;
+	ParadaR4 observado = Lanzamiento;
 	cgame::Hud hud;
 	hud.initialize();
 	ZonaActiva ultimoPlaneta = ZONA_PLANETA_ROCOSO;
 
 	ReiniciarCamara(jugador.PosicionJugador() + glm::vec3(0.0f, 6.0f, 0.0f), yawInicio, -15.0f);
+	printf("[QA] Inicio: jugador=(%.1f, %.1f, %.1f) camara=(%.1f, %.1f, %.1f) dRoca=%.1f dSelva=%.1f\n",
+		jugador.PosicionJugador().x, jugador.PosicionJugador().y, jugador.PosicionJugador().z,
+		camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z,
+		glm::distance(jugador.PosicionJugador(), posPlanetaRocoso),
+		glm::distance(jugador.PosicionJugador(), posPlanetaSelvatico));
+	fflush(stdout);
 
 	ConstruirGuiaSatelite();
 
@@ -596,6 +744,13 @@ int main()
 	//Luminaria 2
 	pointLights[3] = PointLight(0.2f, 0.45f, 1.0f,
 		0.0f, 1.5f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.09f, 0.032f);
+	pointLightCount++;
+
+	//Luz de la llama del cohete D1
+	pointLights[4] = PointLight(1.0f, 0.5f, 0.15f,
+		0.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
 		1.0f, 0.09f, 0.032f);
 	pointLightCount++;
@@ -672,7 +827,13 @@ int main()
 			if (zonaActual == ZONA_ESPACIO || zonaActual == ZONA_PLANETA_OCEANO) destino = ultimoPlaneta;
 		}
 		if (control.raceMode || control.flightMode) {
+			if (control.raceMode) mainWindow.SalirDeCamaraLibre();
 			director.setMode(control.raceMode ? CameraMode::Carrera : CameraMode::Vuelo);
+			if (control.raceMode) {
+				auto* seguimiento = static_cast<Chase*>(director.rig());
+				seguimiento->distancia = 17.0f;
+				seguimiento->altura = 8.0f;
+			}
 			destino = ZONA_ESPACIO;
 		}
 		if (control.observationMode) director.setMode(CameraMode::Observacion);
@@ -680,9 +841,14 @@ int main()
 		if (entrada.wasPressed(GLFW_KEY_F6)) destino = ZONA_PLANETA_ROCOSO;
 		if (entrada.wasPressed(GLFW_KEY_F7)) destino = ZONA_PLANETA_OCEANO;
 		if (entrada.wasPressed(GLFW_KEY_F8)) destino = ZONA_ESPACIO;
+		if (director.mode() == CameraMode::Observacion &&
+			(entrada.wasPressed(GLFW_KEY_F5) || entrada.wasPressed(GLFW_KEY_F6) ||
+			 entrada.wasPressed(GLFW_KEY_F7) || entrada.wasPressed(GLFW_KEY_F8)))
+			director.setMode(CameraMode::Planeta);
 		if (destino != zonaActual) {
 			if (destino == ZONA_ESPACIO) SalirAlEspacio();
 			else {
+				PrepararRecursosSuperficie(destino);
 				zonaActual = destino;
 				auto tipo = destino == ZONA_PLANETA_SELVATICO ? SUPERFICIE_SELVATICA : SUPERFICIE_ROCOSA;
 				float yaw = destino == ZONA_PLANETA_OCEANO ? jugador.ColocarJugadorEnOceano()
@@ -698,19 +864,51 @@ int main()
 		camera.mouseControl(control.mouseDeltaX, control.mouseDeltaY);
 
 		// NUEVO: entrar y salir de los planetas, subir a la nave y cambio de cámara (teclas E, K y C)
-		ActualizarZona();
+		const ParadaR4 previa = observado;
+		bool enR4 = director.mode() == CameraMode::Observacion;
+		if (enR4 && modoAnterior != director.mode())
+			observado = ParadaDisponible(Lanzamiento) ? Lanzamiento : Hangar;
+		if (enR4 && control.nextObservationTarget) observado = SiguienteParada(observado);
+		if (!enR4) ActualizarZona();
+		ZonaActiva zonaVista = enR4 ? encuadres[observado].zona : zonaActual;
 
-		if (!camaraLibre)
+		if (control.launchRocket)
+		{
+			const bool mirandoCohete = observado == Lanzamiento || observado == CoheteBase;
+			if ((!enR4 || mirandoCohete) && espacio.CoheteDisponible() &&
+				(zonaVista == ZONA_ESPACIO || zonaVista == ZONA_PLANETA_SELVATICO)) {
+				bool shinobi = zonaVista == ZONA_PLANETA_SELVATICO;
+				if (espacio.LanzarCohete(shinobi ? COHETE_SHINOBI : COHETE_BASE)
+					&& !jugador.CarreraIniciada() && !camaraLibre) {
+					observado = shinobi ? Lanzamiento : CoheteBase;
+					director.setMode(CameraMode::Observacion);
+					enR4 = true;
+				}
+			}
+		}
+		if (enR4 && (modoAnterior != director.mode() || previa != observado)) {
+			const auto& cuadro = encuadres[observado];
+			zonaVista = cuadro.zona;
+			PrepararRecursosSuperficie(zonaVista);
+			auto* orbita = static_cast<Orbit*>(director.rig());
+			orbita->distancia = cuadro.distancia;
+			orbita->pitch = cuadro.pitch;
+			orbita->alturaObjetivo = cuadro.altura;
+			orbita->velocidadAngular = 0.04f;
+			orbita->yaw = 0.2f;
+		}
+
+		if (!enR4 && !camaraLibre)
 		{
 			// el avatar se mueve con W A S D y la cámara lo sigue en tercera persona
 			jugador.ActualizarJugador(mainWindow.getsKeys(), deltaTime, LugarDelJugador(), camera, tiempoAnimacion, director.mode() == CameraMode::Vuelo);
 		}
-		else if (zonaActual == ZONA_PLANETA_OCEANO)
+		else if (!enR4 && zonaActual == ZONA_PLANETA_OCEANO)
 		{
 			// cámara libre en el océano: no se mete bajo el agua ni dentro de la ola
 			camera.setPosition(oceano.AjustarCamaraOceano(camera.getCameraPosition()));
 		}
-		else if (zonaActual != ZONA_ESPACIO && camera.getCameraPosition().y < 1.5f)
+		else if (!enR4 && zonaActual != ZONA_ESPACIO && camera.getCameraPosition().y < 1.5f)
 		{
 			// cámara libre en un planeta: vuela por donde quiera, pero no atraviesa el suelo
 			glm::vec3 p = camera.getCameraPosition();
@@ -720,6 +918,7 @@ int main()
 
 		// animaciones
 		tiempoAnimacion += deltaTime;
+		espacio.ActualizarCohetes(deltaTime);
 		AnimarSatelite(deltaTime);
 		AnimarCapsula(deltaTime);
 
@@ -744,7 +943,7 @@ int main()
 		ambiente.tinteCielo = glm::vec3(1.0f);
 		ambiente.brumaHorizonte = glm::vec4(0.0f);
 		skybox.SetCieloSolido(glm::vec3(0.0f), 0.0f);   // solo el océano usa cielo despejado
-		if (zonaActual == ZONA_PLANETA_OCEANO)
+		if (zonaVista == ZONA_PLANETA_OCEANO)
 		{
 			// cielo despejado y gris azulado
 			AmbienteOceano ao = oceano.ObtenerAmbienteOceano(factorDia);
@@ -754,9 +953,9 @@ int main()
 			ambiente.brumaHorizonte = ao.brumaHorizonte;
 			skybox.SetCieloSolido(ao.colorCenit, ao.cieloSolido);
 		}
-		else if (zonaActual != ZONA_ESPACIO)
+		else if (zonaVista != ZONA_ESPACIO)
 		{
-			ambiente = superficie.ObtenerAmbiente(zonaActual == ZONA_PLANETA_ROCOSO ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA, factorDia);
+			ambiente = superficie.ObtenerAmbiente(zonaVista == ZONA_PLANETA_ROCOSO ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA, factorDia);
 		}
 		skybox.SetAmbiente(ambiente.tinteCielo, ambiente.brumaHorizonte);
 		if (zonaActual == ZONA_PLANETA_ROCOSO || zonaActual == ZONA_PLANETA_SELVATICO) ultimoPlaneta = zonaActual;
@@ -769,22 +968,19 @@ int main()
 		escenaAvatar.updateWorld();
 		objetivo.position = pos;
 		objetivo.rotationEuler.y = jugador.Rumbo();
-		if (director.mode() == CameraMode::Observacion) {
-			if (control.nextObservationTarget) observado = (observado + 1) % 3;
+		if (enR4) {
+			const auto& cuadro = encuadres[observado];
 			auto* orbita = static_cast<Orbit*>(director.rig());
-			orbita->distancia = glm::clamp(orbita->distancia - control.observationZoom * 2.0f, 4.0f, 180.0f);
-			if (zonaActual == ZONA_ESPACIO && observado == 1) objetivo.position = posPlanetaSelvatico;
-			if (zonaActual == ZONA_ESPACIO && observado == 2) objetivo.position = PosicionSatelite(estadoSatelite, thetaSatelite);
-			if ((zonaActual == ZONA_PLANETA_SELVATICO || zonaActual == ZONA_PLANETA_ROCOSO) && observado)
-				objetivo.position = observado == 1 ? superficie.PosicionCapsula(zonaActual == ZONA_PLANETA_ROCOSO ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA)
-					: superficie.PosicionInicio(zonaActual == ZONA_PLANETA_ROCOSO ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA);
+			orbita->distancia = glm::clamp(orbita->distancia - control.observationZoom * 2.0f, cuadro.minima, 180.0f);
+			objetivo.position = CentroObservado(observado);
 		}
 		objetivo.updateWorld();
 		director.update(deltaTime, objetivo);
-		const glm::mat4 vista = camaraLibre ? camera.calculateViewMatrix() : director.view();
+		const glm::mat4 vista = camaraLibre && !enR4 ? camera.calculateViewMatrix() : director.view();
 		projection = director.projection(float(mainWindow.getBufferWidth()) / mainWindow.getBufferHeight());
 		if (zonaAnterior != zonaActual || modoAnterior != director.mode() || control.nextObservationTarget) {
 			printf("Zona=%d camara=%d objetivo=%d nave=%d\n", int(zonaActual), int(director.mode()), observado, jugador.JugadorEnNave());
+			if (enR4) printf("R4 %s zonaVista=%d distancia=%.1f\n", encuadres[observado].nombre, int(zonaVista), static_cast<Orbit*>(director.rig())->distancia);
 			fflush(stdout);
 		}
 		const glm::mat4 inversa = glm::inverse(vista);
@@ -824,7 +1020,7 @@ int main()
 			spotLights[0].SetColor(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		// faro de miNave (tecla L): solo cuando el jugador va en su nave
-		if (mainWindow.getLuzNave() && jugador.JugadorEnNave())
+		if (mainWindow.getLuzNave() && zonaVista == zonaActual && jugador.JugadorEnNave())
 		{
 			glm::vec3 posFaro, dirFaro;
 			jugador.PuntoFaroNave(posFaro, dirFaro);
@@ -835,7 +1031,7 @@ int main()
 			spotLights[1].SetColor(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		// foco de la base (tecla J): la base solo existe en el espacio
-		if (mainWindow.getFocoBase() && zonaActual == ZONA_ESPACIO)
+		if (mainWindow.getFocoBase() && zonaVista == ZONA_ESPACIO)
 			spotLights[2].SetColor(glm::vec3(1.0f, 0.85f, 0.6f));
 		else
 			spotLights[2].SetColor(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -851,13 +1047,13 @@ int main()
 		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 
-		if (zonaActual == ZONA_ESPACIO)
+		if (zonaVista == ZONA_ESPACIO)
 		{
 			//=========================== ESPACIO ===========================
 			// nave rival: espera en la meta hasta que el jugador sube a miNave (tecla K)
 			glm::vec3 posNave, tanNave, arribaRival;
 			LugarJugador lugarRival;
-			jugador.EstadoRival(tiempoAnimacion, lugarRival, posNave, tanNave, arribaRival);
+			jugador.EstadoRival(RivalCarrera::Primero, tiempoAnimacion, lugarRival, posNave, tanNave, arribaRival);
 			bool naveVisible = (lugarRival == LUGAR_ESPACIO);   // si no, va corriendo dentro de un planeta
 
 			glm::vec3 objetivo = glm::normalize(tanNave);
@@ -874,6 +1070,9 @@ int main()
 				pointLights[0].SetColor(glm::vec3(0.2f, 0.45f, 1.0f));
 				pointLights[1].SetColor(glm::vec3(0.2f, 0.45f, 1.0f));
 			}
+			pointLights[4].SetPos(espacio.PosicionLlama(COHETE_BASE));
+			if (espacio.CoheteEncendido(COHETE_BASE))
+				pointLights[4].SetColor(glm::vec3(1.0f, 0.45f, 0.10f));
 
 			//información al shader de fuentes de iluminación
 			shaderList[0].SetDirectionalLight(&mainLight);
@@ -907,11 +1106,12 @@ int main()
 			}
 
 			// Planeta selvático (Shinobi)
+			model = glm::mat4(1.0);
+			model = glm::translate(model, posPlanetaSelvatico);
+			model = glm::rotate(model, 0.18f * tiempoAnimacion, glm::vec3(0.0f, 1.0f, 0.0f));
+			Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 			if (PlanetaSelvatico_M.estaCargado())
 			{
-				model = glm::mat4(1.0);
-				model = glm::translate(model, posPlanetaSelvatico);
-				model = glm::rotate(model, 0.18f * tiempoAnimacion, glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::scale(model, glm::vec3(radioPlanetaSelvatico / PlanetaSelvatico_M.getRadio()));
 				model = glm::translate(model, -PlanetaSelvatico_M.getCentro());
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -920,6 +1120,16 @@ int main()
 				Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 				PlanetaSelvatico_M.RenderModel();
 			}
+			else
+			{
+				model = glm::scale(model, glm::vec3(radioPlanetaSelvatico / Planeta_M.getRadio()));
+				model = glm::translate(model, -Planeta_M.getCentro());
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				color = glm::vec3(0.30f, 0.65f, 0.26f);
+				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+				plainTexture.UseTexture();
+				Planeta_M.RenderModel();
+			}
 
 			// NUEVO: cinturón de asteroides, planeta océano, pista de carreras y base (ver Espacio.h y Oceano.h)
 			espacio.DibujarCinturon(ojo, mirada, tiempoAnimacion,
@@ -927,9 +1137,13 @@ int main()
 			oceano.DibujarPlanetaOceano(tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess, uniformEmision);
 			espacio.DibujarPista(tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess, uniformEmision);
 			espacio.DibujarBase(tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess, uniformEmision);
+			DibujarHangar(sp, uniformModel, uniformColor, uniformEmision, uniformSpecularIntensity, uniformShininess);
+			espacio.DibujarCohete(COHETE_BASE, ojo, tiempoAnimacion, uniformModel, uniformColor,
+				uniformSpecularIntensity, uniformShininess, uniformEmision);
 
 			// avatar (Paul en la base o miNave en la pista) y miNave estacionada en la base
-			jugador.DibujarJugador(LUGAR_ESPACIO, tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
+			if (zonaVista == zonaActual)
+				jugador.DibujarJugador(LUGAR_ESPACIO, tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 			DibujarGuiaSatelite(glm::vec3(1.0f, 0.35f, 0.85f), uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 
 			// nave rival
@@ -940,6 +1154,7 @@ int main()
 			Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 			if (naveVisible)
 				Nave_M.RenderModel();
+			DibujarRivalEn(RivalCarrera::Segundo, LUGAR_ESPACIO, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 
 			// Satélite (jerarquía): la base recorre la órbita y los paneles y el aspa heredan su matriz
 			glm::vec3 satPos = PosicionSatelite(estadoSatelite, thetaSatelite);
@@ -1021,7 +1236,7 @@ int main()
 			glDepthMask(GL_TRUE);
 			glDisable(GL_BLEND);
 		}
-		else if (zonaActual == ZONA_PLANETA_OCEANO)
+		else if (zonaVista == ZONA_PLANETA_OCEANO)
 		{
 			//=========================== PLANETA OCÉANO ===========================
 			// mar con la ola gigante; las dos naves vuelan sobre el agua (sin luces puntuales)
@@ -1032,13 +1247,14 @@ int main()
 			toffset = glm::vec2(toffsetaguau, toffsetaguav);
 			oceano.DibujarOceano(ojo, toffset, uniformModel, uniformColor, uniformTextureOffset,
 				uniformSpecularIntensity, uniformShininess, uniformEmision);
-			DibujarRivalEn(LUGAR_OCEANO, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
+			for (auto rival : {RivalCarrera::Primero, RivalCarrera::Segundo})
+				DibujarRivalEn(rival, LUGAR_OCEANO, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 			jugador.DibujarJugador(LUGAR_OCEANO, tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 		}
 		else
 		{
 			//=========================== PLANETA ROCOSO O SELVÁTICO ===========================
-			TipoSuperficie tipoSuperficie = (zonaActual == ZONA_PLANETA_ROCOSO) ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA;
+			TipoSuperficie tipoSuperficie = (zonaVista == ZONA_PLANETA_ROCOSO) ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA;
 			glm::vec3 posCapsula = superficie.PosicionCapsula(tipoSuperficie);
 
 			// luminarias junto a la cápsula, del lado contrario al camino (el camino pasa por x = 0).
@@ -1053,6 +1269,9 @@ int main()
 				pointLights[2].SetColor(glm::vec3(0.2f, 0.45f, 1.0f));
 				pointLights[3].SetColor(glm::vec3(0.2f, 0.45f, 1.0f));
 			}
+			pointLights[4].SetPos(espacio.PosicionLlama(COHETE_SHINOBI));
+			if (zonaVista == ZONA_PLANETA_SELVATICO && espacio.CoheteEncendido(COHETE_SHINOBI))
+				pointLights[4].SetColor(glm::vec3(1.0f, 0.45f, 0.10f));
 
 			//información al shader de fuentes de iluminación
 			shaderList[0].SetDirectionalLight(&mainLight);
@@ -1062,8 +1281,14 @@ int main()
 			// NUEVO: piso, camino, árboles, rocas, cristales, NPCs y portal (ver Superficie.h)
 			superficie.DibujarSuperficie(tipoSuperficie, ojo, mirada, factorDia, tiempoAnimacion,
 				uniformModel, uniformColor, uniformTextureOffset, uniformSpecularIntensity, uniformShininess, uniformEmision);
-			jugador.DibujarJugador(LugarDelJugador(), tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);   // la nave del jugador sobre el camino
-			DibujarRivalEn(LugarDelJugador(), uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);   // y la nave rival
+			if (zonaVista == ZONA_PLANETA_SELVATICO)
+				espacio.DibujarCohete(COHETE_SHINOBI, ojo, tiempoAnimacion, uniformModel, uniformColor,
+					uniformSpecularIntensity, uniformShininess, uniformEmision);
+			if (zonaVista == zonaActual)
+				jugador.DibujarJugador(LugarDelJugador(), tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);   // la nave del jugador sobre el camino
+			for (auto rival : {RivalCarrera::Primero, RivalCarrera::Segundo})
+				DibujarRivalEn(rival, tipoSuperficie == SUPERFICIE_ROCOSA ? LUGAR_ROCOSO : LUGAR_SELVATICO,
+					uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 
 			// Cápsula de regreso (jerarquía): la puerta hereda la matriz del cuerpo y gira sobre su bisagra.
 			// La cápsula no trae texturas, solo colores en su .mtl: RenderModel(uniformColor, tinte) manda
@@ -1117,18 +1342,24 @@ int main()
 		float horaDelDia = fmodf(6.0f + 24.0f * tiempoAnimacion / duracionCicloDiaNoche, 24.0f);
 		int dia = 1 + (int)((tiempoAnimacion + 0.25f * duracionCicloDiaNoche) / duracionCicloDiaNoche);   // cambia a medianoche
 		int clima = 0;
-		if (zonaActual == ZONA_PLANETA_SELVATICO) clima = 1;
-		else if (zonaActual == ZONA_PLANETA_ROCOSO) clima = 2;
-		else if (zonaActual == ZONA_PLANETA_OCEANO) clima = 3;   // despejado
+		if (zonaVista == ZONA_PLANETA_SELVATICO) clima = 1;
+		else if (zonaVista == ZONA_PLANETA_ROCOSO) clima = 2;
+		else if (zonaVista == ZONA_PLANETA_OCEANO) clima = 3;   // despejado
 		glUniform2f(uniformTextureOffset, 0, 0);
 		glUniform3f(uniformEmision, 0, 0, 0);
-		escenaAvatar.render(shaderList[0], vista, projection);
+		if (zonaVista == zonaActual) escenaAvatar.render(shaderList[0], vista, projection);
 		const char* modos[] = {"PLANETA", "CARRERA", "VUELO", "OBSERVACION"};
 		const char* zonas[] = {"ESPACIO", "ROCA", "SELVA", "OCEANO"};
 		char estadoHud[80];
-		snprintf(estadoHud, sizeof(estadoHud), "%s  DIA %d  %02d:%02d", jugador.JugadorEnNave() ? "NAVE" : "REKSAI", dia, int(horaDelDia), int(horaDelDia * 60) % 60);
-		hud.draw(mainWindow.getBufferWidth(), mainWindow.getBufferHeight(), camaraLibre ? "LIBRE" : modos[static_cast<int>(director.mode())], zonas[zonaActual], estadoHud);
-		reloj.DibujarReloj((int)mainWindow.getBufferWidth(), (int)mainWindow.getBufferHeight(), horaDelDia, dia, clima);
+		const char* estadoCohete = "";
+		if (zonaVista == ZONA_ESPACIO && (!enR4 || observado == CoheteBase))
+			estadoCohete = espacio.TextoEstadoCohete(COHETE_BASE);
+		else if (zonaVista == ZONA_PLANETA_SELVATICO)
+			estadoCohete = espacio.TextoEstadoCohete(COHETE_SHINOBI);
+		snprintf(estadoHud, sizeof(estadoHud), "%s  %s  DIA %d  %02d:%02d", enR4 ? encuadres[observado].nombre : (jugador.JugadorEnNave() ? "NAVE" : "REKSAI"),
+			estadoCohete, dia, int(horaDelDia), int(horaDelDia * 60) % 60);
+		hud.draw(mainWindow.getBufferWidth(), mainWindow.getBufferHeight(), camaraLibre && !enR4 ? "LIBRE" : modos[static_cast<int>(director.mode())], zonas[zonaVista], estadoHud);
+		if (!enR4) reloj.DibujarReloj((int)mainWindow.getBufferWidth(), (int)mainWindow.getBufferHeight(), horaDelDia, dia, clima);
 
 		glUseProgram(0);
 

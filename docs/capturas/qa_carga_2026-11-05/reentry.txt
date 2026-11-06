@@ -1,0 +1,3 @@
+Reentrada selva: found=True ms=77
+Primera roca (tras selva): ms=1,079
+Reentrada roca: found=True ms=64

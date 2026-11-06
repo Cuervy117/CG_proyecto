@@ -40,6 +40,8 @@ Superficie::Superficie()
 	hayRoca = false;
 	for (int i = 0; i < NUM_MODELOS_NPC; i++)
 		hayNPC[i] = false;
+	modelosSuperficieListos[SUPERFICIE_SELVATICA] = false;
+	modelosSuperficieListos[SUPERFICIE_ROCOSA] = false;
 	hayPortal = false;
 	paulValido = false;
 	revelacionPaul = 0.0f;
@@ -934,48 +936,14 @@ void Superficie::InicializarSuperficies()
 	Roca_M.LoadModel("Models/asteroide/Rocky_Asteroid_6.obj");
 	hayRoca = Roca_M.estaCargado();
 
-	// NPCs del planeta selvático (cada .obj pesa decenas de MB: tardan en cargar)
-	printf("Cargando los NPCs ...\n");
-	modelosNPC[NPC_NARUTO] = Model();
-	modelosNPC[NPC_NARUTO].LoadModel("Models/npcSelva/naruto.obj");
-	modelosNPC[NPC_ZORRO_BLANCO] = Model();
-	modelosNPC[NPC_ZORRO_BLANCO].LoadModel("Models/npcSelva/zorroBlanco.obj");
-	modelosNPC[NPC_CABALLO_DELFIN] = Model();
-	modelosNPC[NPC_CABALLO_DELFIN].LoadModel("Models/npcSelva/caballoDelfin.obj");
-	modelosNPC[NPC_PULPO] = Model();
-	modelosNPC[NPC_PULPO].LoadModel("Models/npcSelva/pulpo.obj");
-	modelosNPC[NPC_TIGRE_FUEGO] = Model();
-	modelosNPC[NPC_TIGRE_FUEGO].LoadModel("Models/npcSelva/tigreFuego.obj");
-	modelosNPC[NPC_CALAMARDO_GUAPO] = Model();
-	modelosNPC[NPC_CALAMARDO_GUAPO].LoadModel("Models/npcSelva/calamardoGuapo.obj");
-	// NPCs del planeta rocoso
-	modelosNPC[NPC_MONSTRUO_NEGRO] = Model();
-	modelosNPC[NPC_MONSTRUO_NEGRO].LoadModel("Models/npcRoca/monstruoNegro.obj");
-	modelosNPC[NPC_ESCORPION] = Model();
-	modelosNPC[NPC_ESCORPION].LoadModel("Models/npcRoca/escorpion.obj");
-	modelosNPC[NPC_CERBERO] = Model();
-	modelosNPC[NPC_CERBERO].LoadModel("Models/npcRoca/Cerbero.obj");
-	modelosNPC[NPC_SERPIENTE_ALAS] = Model();
-	modelosNPC[NPC_SERPIENTE_ALAS].LoadModel("Models/npcRoca/serpienteAlas.obj");
-	modelosNPC[NPC_PAUL] = Model();
-	modelosNPC[NPC_PAUL].LoadModel("Models/npcRoca/Paul.obj");
-	for (int i = 0; i < NUM_MODELOS_NPC; i++)
-		hayNPC[i] = modelosNPC[i].estaCargado();
-
 	// portal de salida (el archivo se llama asteroide.obj pero tiene el portal)
 	Portal_M = Model();
 	Portal_M.LoadModel("Models/portal/asteroide.obj");
 	hayPortal = Portal_M.estaCargado();
 
-	// Si Paul.obj trae la misma malla que el portal (en Blender se exportó el objeto equivocado)
-	// se dibujaría un segundo portal: en ese caso Paul no se usa hasta que se re-exporte.
-	paulValido = hayNPC[NPC_PAUL];
-	if (paulValido && hayPortal && modelosNPC[NPC_PAUL].getNumTriangulos() == Portal_M.getNumTriangulos()
-		&& glm::length(modelosNPC[NPC_PAUL].getTamano() - Portal_M.getTamano()) < 0.01f)
-	{
-		printf("[AVISO] Models/npcRoca/Paul.obj tiene la misma malla que el portal. No se dibuja.\n");
-		paulValido = false;
-	}
+	// Paul.obj es una exportación duplicada del portal. No se carga: Rek'Sai es el avatar vigente.
+	paulValido = false;
+	printf("[OK] Se omitio Models/npcRoca/Paul.obj: corresponde al portal y no se utiliza.\n");
 
 	// los tres racimos de cristales hechos con código
 	for (int i = 0; i < 3; i++)
@@ -995,6 +963,41 @@ void Superficie::InicializarSuperficies()
 			(i == SUPERFICIE_SELVATICA) ? "selvatica" : "rocosa", m.largo, (int)m.objetos.size(), (int)m.npcs.size());
 	}
 	inicializado = true;
+}
+
+void Superficie::PrepararModelosSuperficie(TipoSuperficie tipo)
+{
+	if (!inicializado || modelosSuperficieListos[tipo])
+		return;
+
+	struct RecursoNPC { ModeloNPC modelo; const char* ruta; };
+	static const RecursoNPC selva[] = {
+		{ NPC_NARUTO, "Models/npcSelva/naruto.obj" },
+		{ NPC_ZORRO_BLANCO, "Models/npcSelva/zorroBlanco.obj" },
+		{ NPC_CABALLO_DELFIN, "Models/npcSelva/caballoDelfin.obj" },
+		{ NPC_PULPO, "Models/npcSelva/pulpo.obj" },
+		{ NPC_TIGRE_FUEGO, "Models/npcSelva/tigreFuego.obj" },
+		{ NPC_CALAMARDO_GUAPO, "Models/npcSelva/calamardoGuapo.obj" }
+	};
+	static const RecursoNPC roca[] = {
+		{ NPC_MONSTRUO_NEGRO, "Models/npcRoca/monstruoNegro.obj" },
+		{ NPC_ESCORPION, "Models/npcRoca/escorpion.obj" },
+		{ NPC_CERBERO, "Models/npcRoca/Cerbero.obj" },
+		{ NPC_SERPIENTE_ALAS, "Models/npcRoca/serpienteAlas.obj" }
+	};
+	const RecursoNPC* recursos = (tipo == SUPERFICIE_SELVATICA) ? selva : roca;
+	const size_t cantidad = (tipo == SUPERFICIE_SELVATICA)
+		? sizeof(selva) / sizeof(selva[0]) : sizeof(roca) / sizeof(roca[0]);
+	printf("Cargando %zu NPCs de la superficie %s bajo demanda ...\n", cantidad,
+		(tipo == SUPERFICIE_SELVATICA) ? "selvatica" : "rocosa");
+	for (size_t i = 0; i < cantidad; ++i)
+	{
+		const int indice = recursos[i].modelo;
+		modelosNPC[indice] = Model();
+		modelosNPC[indice].LoadModel(recursos[i].ruta);
+		hayNPC[indice] = modelosNPC[indice].estaCargado();
+	}
+	modelosSuperficieListos[tipo] = true;
 }
 
 // NUEVO: recorte por cono. Solo se dibuja lo que está cerca y frente a la cámara (un cono horizontal

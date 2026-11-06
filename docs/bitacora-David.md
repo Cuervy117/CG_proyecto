@@ -92,6 +92,15 @@ La revisión del 30-oct sustituye el calendario/alcance anterior sin alterar los
 | H-A4 | 2026-10-31 | 13:42 | Chase, Flight, Orbit y cuatro modos | `Chase`, `Flight` y `Orbit` implementados con pruebas A4.1–A4.3 sobre Rek'Sai y `Fighter_03`; `CameraDirector` unificado con `CameraMode` (`Planeta/Carrera/Vuelo/Observacion`), `setMode`, `mode` y `setModeForKey`; F1–F4 cambian de rig sin mezclar matrices; A4.4 OK, sin regresiones H-A1/A3.x. Objetivos reales de R4 quedan con C/B. | `docs/capturas/ha4_1_chase_01.png`, `ha4_2_flight_01.png`, `ha4_3_orbit_01.png`, `ha4_4_f1_planeta.png`–`ha4_4_f4_observacion.png` y logs `ha4_*_*.txt` · build 0 errores | por confirmar | hecho |
 | H-E0 | 2026-10-30 | — | Integración común | Avatar camina en P1; develop compilable. | por generar | — | pendiente |
 
+### Refactoring de rendimiento y carga
+
+> Registro técnico con el mismo nivel de evidencia de los hitos, pero no corresponde a un hito del plan maestro.
+
+| Fecha | Hora | Actividad | Descripción | Evidencia | Horas | Estado |
+|---|---|---|---|---|---:|---|
+| 2026-11-05 | 22:23 | Carga diferida por zona | Se separó la carga inicial del espacio de los modelos de cada superficie. Los planetas detallados, la cápsula y los NPC se cargan sólo al entrar por primera vez en roca o selva. Se eliminó por completo la lectura de `Models/npcRoca/Paul.obj`, porque es una exportación duplicada del portal y Rek'Sai es el avatar vigente. Release x64 compila con 0 errores. La ventana pasó de responder cerca de los 30 s con ~1.16 GB privados a responder en la primera muestra de 1 s con 490.8 MB privados. | `docs/capturas/refactor_carga_2026-11-05.txt` · build Release x64 | 0.1 | implementado; QA manual de F5/F6 pendiente |
+| 2026-11-05 | 23:50 | QA de carga y optimización de geometría | Se corrigió la entrada normal por E/atmósfera para que use la misma carga diferida que F5/F6. Se instrumentaron `Model::LoadModel` y un helper `[QA]` compartido. QA en frío: selva 13.12 s/1.18 GB -> 1.64 s/508 MB; roca 7.04 s -> 1.06 s; tras ambas superficies 1.17 GB -> 774.7 MB; reentrada sin recargas; entrada normal validada. Se redujeron 12 OBJ de 668.5 MB a 52.8 MB con Blender (Decimate), con respaldo en `Models/_originales_2026-11-05/`. | `docs/capturas/qa_carga_2026-11-05.txt` y `docs/capturas/qa_carga_2026-11-05/` · `scripts/Optimizar-Modelos.py` · build 0 errores | por confirmar | hecho |
+
 ---
 
 ## 5. Registro diario (formato del PDF)
@@ -105,8 +114,9 @@ La revisión del 30-oct sustituye el calendario/alcance anterior sin alterar los
 | 2026-11-02 | Integración, rendimiento, bugs |  | 0 |
 | 2026-11-03 | Release en otra PC, QA y freeze 18:00 |  | — |
 | 2026-11-04 | Documentación motor/build/Git y correcciones |  | — |
-| 2026-11-05 | Capturas técnicas y manual técnico |  | 0 |
-| 2026-11-06 | Buffer e imprevistos |  | 0 |
+| 2026-11-05 | Capturas técnicas, manual técnico y reducción del costo de arranque | Refactoring de carga: modelos iniciales mínimos para espacio; NPC, planetas detallados y cápsula bajo demanda por superficie; `Paul.obj` duplicado ya no se carga. Release x64 con 0 errores. Medición posterior: ventana disponible en la muestra de 1 s y 490.8 MB privados. | 0.1 |
+| 2026-11-05 | Cerrar QA del refactoring de carga y reducir geometría | Se corrigió la entrada normal por E/atmósfera; se instrumentó la carga y se midió en frío F5/F6: 13.12 s -> 1.64 s (selva) y 7.04 s -> 1.06 s (roca); memoria tras ambas superficies 1.17 GB -> 774.7 MB; reentrada sin recargas. Se redujeron 12 modelos de 668.5 MB a 52.8 MB con Blender, conservando MTL/texturas y respaldo. Evidencia y capturas en `docs/capturas/qa_carga_2026-11-05.txt` y `docs/capturas/qa_carga_2026-11-05/`. | por confirmar |
+| 2026-11-06 | Integrar el cohete D1 en la base espacial y P2 Shinobi | Se agregaron plataforma, estados (ignicion, ascenso, orbita y reinicio), tecla 1, HUD, luz puntual, camara de observacion, llama y humo. QA en ambos sitios con Tab y reinicio; Release x64 con 0 errores. | por confirmar |
 | 2026-11-07 | Entrega |  | 0 |
 
 > Las horas de los días futuros se llenan al cerrar cada día. No se estiman: se anotan las reales.

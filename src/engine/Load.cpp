@@ -33,15 +33,34 @@ void LoadModels()
 	SateliteAspa_M = Model();
 	SateliteAspa_M.LoadModel("Models/satelite/satelite_aspa_g.fbx");
 
-	// planetas: cada .obj pesa unos 100 MB y tarda varios segundos (la consola muestra el avance)
-	printf("Cargando Models/planetaSelva/planetaSelvatico.obj ...\n");
-	PlanetaSelvatico_M = Model();
-	PlanetaSelvatico_M.LoadModel("Models/planetaSelva/planetaSelvatico.obj");
-	printf("Cargando Models/planetaRoca/planetaRoca.obj ...\n");
+	printf("[OK] Modelos iniciales del espacio cargados; planetas y capsula quedan bajo demanda.\n");
+}
+
+void LoadPlanetaRocoso()
+{
+	static bool intentado = false;
+	if (intentado) return;
+	intentado = true;
+	printf("Cargando Models/planetaRoca/planetaRoca.obj bajo demanda ...\n");
 	PlanetaRocoso_M = Model();
 	PlanetaRocoso_M.LoadModel("Models/planetaRoca/planetaRoca.obj");
+}
 
-	// cápsula de regreso: el cuerpo y la puerta son modelos separados (la puerta gira con la tecla 2)
+void LoadPlanetaSelvatico()
+{
+	static bool intentado = false;
+	if (intentado) return;
+	intentado = true;
+	printf("Cargando Models/planetaSelva/planetaSelvatico.obj bajo demanda ...\n");
+	PlanetaSelvatico_M = Model();
+	PlanetaSelvatico_M.LoadModel("Models/planetaSelva/planetaSelvatico.obj");
+}
+
+void LoadCapsulaModels()
+{
+	static bool intentado = false;
+	if (intentado) return;
+	intentado = true;
 	CapsulaCuerpo_M = Model();
 	CapsulaCuerpo_M.LoadModel("Models/capsula/capsulaCuerpo.obj");
 	CapsulaPuerta_M = Model();

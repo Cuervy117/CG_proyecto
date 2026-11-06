@@ -34,6 +34,8 @@ enum LugarJugador
 	LUGAR_OCEANO
 };
 
+enum class RivalCarrera { Primero, Segundo };
+
 class Jugador
 {
 public:
@@ -67,7 +69,7 @@ public:
 
 	// Nave rival: dónde va en este momento (lugar, posición y orientación). Espera en la meta
 	// hasta que empieza la carrera.
-	void EstadoRival(float tiempo, LugarJugador& lugar, glm::vec3& posicion, glm::vec3& adelante, glm::vec3& arriba);
+	void EstadoRival(RivalCarrera rival, float tiempo, LugarJugador& lugar, glm::vec3& posicion, glm::vec3& adelante, glm::vec3& arriba);
 
 	// Dibuja al avatar y, si aún no se aborda, a miNave estacionada en la base
 	void DibujarJugador(LugarJugador lugar, float tiempo, GLuint modelLocation, GLuint colorLocation,

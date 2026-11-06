@@ -1,0 +1,34 @@
+EXE: C:\UNAM\CGICH\x64\Release\LabCGeIHC.exe
+EXE timestamp: 2026-11-05 23:30:49
+EXE bytes: 594944
+EXE SHA256: D6B787493CF7A644C98568FFCD3EE1DDAF586AFDBD49A8067B79EF3640F2A493
+
+Fuentes y scripts:
+C:\UNAM\CGICH\P09-424104230.cpp | 2026-11-05 23:30:40 | 53009 bytes
+C:\UNAM\CGICH\src\engine\Model.cpp | 2026-11-05 23:19:06 | 10263 bytes
+C:\UNAM\CGICH\scripts\Optimizar-Modelos.py | 2026-11-05 23:38:35 | 3685 bytes
+
+Git HEAD:
+7833821 chore: excluir modelos, texturas y paquetes locales de Git
+
+Git status:
+ M P09-424104230.cpp
+ M README.md
+ M docs/bitacora-David.md
+ M src/engine/Load.cpp
+ M src/engine/Load.hpp
+ M src/engine/Model.cpp
+ M src/game/world/Espacio.cpp
+ M src/game/world/Espacio.h
+ M src/game/world/Reloj.cpp
+ M src/game/world/Reloj.h
+ M src/game/world/Superficie.cpp
+ M src/game/world/Superficie.h
+?? docs/capturas/qa_carga_2026-11-05/
+?? docs/capturas/refactor_carga_2026-11-05.txt
+?? manifest-project-assets.json
+?? scripts/Optimizar-Modelos.py
+?? scripts/Verify-Project-Assets.ps1
+
+Variables de entorno:
+Blender: Blender 5.2.2 LTS
