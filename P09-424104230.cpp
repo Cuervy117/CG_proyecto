@@ -781,7 +781,10 @@ int main()
 		}
 		objetivo.updateWorld();
 		director.update(deltaTime, objetivo);
-		const glm::mat4 vista = camaraLibre ? camera.calculateViewMatrix() : director.view();
+		// En modo Planeta, la cámara debe conservar la órbita controlada por el mouse alrededor del avatar.
+		// Los otros modos siguen usando la vista definida por su rig; C mantiene la cámara libre.
+		const glm::mat4 vista = (camaraLibre || director.mode() == CameraMode::Planeta)
+			? camera.calculateViewMatrix() : director.view();
 		projection = director.projection(float(mainWindow.getBufferWidth()) / mainWindow.getBufferHeight());
 		if (zonaAnterior != zonaActual || modoAnterior != director.mode() || control.nextObservationTarget) {
 			printf("Zona=%d camara=%d objetivo=%d nave=%d\n", int(zonaActual), int(director.mode()), observado, jugador.JugadorEnNave());
@@ -1126,7 +1129,8 @@ int main()
 		const char* modos[] = {"PLANETA", "CARRERA", "VUELO", "OBSERVACION"};
 		const char* zonas[] = {"ESPACIO", "ROCA", "SELVA", "OCEANO"};
 		char estadoHud[80];
-		snprintf(estadoHud, sizeof(estadoHud), "%s  DIA %d  %02d:%02d", jugador.JugadorEnNave() ? "NAVE" : "REKSAI", dia, int(horaDelDia), int(horaDelDia * 60) % 60);
+		// La hora/día ya aparecen en el reloj gráfico; mantener aquí solo el estado evita duplicarlo.
+		snprintf(estadoHud, sizeof(estadoHud), "%s", jugador.JugadorEnNave() ? "NAVE" : "REKSAI");
 		hud.draw(mainWindow.getBufferWidth(), mainWindow.getBufferHeight(), camaraLibre ? "LIBRE" : modos[static_cast<int>(director.mode())], zonas[zonaActual], estadoHud);
 		reloj.DibujarReloj((int)mainWindow.getBufferWidth(), (int)mainWindow.getBufferHeight(), horaDelDia, dia, clima);
 
