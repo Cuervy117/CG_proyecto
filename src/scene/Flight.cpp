@@ -36,8 +36,18 @@ void Flight::update(float dt, const SceneNode& target)
 	const glm::vec3 frente = frente3D(target);
 	const float distanciaSegura = (distancia > 0.01f) ? distancia : 0.01f;
 
-	m_pos = base - frente * distanciaSegura + m_up * altura;
 	m_target = base + frente * adelanto + m_up * alturaObjetivo;
+	if (glm::dot(miradaMouse, miradaMouse) > 0.25f)
+	{
+		// gira alrededor de la nave con el mouse, a la misma distancia de siempre
+		const float subida = altura - alturaObjetivo;
+		const float radio = std::sqrt(distanciaSegura * distanciaSegura + subida * subida);
+		m_pos = m_target - glm::normalize(miradaMouse) * radio;
+	}
+	else
+	{
+		m_pos = base - frente * distanciaSegura + m_up * altura;
+	}
 }
 
 glm::mat4 Flight::view() const

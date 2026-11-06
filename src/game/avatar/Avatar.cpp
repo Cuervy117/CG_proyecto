@@ -290,7 +290,18 @@ bool Avatar::attach(SceneNode& parent, const std::string& objPath,
 
     auto texture = std::make_unique<Texture>(texturePath.c_str());
     if (!texture->LoadTextureA())
-        return false;
+    {
+        // Sin su textura Rek'Sai se ve de un solo color, pero el programa sigue funcionando
+        std::printf("[AVISO] Se buscara la textura de Rek'Sai junto al modelo.\n");
+        texture = std::make_unique<Texture>("Models/reksai/reksai.png");
+        if (!texture->LoadTextureA())
+        {
+            std::printf("[AVISO] Usando Textures/plain.png para Rek'Sai.\n");
+            texture = std::make_unique<Texture>("Textures/plain.png");
+            if (!texture->LoadTextureA())
+                return false;
+        }
+    }
 
     std::vector<std::unique_ptr<MeshModel>> meshes;
     auto rootNode = std::make_unique<SceneNode>("c.avatar.reksai");

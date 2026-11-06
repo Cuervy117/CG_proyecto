@@ -18,4 +18,8 @@ public:
 	float altura;
 	float alturaObjetivo;
 	float adelanto;
+	void Orbitar(float dx, float dy);
+
+private:
+	float giro = 0.0f, inclinacion = 0.0f;
 };

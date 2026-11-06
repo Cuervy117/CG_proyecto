@@ -42,6 +42,7 @@ Ejecuta desde la raíz con los modelos y texturas del paquete actualizado superp
 |---|---|
 | F1 / F2 / F3 / F4 | Planeta a pie, persecución de carrera, vuelo, observación |
 | W / S y A / D en carrera (F2) | Acelerar o frenar y cambiar de carril con miNave. Las otras dos naves repiten la vuelta por roca, selva y océano. |
+| Ratón en F1 / F2 / F3 | En F1 gira alrededor del avatar a altura constante. En F2 orbita respecto al rumbo de miNave. En F3 sigue la mirada de vuelo. |
 | Tab / rueda | En F4, avanzar al siguiente objetivo disponible y ajustar el zoom |
 | F5 / F6 / F7 / F8 | Accesos directos a selva, roca, océano y espacio |
 | WASD / ratón | Movimiento y orientación |

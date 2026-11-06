@@ -687,8 +687,17 @@ int main()
 	float yawInicio = jugador.ColocarJugadorEnBase();
 	Scene escenaAvatar;
 	cgame::Avatar avatar;
-	jugador.avatarArticulado = avatar.attach(escenaAvatar.root, "Models/reksai.obj", "Textures/reksai.png", jugador.PosicionJugador(), 2.2f);
-	if (!jugador.avatarArticulado) return 1;
+	for (const char* ruta : {"Models/reksai/reksai.obj", "Models/reksai.obj"}) {
+		if (std::ifstream(ruta).good() && avatar.attach(escenaAvatar.root, ruta, "Textures/reksai.png",
+			jugador.PosicionJugador(), 2.2f)) {
+			jugador.avatarArticulado = true;
+			break;
+		}
+	}
+	if (!jugador.avatarArticulado) {
+		fprintf(stderr, "[ERROR] No se pudo inicializar Rek'Sai desde Models/reksai/ ni Models/.\n");
+		return 1;
+	}
 	SceneNode objetivo("objetivo");
 	escenaAvatar.updateWorld();
 	if (!VerificarEscenaIntegrada(*avatar.root(), objetivo)) return 1;
@@ -974,6 +983,11 @@ int main()
 			objetivo.position = CentroObservado(observado);
 		}
 		objetivo.updateWorld();
+		if (director.mode() == CameraMode::Carrera) {
+			static_cast<Chase*>(director.rig())->Orbitar(control.mouseDeltaX, control.mouseDeltaY);
+		} else if (director.mode() != CameraMode::Observacion) {
+			director.rig()->miradaMouse = camera.getCameraDirection();
+		}
 		director.update(deltaTime, objetivo);
 		const glm::mat4 vista = camaraLibre && !enR4 ? camera.calculateViewMatrix() : director.view();
 		projection = director.projection(float(mainWindow.getBufferWidth()) / mainWindow.getBufferHeight());
