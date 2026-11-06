@@ -183,6 +183,9 @@ float atmosferaRocoso = 22.0f;
 glm::vec3 posPlanetaSelvatico = glm::vec3(120.0f, 10.0f, 90.0f);
 float radioPlanetaSelvatico = 16.0f;
 float atmosferaSelvatico = 24.0f;
+// Luna visible del sistema; usa el planeta estilizado como malla y un tinte gris.
+glm::vec3 posLuna = glm::vec3(48.0f, 36.0f, -82.0f);
+float radioLuna = 5.0f;
 float alturaCamaraSuperficie = 3.5f;
 
 // Animación básica 1: puerta de la cápsula (tecla 2). La puerta gira sobre su bisagra, que es su
@@ -1161,6 +1164,21 @@ int main(int argc, char** argv)
 				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 				plainTexture.UseTexture();
 				Planeta_M.RenderModel();
+			}
+
+			// Luna del sistema: cuerpo celeste visible en el espacio y en R4.
+			if (Planeta_M.estaCargado() && Planeta_M.getRadio() > 0.0f)
+			{
+				model = glm::mat4(1.0f);
+				model = glm::translate(model, posLuna);
+				model = glm::rotate(model, 0.05f * tiempoAnimacion, glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(radioLuna / Planeta_M.getRadio()));
+				model = glm::translate(model, -Planeta_M.getCentro());
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				color = glm::vec3(0.72f, 0.76f, 0.84f);
+				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+				Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+				Planeta_M.RenderModel(uniformColor, color);
 			}
 
 			// NUEVO: cinturón de asteroides, planeta océano, pista de carreras y base (ver Espacio.h y Oceano.h)

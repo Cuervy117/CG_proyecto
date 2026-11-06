@@ -370,13 +370,15 @@ void Jugador::ActualizarJugador(bool* keys, GLfloat deltaTime, LugarJugador luga
 	glm::vec3 derechaH = glm::normalize(glm::cross(adelanteH, glm::vec3(0.0f, 1.0f, 0.0f)));
 	float ejeAdelante = (keys[GLFW_KEY_W] ? 1.0f : 0.0f) - (keys[GLFW_KEY_S] ? 1.0f : 0.0f);
 	float ejeLado = (keys[GLFW_KEY_D] ? 1.0f : 0.0f) - (keys[GLFW_KEY_A] ? 1.0f : 0.0f);
+	float ejeVertical = (keys[GLFW_KEY_E] ? 1.0f : 0.0f) - (keys[GLFW_KEY_Q] ? 1.0f : 0.0f);
 	float distancia, alturaMira;
 
 	if (vueloLibre && lugar == LUGAR_ESPACIO && enNave)
 	{
 		adelanteNave = glm::normalize(frente);
 		arribaNave = glm::normalize(glm::cross(derechaH, adelanteNave));
-		posicion += (adelanteNave * ejeAdelante + derechaH * ejeLado) * VELOCIDAD_NAVE_MAX * deltaTime;
+		posicion += (adelanteNave * ejeAdelante + derechaH * ejeLado
+			+ glm::vec3(0.0f, 1.0f, 0.0f) * ejeVertical) * VELOCIDAD_NAVE_MAX * deltaTime;
 		rumbo = atan2f(frente.x, frente.z);
 		distancia = 15.0f;
 		alturaMira = 3.0f;

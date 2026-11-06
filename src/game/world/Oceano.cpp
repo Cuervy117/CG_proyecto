@@ -165,6 +165,12 @@ void Oceano::InicializarOceano()
 	aguaTexture = Texture("Textures/aguaOceanoTexture.png");
 	texturaAguaLista = aguaTexture.LoadTextureA();
 	if (!texturaAguaLista) {
+		// El paquete base no incluye la textura dedicada: usar la del planeta océano
+		// antes de caer al material plano.
+		aguaTexture = Texture("Textures/planetaOceanoTexture.png");
+		texturaAguaLista = aguaTexture.LoadTextureA();
+	}
+	if (!texturaAguaLista) {
 		aguaTexture = Texture("Textures/plain.png");
 		aguaTexture.LoadTextureA();
 	}
