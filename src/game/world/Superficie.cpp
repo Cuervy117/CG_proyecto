@@ -29,7 +29,7 @@ const float PROBABILIDAD_LUMINOSA_BOSQUE = 0.0f;
 const float RADIO_JUGADOR = 0.9f;			// para no meterse en troncos ni rocas
 // distancia máxima a la que se dibuja cada tipo (la niebla tapa lo que queda más lejos)
 const float DISTANCIA_MAXIMA[NUM_TIPOS_OBJETO] = { 150.0f, 70.0f, 100.0f, 320.0f, 160.0f, 220.0f, 1.0e9f };
-const glm::vec3 COLOR_ROCA(1.10f, 0.62f, 0.46f);
+const glm::vec3 COLOR_ROCA(0.80f, 0.64f, 0.95f);
 const float PI_SUPERFICIE = 3.14159265f;
 
 
@@ -829,10 +829,52 @@ void Superficie::GenerarDesierto(Mundo& m)
 	}
 
 	m.mosaicoPiso = 9.0f;
-	m.texturaPiso = &sueloRocosoTexture;
-	m.texturaCamino = &sueloRocosoTexture;
-	m.colorPiso = glm::vec3(1.05f, 0.56f, 0.40f);		// tierra rojiza
-	m.colorCamino = glm::vec3(1.22f, 0.86f, 0.66f);	// arena más clara pisada
+	m.texturaPiso = &pizarraTexture;
+	m.texturaCamino = &pizarraTexture;
+	m.colorPiso = glm::vec3(0.66f, 0.69f, 0.82f);
+	m.colorCamino = glm::vec3(1.02f, 1.03f, 1.16f);
+}
+
+void Superficie::CrearFisuras(const Mundo& mundo)
+{
+	std::vector<GLfloat> vertices;
+	std::vector<unsigned int> indices;
+	Aleatorio rnd(20261106u);
+	// Cintas cortas y afiladas a ras de suelo. Se dibujan juntas, sin colisión.
+	auto veta = [&](glm::vec2 p, glm::vec2 rumbo, float largo, float ancho) {
+		glm::vec2 normal(-rumbo.y, rumbo.x);
+		const unsigned int inicio = static_cast<unsigned int>(vertices.size() / 8);
+		for (int i = 0; i <= 4; ++i) {
+			const float t = i / 4.0f;
+			glm::vec2 c = p + rumbo * largo * t;
+			if (i > 0 && i < 4) c += normal * rnd.rango(-0.45f, 0.45f);
+			for (float lado : {-1.0f, 1.0f}) {
+				glm::vec2 q = c + normal * (lado * ancho * (1.0f-t));
+				vertices.insert(vertices.end(), {q.x, 0.035f, q.y, 0,0, 0,-1,0});
+			}
+			if (i < 4) {
+				unsigned int k = inicio + 2*i;
+				indices.insert(indices.end(), {k,k+1,k+2, k+1,k+3,k+2});
+			}
+		}
+	};
+	auto grietas = [&](glm::vec2 centro, glm::vec2 afuera) {
+		float eje = atan2f(afuera.y, afuera.x);
+		for (float giro : {-0.95f, 0.2f, 1.1f}) {
+			float angulo = eje + giro + rnd.rango(-0.2f, 0.2f);
+			glm::vec2 rumbo(cosf(angulo), sinf(angulo));
+			float largo = rnd.rango(3.4f, 5.4f);
+			veta(centro, rumbo, largo, 0.14f);
+			veta(centro + rumbo*largo*0.5f, glm::vec2(cosf(angulo+0.7f), sinf(angulo+0.7f)), largo*0.45f, 0.07f);
+		}
+	};
+	for (const NPC& npc : mundo.npcs)
+		if (npc.modelo == NPC_VOIDGRUB) grietas(npc.centro, npc.afuera);
+	glm::vec2 lateral(-mundo.portal.adelante.y, mundo.portal.adelante.x);
+	for (float lado : {-1.0f, 1.0f})
+		grietas(mundo.portal.centro + lateral * (lado * mundo.portal.ancho * 0.5f), lado*lateral);
+	fisuras.CreateMeshModel(vertices.data(), indices.data(), static_cast<unsigned int>(vertices.size()),
+		static_cast<unsigned int>(indices.size()));
 }
 
 // =============================================================================================
@@ -929,10 +971,10 @@ glm::mat4 Superficie::MatrizNPC(const NPC& n, float tiempo, glm::vec2& posicion)
 }
 
 // =============================================================================================
-void Superficie::InicializarSuperficies()
+bool Superficie::InicializarSuperficies()
 {
 	if (inicializado)
-		return;
+		return true;
 
 	// texturas
 	arbolTexture = Texture("Textures/arbolTexture.png");
@@ -941,6 +983,8 @@ void Superficie::InicializarSuperficies()
 	sueloSelvaTexture.LoadTextureA();
 	sueloRocosoTexture = Texture("Textures/sueloRocoso.png");
 	sueloRocosoTexture.LoadTextureA();
+	pizarraTexture = Texture("Textures/Vacio/pizarra.png");
+	if (!pizarraTexture.LoadTextureA()) return false;
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 
@@ -967,6 +1011,7 @@ void Superficie::InicializarSuperficies()
 
 	GenerarSelva(mundos[SUPERFICIE_SELVATICA]);
 	GenerarDesierto(mundos[SUPERFICIE_ROCOSA]);
+	CrearFisuras(mundos[SUPERFICIE_ROCOSA]);
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -979,6 +1024,7 @@ void Superficie::InicializarSuperficies()
 			(i == SUPERFICIE_SELVATICA) ? "selvatica" : "rocosa", m.largo, (int)m.objetos.size(), (int)m.npcs.size());
 	}
 	inicializado = true;
+	return true;
 }
 
 void Superficie::PrepararModelosSuperficie(TipoSuperficie tipo)
@@ -1038,7 +1084,7 @@ bool Superficie::Visible(glm::vec2 posicion, float radio, float distanciaMaxima,
 	return true;
 }
 
-void Superficie::DibujarObjeto(const Objeto& o)
+void Superficie::DibujarObjeto(const Objeto& o, Texture& texturaRoca)
 {
 	// se cambia el material solo cuando cambia el tipo de objeto
 	if (o.tipo != tipoActual)
@@ -1082,7 +1128,7 @@ void Superficie::DibujarObjeto(const Objeto& o)
 	}
 	else if (o.tipo == OBJ_AGUJA || o.tipo == OBJ_ROCA || o.tipo == OBJ_MONTANA)
 	{
-		Roca_M.RenderModelConTextura(sueloRocosoTexture);
+		Roca_M.RenderModelConTextura(texturaRoca);
 		triangulos += Roca_M.getNumTriangulos();
 	}
 	else if (o.tipo == OBJ_CRISTAL)
@@ -1130,6 +1176,14 @@ void Superficie::DibujarSuperficie(TipoSuperficie tipo, glm::vec3 posCamara, glm
 	glUniform3f(uniformColor, m.colorCamino.x, m.colorCamino.y, m.colorCamino.z);
 	m.mallaCamino->RenderMeshModel();
 	glDisable(GL_POLYGON_OFFSET_FILL);
+	if (tipo == SUPERFICIE_ROCOSA) {
+		plainTexture.UseTexture();
+		glUniform3f(uniformColor, 0.14f, 0.025f, 0.15f);
+		float pulso = 0.73f + 0.12f * sinf(1.45f * tiempo);
+		glUniform3f(uniformEmision, pulso, 0.12f * pulso, 0.65f * pulso);
+		fisuras.RenderMeshModel();
+		glUniform3f(uniformEmision, 0, 0, 0);
+	}
 
 	// datos del recorte por cono (ver Visible)
 	camaraPiso = glm::vec2(posCamara.x, posCamara.z);
@@ -1171,7 +1225,8 @@ void Superficie::DibujarSuperficie(TipoSuperficie tipo, glm::vec3 posCamara, glm
 		model = glm::scale(model, glm::vec3(escala));
 		model = glm::translate(model, PiesDelModelo(Portal_M));
 		float pulso = 0.6f + 0.4f * sinf(2.2f * tiempo);
-		glUniform3f(uniformEmision, 0.45f * pulso, 0.50f * pulso, 0.75f * pulso);   // la galaxia del portal brilla
+		const glm::vec3 acento = tipo == SUPERFICIE_ROCOSA ? glm::vec3(0.85f,0.13f,0.67f) : glm::vec3(0.45f,0.50f,0.75f);
+		glUniform3fv(uniformEmision, 1, glm::value_ptr(acento * pulso));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Portal_M.RenderModel();
 		glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
@@ -1226,13 +1281,13 @@ void Superficie::DibujarSuperficie(TipoSuperficie tipo, glm::vec3 posCamara, glm
 	{
 		if (triangulos > PRESUPUESTO_TRIANGULOS)
 			break;   // lo que falta está más lejos que todo lo ya dibujado
-		DibujarObjeto(m.objetos[visibles[i].second]);
+		DibujarObjeto(m.objetos[visibles[i].second], tipo == SUPERFICIE_ROCOSA ? pizarraTexture : sueloRocosoTexture);
 	}
 
 	// montañas: siempre (son pocas y están tan lejos que la niebla decide cuánto se ven)
 	for (size_t i = 0; i < m.objetos.size(); i++)
 		if (m.objetos[i].tipo == OBJ_MONTANA)
-			DibujarObjeto(m.objetos[i]);
+			DibujarObjeto(m.objetos[i], tipo == SUPERFICIE_ROCOSA ? pizarraTexture : sueloRocosoTexture);
 
 	glUniform3f(uniformEmision, 0.0f, 0.0f, 0.0f);
 }
@@ -1360,11 +1415,11 @@ AmbienteSuperficie Superficie::ObtenerAmbiente(TipoSuperficie tipo, float factor
 	}
 	else
 	{
-		// polvo rojizo del desierto; de noche se ve el cielo estrellado
-		a.colorNiebla = glm::vec3(0.72f, 0.38f, 0.24f) * luz;
+		// La bruma índigo separa las sierras; el brillo magenta queda en las fisuras.
+		a.colorNiebla = glm::vec3(0.22f, 0.19f, 0.36f) * luz;
 		a.densidadNiebla = 1.0f / 300.0f;
-		a.tinteCielo = glm::vec3(1.0f, 0.80f, 0.82f) * (0.55f + 0.45f * factorDia);
-		a.brumaHorizonte = glm::vec4(a.colorNiebla, 0.85f);
+		a.tinteCielo = glm::vec3(0.97f, 0.96f, 1.0f) * (0.48f + 0.52f * factorDia);
+		a.brumaHorizonte = glm::vec4(a.colorNiebla, 0.46f);
 	}
 	return a;
 }

@@ -68,6 +68,8 @@ Si falta upstream: `git push -u origin feat/b-mundo` (o tu rama). A coordina mer
 
 ## Recursos y publicación
 
+El planeta Vacío usa un cubemap propio y una textura mineral en `Textures/Vacio/`. Los siete PNG viajan en el paquete de recursos compartido por Drive y el empaquetador los incluye ya generados en el juego distribuido. El cubemap de Cupertin diurno sigue asignado a Shinobi.
+
 ### Candidato ejecutable Windows x64
 
 Desde un checkout limpio con los assets del proyecto, VS 2022/v143, su redistribuible x64 y Python 3, ejecuta `python scripts/Package-Release.py v0.2.0-rc.1`. El script compila Release y genera el ZIP y su SHA-256 en `artefactos/`. Para otra versión, cambia el nombre del candidato.

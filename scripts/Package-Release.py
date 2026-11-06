@@ -72,12 +72,13 @@ def runtime_files():
         path = f"Textures/{name}.png"
         files[path] = ROOT / path
     water = "Textures/aguaOceanoTexture.png"
+    files["Textures/Vacio/pizarra.png"] = ROOT / "Textures/Vacio/pizarra.png"
     if (ROOT / water).is_file():
         files[water] = ROOT / water
     for side in ("ft", "bk", "dn", "up", "rt", "lf"):
         for path in (f"Textures/spacenebulaskybox/nebula{side}.png",
                      f"Textures/Skybox/cupertin-lake_{side}.tga",
-                     f"Textures/Skybox/cupertin-lake-night_{side}.tga"):
+                     f"Textures/Vacio/cielo_{side}.png"):
             files[path] = ROOT / path
     for shader in ("hud", "shader_light", "skybox"):
         for ext in ("vert", "frag"):

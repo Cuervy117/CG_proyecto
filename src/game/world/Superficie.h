@@ -191,7 +191,7 @@ class Superficie
 public:
 	Superficie();
 	// Carga modelos y texturas y genera los dos mundos (con OpenGL ya iniciado)
-	void InicializarSuperficies();
+	bool InicializarSuperficies();
 	// Carga solo los NPC que pertenecen a la superficie solicitada. Se llama al entrar por primera vez.
 	void PrepararModelosSuperficie(TipoSuperficie tipo);
 
@@ -257,7 +257,8 @@ private:
 	// --- dibujo ---
 	glm::mat4 MatrizNPC(const NPC& n, float tiempo, glm::vec2& posicion);
 	bool Visible(glm::vec2 posicion, float radio, float distanciaMaxima, float& dist);
-	void DibujarObjeto(const Objeto& o);
+	void DibujarObjeto(const Objeto& o, Texture& texturaRoca);
+	void CrearFisuras(const Mundo& mundo);
 	float InicioCarrera(const Mundo& m);
 
 	Mundo mundos[2];
@@ -275,6 +276,8 @@ private:
 	float revelacionPaul;		// 0 = escondido detrás del portal, 1 = asomado
 	Texture sueloSelvaTexture;
 	Texture sueloRocosoTexture;
+	Texture pizarraTexture;
+	MeshModel fisuras;
 	Texture arbolTexture;
 	Texture plainTexture;
 	bool hayTexArbol;

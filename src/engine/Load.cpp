@@ -75,7 +75,7 @@ bool LoadSkybox()
 	for (size_t i = 0; i < 6; ++i) {
 		const std::string lado = lados[i];
 		cielos[static_cast<size_t>(Fondo::Espacio)][i] = "Textures/spacenebulaskybox/nebula" + lado + ".png";
-		cielos[static_cast<size_t>(Fondo::Roca)][i] = "Textures/Skybox/cupertin-lake-night_" + lado + ".tga";
+		cielos[static_cast<size_t>(Fondo::Roca)][i] = "Textures/Vacio/cielo_" + lado + ".png";
 		cielos[static_cast<size_t>(Fondo::Selva)][i] = "Textures/Skybox/cupertin-lake_" + lado + ".tga";
 	}
 	return skybox.Inicializar(cielos);

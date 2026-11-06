@@ -382,16 +382,19 @@ void AnimarCapsula(GLfloat dt)
 //   factorDia = (alturaSol + 0.25) / 1.25, limitado entre 0.08 y 1		qué tanto es de día
 // La dirección de la luz sigue al sol y el color pasa de blanco cálido (día) a azul (noche).
 // factorDia también decide cuándo se prenden las luminarias (factorDia < 0.45 = de noche).
-float ActualizarCicloDiaNoche()
+float ActualizarCicloDiaNoche(ZonaActiva zonaVista)
 {
 	float anguloSol = (dosPi / duracionCicloDiaNoche) * tiempoAnimacion;
 	float alturaSol = sinf(anguloSol);
 	float factorDia = glm::clamp((alturaSol + 0.25f) / 1.25f, 0.08f, 1.0f);
 
 	glm::vec3 dirLuz = glm::normalize(glm::vec3(cosf(anguloSol), -alturaSol, 0.35f));
+	const bool vacio = zonaVista == ZONA_PLANETA_ROCOSO;
+	const glm::vec3 noche = vacio ? glm::vec3(0.73f, 0.65f, 0.98f) : glm::vec3(1.0f, 0.35f, 0.65f);
+	const glm::vec3 luz = glm::mix(noche, glm::vec3(1.0f, 0.96f, 0.90f), factorDia);
 	mainLight = DirectionalLight(
-		1.0f, 0.96f * factorDia + 0.35f * (1.0f - factorDia), 0.90f * factorDia + 0.65f * (1.0f - factorDia),
-		0.12f + 0.28f * factorDia,
+		luz.r, luz.g, luz.b,
+		glm::mix(vacio ? 0.32f : 0.12f, 0.40f, factorDia),
 		0.15f + 0.75f * factorDia,
 		dirLuz.x, dirLuz.y, dirLuz.z);
 
@@ -685,7 +688,7 @@ int main(int argc, char** argv)
 	if (!LoadSkybox()) return 1;
 
 	// NUEVO: módulos del escenario (cada uno carga sus propios modelos y texturas)
-	superficie.InicializarSuperficies();	// selva y desierto de los planetas
+	if (!superficie.InicializarSuperficies()) return 1;
 	if (!espacio.InicializarEspacio(&oceano)) return 1;	// pista de carreras, cinturón de asteroides y base
 	if (!reloj.InicializarReloj()) return 1;				// reloj en pantalla
 	oceano.InicializarOceano();				// planeta océano (por fuera y por dentro)
@@ -947,7 +950,7 @@ int main(int argc, char** argv)
 			toffsetaguav = 0.0f;
 
 		// NUEVO: ciclo de día y noche (cambia la luz direccional)
-		float factorDia = ActualizarCicloDiaNoche();
+		float factorDia = ActualizarCicloDiaNoche(zonaVista);
 		bool esDeNoche = (factorDia < 0.45f);
 
 		// Clear the window
