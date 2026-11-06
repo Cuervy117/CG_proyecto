@@ -68,6 +68,20 @@ Si falta upstream: `git push -u origin feat/b-mundo` (o tu rama). A coordina mer
 
 ## Recursos y publicación
 
+### Candidato ejecutable Windows x64
+
+Desde un checkout limpio con los assets del proyecto, VS 2022/v143, su redistribuible x64 y Python 3, ejecuta `python scripts/Package-Release.py v0.2.0-rc.1`. El script compila Release y genera el ZIP y su SHA-256 en `artefactos/`. Para otra versión, cambia el nombre del candidato.
+
+En el equipo de prueba (Windows x64 con OpenGL 3.3), compara el hash del ZIP con su archivo `.sha256`, extrae todo y ejecuta desde la carpeta extraída:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Verify-Release.ps1
+.\Jugar.cmd --probar-release
+.\Jugar.cmd
+```
+
+La prueba automática dibuja las cuatro zonas y comprueba carrera, lanzamiento y hangar. Finaliza con código 0 si pasa. El manifiesto `release.json` identifica el commit y los archivos de esa distribución.
+
 David genera recursos con `scripts/Package-Dependencies.ps1 -Version <version-nueva>`; no sobreescribe versiones. Compartir ZIP/hash por Drive/USB y registrar aquí la ubicación acordada. No subir assets/DLLs/ZIPs a Git. El manifiesto identifica el paquete; al editar recursos se publica otra versión. Las ocho texturas críticas nuevas se validan con `manifest-project-assets.json` y `scripts/Verify-Project-Assets.ps1`; su carpeta fuente es [Textures en Drive](https://drive.google.com/drive/folders/1794f4lffbV-lYnVEKhLvxA8gr8vDi-iH).
 
 La preparación del 30-oct conserva el main remoto inicial y la base local por merge. La rama remota david no se modifica. main/develop/feat/* quedan preparadas localmente. Ver [publicación](docs/PREPARAR_PUSH.md).

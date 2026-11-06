@@ -659,8 +659,16 @@ void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmisio
 	glUniform3f(uColor, 1,1,1);
 }
 
-int main()
+int main(int argc, char** argv)
 {
+	const bool pruebaRelease = argc == 2 && strcmp(argv[1], "--probar-release") == 0;
+	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
+	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
+		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
+		{GLFW_KEY_F2, ZONA_ESPACIO}, {GLFW_KEY_F4, ZONA_PLANETA_SELVATICO},
+		{GLFW_KEY_1, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_TAB, ZONA_ESPACIO}};
+	const size_t totalPasos = sizeof(pasosRelease) / sizeof(pasosRelease[0]);
+	size_t pasoPrueba = 0;
 	if (!VerificarTexturasCriticas()) return 1;
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	if (mainWindow.Initialise()) return 1;
@@ -825,7 +833,9 @@ int main()
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
-		const auto& entrada = captura.update(deltaTime);
+		auto entrada = captura.update(deltaTime);
+		if (pruebaRelease && pasosRelease[pasoPrueba].tecla)
+			entrada.pressed[pasosRelease[pasoPrueba].tecla] = true;
 		const auto control = cgame::mapControls(entrada);
 		const glm::vec3 anterior = jugador.PosicionJugador();
 		const auto zonaAnterior = zonaActual;
@@ -1380,7 +1390,21 @@ int main()
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
+		if (pruebaRelease) {
+			const int tecla = pasosRelease[pasoPrueba].tecla;
+			if (zonaVista != pasosRelease[pasoPrueba].zonaVista ||
+				(tecla == GLFW_KEY_F2 && (!jugador.JugadorEnNave() || director.mode() != CameraMode::Carrera)) ||
+				(tecla == GLFW_KEY_1 && !espacio.CoheteEncendido(COHETE_SHINOBI)) ||
+				(tecla == GLFW_KEY_TAB && (!enR4 || observado != Hangar))) {
+				fprintf(stderr, "[Release] Fallo en el paso %zu (tecla %d).\n", pasoPrueba, tecla);
+				return 2;
+			}
+			if (++pasoPrueba == totalPasos) {
+				puts("[Release] OK: espacio, roca, selva, oceano, R2, lanzamiento y hangar.");
+				break;
+			}
+		}
 	}
 
-	return 0;
+	return pruebaRelease && pasoPrueba != totalPasos ? 2 : 0;
 }
