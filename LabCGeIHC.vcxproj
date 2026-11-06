@@ -93,6 +93,8 @@
   <ItemGroup Label="C-avatar">
     <ClInclude Include="src\game\avatar\Avatar.h" />
     <ClCompile Include="src\game\avatar\Avatar.cpp" />
+    <ClInclude Include="src\game\avatar\Tars.h" />
+    <ClCompile Include="src\game\avatar\Tars.cpp" />
     <ClInclude Include="src\ui\Hud.h" />
     <ClCompile Include="src\ui\Hud.cpp" />
 

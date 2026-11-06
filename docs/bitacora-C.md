@@ -94,6 +94,8 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C1 / cámaras de prueba | 2026-11-02 | Hora no anotada | Probé WASD y las vistas de cámara de prueba | Probé WASD para caminar y detener a Rek’Sai. También probé F1–F4, que en esa versión solo cambiaban las vistas de cámara de la demo; eso no activa los modos reales del proyecto. | Demo local `x64/Release/LabCGeIHC.local.exe`; prueba hecha antes de quitar esa asignación | 5 min, tiempo que trabajé según mi registro | WASD comprobado; F1–F4 reales siguen pendientes para las experiencias |
 | H-C6 parcial | 2026-11-02 | Hora no anotada | HUD de prueba en OpenGL | Agregué un panel que muestra la cámara de seguimiento, “DEMO LOCAL” y la acción: “WASD MOVER” o “CAMINANDO”. Lo abrí en la demo. Aún no muestra el modo y la ubicación reales del proyecto; falta conectarlo al mundo común. | `src/ui/Hud.h`, `src/ui/Hud.cpp`, `P09-2-424104230.cpp`; `LabCGeIHC.vcxproj` | Sin registrar por ahora; falta que confirme el tiempo | Prototipo visual local; H-C6 todavía no está cerrado |
 
+| Extra C | 2026-11-06 | Hora no anotada | TARS como NPC del planeta océano | Tomé como referencia el modelo público de TARS. Corregí la forma en OpenGL para que sean cuatro paneles largos casi verticales, juntos y con poca inclinación, placas oscuras y acabado metálico; la versión anterior quedaba como vigas cruzadas y no se parecía. Ajusté la caminata para que los dos paneles exteriores avancen juntos y los dos interiores hagan el paso contrario, alternándose. Solo aparece en el planeta océano; Rek’Sai sigue siendo el personaje controlado. Compilé y abrí la nueva demo local. | `src/game/avatar/Tars.cpp/.h`; `P09-424104230.cpp`; `LabCGeIHC.vcxproj`; referencia: [TARS-AI Community](https://github.com/TARS-AI-Community/TARS-AI) | Pendiente de que anote cuánto me tomó | Compila y demo abierta; falta tu revisión visual |
+
 ### Estado de los hitos C al 2-nov
 
 | Tarea | Cómo va | Qué falta |
@@ -156,7 +158,7 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 | 2026-11-03 | QA y freeze | | — |
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
-| 2026-11-06 | Incidencias | | — |
+| 2026-11-06 | Incidencias y personaje extra en el planeta océano | Corregí la forma de TARS: ahora son cuatro paneles altos juntos, como en la foto de referencia, con placas oscuras y acabado metálico. Ajusté la caminata para que los dos paneles exteriores avancen juntos y los dos del centro hagan el paso contrario, alternándose. | Pendiente de anotar |
 | 2026-11-07 | Acuse de entrega | | — |
 
 **Ojo:** la hora que aparece en la sección 3 es la hora del reloj asociada a una anotación; no es la duración del trabajo. Aquí, en “Tiempo que trabajé”, van las horas reales. “Sin registrar” quiere decir que no tenemos el dato; no quiere decir que hayan sido cero horas. El 17-oct sigue sin tiempo anotado.
@@ -174,6 +176,7 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 - [ ] Integrar y comprobar los controles y las cámaras en el programa/mapa común.
 - [ ] Poner Rek’Sai en P1/mapa principal, hacer que la cámara la siga y guardar una captura de la prueba común.
 - [ ] Animar la criatura tipo Kurama de N5 en Shinobi; B debe dejar primero el punto donde va colocada.
+- [ ] Abrir y revisar visualmente el NPC inspirado en TARS dentro del planeta océano; es un extra y no reemplaza los hitos del rol C.
 - [ ] Conectar F1 planeta, F2 carrera, F3 vuelo y F4 observación a sus experiencias reales, coordinándolo con las ubicaciones/objetos que entregue B.
 - [ ] Hacer que E permita entrar/salir según el mundo común y conectar el avatar con esos cambios.
 - [ ] Mostrar en el programa común el modo, el lugar y la acción disponibles; el HUD actual solo es una prueba local.

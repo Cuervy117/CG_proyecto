@@ -104,6 +104,9 @@
     <ClInclude Include="src\ui\Hud.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\avatar\Tars.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="P09-424104230.cpp" />
@@ -188,6 +191,9 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\Hud.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\avatar\Tars.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
