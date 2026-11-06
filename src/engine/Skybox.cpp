@@ -6,7 +6,6 @@ Skybox::Skybox()
 {
 	skyMesh = nullptr;
 	skyShader = nullptr;
-	textureId = 0;
 	uniformProjection = 0;
 	uniformView = 0;
 	uniformTinte = 0;
@@ -17,7 +16,7 @@ Skybox::Skybox()
 	cieloSolido = glm::vec4(0.0f);
 }
 
-Skybox::Skybox(std::vector<std::string> faceLocations)
+bool Skybox::Inicializar(const std::array<CarasCielo, 3>& cielos)
 {
 	skyShader = new Shader();
 	skyShader->CreateFromFiles("shaders/skybox.vert", "shaders/skybox.frag");
@@ -31,28 +30,35 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	brumaHorizonte = glm::vec4(0.0f);
 	cieloSolido = glm::vec4(0.0f);
 
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
-	int width, height, bitDepth;
-	for (size_t i = 0; i < 6; i++)
+	// Cada ubicación conserva su cubemap en GPU. Cambiar de zona sólo cambia el enlace.
+	glGenTextures(static_cast<GLsizei>(texturas.size()), texturas.data());
+	stbi_set_flip_vertically_on_load(true);
+	for (size_t zona = 0; zona < cielos.size(); ++zona)
 	{
-
-		unsigned char *texData = stbi_load(faceLocations[i].c_str(), &width, &height, &bitDepth, 0); //el tipo unsigned char es para un array de bytes de la imagen, obtener datos de la imagen 
-		if (!texData)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texturas[zona]);
+		int lado = 0;
+		for (size_t i = 0; i < cielos[zona].size(); ++i)
 		{
-			printf("No se encontro : %s\n", faceLocations[i].c_str());
-			return;
+			int ancho = 0, alto = 0;
+			const std::string& ruta = cielos[zona][i];
+			auto* pixels = stbi_load(ruta.c_str(), &ancho, &alto, nullptr, STBI_rgb_alpha);
+			if (!pixels || ancho != alto || (i && ancho != lado))
+			{
+				fprintf(stderr, "Cara ausente o incompatible en el cubemap: %s\n", ruta.c_str());
+				stbi_image_free(pixels);
+				return false;
+			}
+			lado = ancho;
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, GL_RGBA8,
+				ancho, alto, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+			stbi_image_free(pixels);
 		}
-		//para cambiar el origen a la esquina inferior izquierda como necesitamos
-		//stbi_set_flip_vertically_on_load(true);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X +i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData); //SIN CANAL ALPHA A ENOS QUE QUERAMOS AGREGAR EFECTO DE PARALLAX
-		stbi_image_free(texData); //para liberar la información de la imagen
+		for (auto eje : {GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_TEXTURE_WRAP_R})
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, eje, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
 	//Creando el Mesh del skybox
 	unsigned int skyboxIndices[] = {
@@ -88,10 +94,11 @@ Skybox::Skybox(std::vector<std::string> faceLocations)
 	};
 	skyMesh = new MeshModel();
 	skyMesh->CreateMeshModel(skyboxVertices, skyboxIndices, 64, 36);
+	return true;
 
 }
 
-void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+void Skybox::DrawSkybox(Fondo fondo, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	viewMatrix = glm::mat4(glm::mat3(viewMatrix));
 
@@ -104,7 +111,7 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	glUniform4f(uniformBruma, brumaHorizonte.x, brumaHorizonte.y, brumaHorizonte.z, brumaHorizonte.w);
 	glUniform4f(uniformCieloSolido, cieloSolido.x, cieloSolido.y, cieloSolido.z, cieloSolido.w);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texturas[static_cast<size_t>(fondo)]);
 	//skyShader->Validate();
 	skyMesh->RenderMeshModel();
 	glDepthMask(true);
@@ -125,4 +132,7 @@ void Skybox::SetCieloSolido(glm::vec3 cenit, float cantidad)
 
 Skybox::~Skybox()
 {
+	if (texturas[0]) glDeleteTextures(static_cast<GLsizei>(texturas.size()), texturas.data());
+	delete skyMesh;
+	delete skyShader;
 }

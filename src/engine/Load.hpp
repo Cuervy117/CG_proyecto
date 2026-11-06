@@ -34,4 +34,4 @@ void LoadModels();		// modelos necesarios para la zona inicial (espacio)
 void LoadPlanetaRocoso();	// carga diferida al entrar al planeta rocoso
 void LoadPlanetaSelvatico();	// carga diferida al entrar al planeta selvático
 void LoadCapsulaModels();	// carga diferida compartida por las superficies
-void LoadSkybox();		// skybox del espacio (nebulosa)
+bool LoadSkybox();

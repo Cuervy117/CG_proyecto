@@ -671,10 +671,10 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
 
-	// texturas, modelos y skybox (Load.cpp). El skybox va al final (ver el comentario en LoadSkybox)
+	// Texturas, modelos y cubemaps del escenario.
 	LoadTextures();
 	LoadModels();
-	LoadSkybox();
+	if (!LoadSkybox()) return 1;
 
 	// NUEVO: módulos del escenario (cada uno carga sus propios modelos y texturas)
 	superficie.InicializarSuperficies();	// selva y desierto de los planetas
@@ -935,8 +935,7 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// NUEVO: el skybox "cambia" según el lugar: en el espacio se ve igual que en la práctica y en
-		// cada planeta se tiñe y se le pone bruma en el horizonte (Skybox::SetAmbiente)
+		// R4 puede dibujar una zona distinta de la que ocupa el jugador.
 		AmbienteSuperficie ambiente;
 		ambiente.colorNiebla = glm::vec3(0.0f);
 		ambiente.densidadNiebla = 0.0f;
@@ -985,7 +984,10 @@ int main()
 		}
 		const glm::mat4 inversa = glm::inverse(vista);
 		const glm::vec3 ojo(inversa[3]), mirada(-glm::vec3(inversa[2]));
-		skybox.DrawSkybox(vista, projection);
+		Fondo fondo = Fondo::Espacio;
+		if (zonaVista == ZONA_PLANETA_ROCOSO) fondo = Fondo::Roca;
+		if (zonaVista == ZONA_PLANETA_SELVATICO) fondo = Fondo::Selva;
+		skybox.DrawSkybox(fondo, vista, projection);
 
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();

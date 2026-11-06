@@ -67,18 +67,16 @@ void LoadCapsulaModels()
 	CapsulaPuerta_M.LoadModel("Models/capsula/capsulaPuerta.obj");
 }
 
-void LoadSkybox()
+bool LoadSkybox()
 {
-	// NUEVO: el skybox se carga DESPUÉS de las texturas. Skybox.cpp no llama a
-	// stbi_set_flip_vertically_on_load y usa el valor que dejó Texture::LoadTextureA (true);
-	// si se cargara antes, las caras saldrían volteadas.
-	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/spacenebulaskybox/nebulaft.png");
-	skyboxFaces.push_back("Textures/spacenebulaskybox/nebulabk.png");
-	skyboxFaces.push_back("Textures/spacenebulaskybox/nebuladn.png");
-	skyboxFaces.push_back("Textures/spacenebulaskybox/nebulaup.png");
-	skyboxFaces.push_back("Textures/spacenebulaskybox/nebulart.png");
-	skyboxFaces.push_back("Textures/spacenebulaskybox/nebulalf.png");
-
-	skybox = Skybox(skyboxFaces);
+	// Orden de las seis caras para la convención TexCoords = -pos del shader.
+	const char* lados[] = { "ft", "bk", "dn", "up", "rt", "lf" };
+	std::array<CarasCielo, 3> cielos;
+	for (size_t i = 0; i < 6; ++i) {
+		const std::string lado = lados[i];
+		cielos[static_cast<size_t>(Fondo::Espacio)][i] = "Textures/spacenebulaskybox/nebula" + lado + ".png";
+		cielos[static_cast<size_t>(Fondo::Roca)][i] = "Textures/Skybox/cupertin-lake-night_" + lado + ".tga";
+		cielos[static_cast<size_t>(Fondo::Selva)][i] = "Textures/Skybox/cupertin-lake_" + lado + ".tga";
+	}
+	return skybox.Inicializar(cielos);
 }
