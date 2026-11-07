@@ -20,7 +20,7 @@
 \vspace{1.3cm}\rule{\linewidth}{2pt}\vspace{0.5cm}
 {\large David Díaz Antúnez\par Jonhatan Alexis Martínez Ojeda\par Venancio Miguel Tapia Verástegui\par}
 \vfill{\large Semestre 2027-1 \textbar\ 7 de noviembre de 2026\par}
-{\small Estado documentado: candidato Release \texttt{v0.4.0-rc.1}, commit \texttt{7ece353}.\par}
+{\small Estado documentado: candidato Release \texttt{v0.4.0-rc.2}, commit \texttt{7ece353}.\par}
 \end{titlepage}\tableofcontents\newpage
 
 \section{Objetivo, alcance y arquitectura}
@@ -136,7 +136,7 @@ glm::vec3 satTan = TangenteSatelite(estadoSatelite, thetaSatelite);
 \end{lstlisting}
 
 \section{Compilación, distribución y validación}
-La solución \ruta{LabCGeIHC.sln} compila Release x64 con Visual Studio y el toolset v143. \ruta{scripts/Build.ps1} automatiza el build. \ruta{scripts/Package-Release.py} arma un ZIP con EXE, bibliotecas, shaders, modelos y texturas; incluye \ruta{release.json} con versión, commit y hashes por archivo. \ruta{Verify-Release.ps1} verifica el contenido distribuido y \ruta{Jugar.cmd --probar-release} recorre espacio, roca, selva, océano, carrera, lanzamiento y hangar. La bitácora de David registra compilación y prueba locales para \texttt{v0.4.0-rc.1}; la comprobación en otra PC debe registrarse de manera independiente antes de la entrega.
+La solución \ruta{LabCGeIHC.sln} compila Release x64 con Visual Studio y el toolset v143. \ruta{scripts/Build.ps1} automatiza el build. \ruta{scripts/Package-Release.py} arma un ZIP con EXE, bibliotecas, shaders, modelos y texturas; incluye \ruta{release.json} con versión, commit y hashes por archivo. \ruta{Verify-Release.ps1} verifica el contenido distribuido y \ruta{Jugar.cmd --probar-release} recorre espacio, roca, selva, océano, carrera, lanzamiento y hangar. La bitácora de David registra compilación y prueba locales para \texttt{v0.4.0-rc.2}; la comprobación en otra PC debe registrarse de manera independiente antes de la entrega.
 
 \section{Conclusiones}
 \textbf{David Díaz Antúnez.} La integración de motor, cámaras y Release muestra la utilidad de separar rigs y probar los cambios en un ejecutable común. La carga diferida por zona redujo el tiempo de entrada observado; el registro de QA permite distinguir una compilación correcta de una experiencia visual comprobada.
