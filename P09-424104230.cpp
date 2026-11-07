@@ -31,6 +31,7 @@ Teclas:
 #include "Chase.h"
 #include "Scene.h"
 #include "src/game/avatar/Avatar.h"
+#include "src/game/avatar/Tars.h"
 #include "src/ui/Hud.h"
 bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include <stdio.h>
@@ -819,6 +820,7 @@ int main(int argc, char** argv)
 	float yawInicio = jugador.ColocarJugadorEnBase();
 	Scene escenaAvatar;
 	cgame::Avatar avatar;
+	cgame::Tars tars;
 	for (const char* ruta : {"Models/reksai/reksai.obj", "Models/reksai.obj"}) {
 		if (std::ifstream(ruta).good() && avatar.attach(escenaAvatar.root, ruta, "Textures/reksai.png",
 			jugador.PosicionJugador(), 2.2f)) {
@@ -830,12 +832,17 @@ int main(int argc, char** argv)
 		fprintf(stderr, "[ERROR] No se pudo inicializar Rek'Sai desde Models/reksai/ ni Models/.\n");
 		return 1;
 	}
+	// TARS es un NPC extra del planeta océano; comparte la escena con Rek'Sai,
+	// pero solo se muestra cuando entramos a esa zona.
+	escenaAvatar.setFallbackTexture(&plainTexture);
+	if (!tars.attach(escenaAvatar.root, jugador.PosicionJugador(), 1.0f)) return 1;
 	SceneNode objetivo("objetivo");
 	escenaAvatar.updateWorld();
 	if (!VerificarEscenaIntegrada(*avatar.root(), objetivo)) return 1;
 	CameraDirector director;
 	director.setMode(CameraMode::Planeta);
 	ParadaR4 observado = Lanzamiento;
+	float tiempoPatrullaTars = 0.0f;
 	cgame::Hud hud;
 	hud.initialize();
 	ZonaActiva ultimoPlaneta = ZONA_PLANETA_ROCOSO;
@@ -1110,6 +1117,17 @@ int main(int argc, char** argv)
 		avatar.setPosition(pos);
 		avatar.update(deltaTime, recorrido > 0.0001f ? paso / recorrido : glm::vec3(0), recorrido > 0.0001f ? 1.0f : 0.0f);
 		avatar.root()->visible = !jugador.JugadorEnNave();
+		// Patrulla suavemente sobre el mar plano, antes de la ola gigante.
+		tiempoPatrullaTars += deltaTime;
+		const float recorridoTars = tiempoPatrullaTars * 0.35f;
+		const float xTars = 2.2f + std::sin(recorridoTars) * 1.1f;
+		const float direccionTars = std::cos(recorridoTars);
+		glm::vec3 posicionTars, tangenteTars, normalTars;
+		oceano.PuntoOla(xTars, -526.0f, 0.0f, posicionTars, tangenteTars, normalTars);
+		tars.setPosition(posicionTars);
+		tars.update(deltaTime, glm::vec3(direccionTars, 0.0f, 0.0f), 1.0f);
+		tars.root()->rotationEuler.y = 3.14159265f;
+		tars.root()->visible = zonaActual == ZONA_PLANETA_OCEANO;
 		escenaAvatar.updateWorld();
 		objetivo.position = pos;
 		objetivo.rotationEuler.y = jugador.Rumbo();

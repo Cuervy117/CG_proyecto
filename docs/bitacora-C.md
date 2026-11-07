@@ -93,6 +93,7 @@ En esta tabla, **Hora de referencia** es la hora del reloj que anoté para ese a
 | H-C0 / H-C2 | 2026-11-02 | Hora no anotada | Abrí y revisé la demo en mi PC | Abrí la versión nueva de la demo OpenGL y confirmé que Rek’Sai se ve bien y completa. La compilé localmente con v145 porque mi PC no tiene el v143 que pide el proyecto. | `x64/Release/LabCGeIHC.local.exe` local; commit [`5ae68e0`](https://github.com/Cuervy117/CG_proyecto/commit/5ae68e0) | Sin registrar por ahora | Vista comprobada; falta validar con v143 e integrar al programa común |
 | H-C1 / cámaras de prueba | 2026-11-02 | Hora no anotada | Probé WASD y las vistas de cámara de prueba | Probé WASD para caminar y detener a Rek’Sai. También probé F1–F4, que en esa versión solo cambiaban las vistas de cámara de la demo; eso no activa los modos reales del proyecto. | Demo local `x64/Release/LabCGeIHC.local.exe`; prueba hecha antes de quitar esa asignación | 5 min, tiempo que trabajé según mi registro | WASD comprobado; F1–F4 reales siguen pendientes para las experiencias |
 | H-C6 parcial | 2026-11-02 | Hora no anotada | HUD de prueba en OpenGL | Agregué un panel que muestra la cámara de seguimiento, “DEMO LOCAL” y la acción: “WASD MOVER” o “CAMINANDO”. Lo abrí en la demo. Aún no muestra el modo y la ubicación reales del proyecto; falta conectarlo al mundo común. | `src/ui/Hud.h`, `src/ui/Hud.cpp`, `P09-2-424104230.cpp`; `LabCGeIHC.vcxproj` | Sin registrar por ahora; falta que confirme el tiempo | Prototipo visual local; H-C6 todavía no está cerrado |
+| Extra C | 2026-11-07 | Hora no anotada | TARS como NPC en el planeta océano | Recuperé el TARS articulado que había preparado y lo conecté a la escena principal. Patrulla sobre el mar plano cuando se entra al océano; sus paneles exteriores se mueven juntos y alternan con los dos del centro. | `src/game/avatar/Tars.cpp/.h`; `P09-424104230.cpp`; `LabCGeIHC.vcxproj`; `LabCGeIHC.vcxproj.filters` | Sin registrar; falta que anote cuánto me tomó | Compilé Release x64; falta revisar visualmente su aparición en el océano |
 
 ### Estado de los hitos C al 2-nov
 
@@ -157,7 +158,7 @@ Preparé este material en mi computadora el 17-oct, antes de que el reparto vige
 | 2026-11-04 | Documentación de mi módulo | | — |
 | 2026-11-05 | Videos y entrega preparada | | — |
 | 2026-11-06 | Incidencias | | — |
-| 2026-11-07 | Acuse de entrega | | — |
+| 2026-11-07 | Integrar TARS y acuse de entrega | Conecté el NPC TARS a la escena principal para que aparezca y patrulle sobre el mar al entrar al planeta océano. Compilé Release x64; falta revisar visualmente esta versión en el ejecutable del equipo. | Sin registrar; falta que anote cuánto me tomó |
 
 **Ojo:** la hora que aparece en la sección 3 es la hora del reloj asociada a una anotación; no es la duración del trabajo. Aquí, en “Tiempo que trabajé”, van las horas reales. “Sin registrar” quiere decir que no tenemos el dato; no quiere decir que hayan sido cero horas. El 17-oct sigue sin tiempo anotado.
 
