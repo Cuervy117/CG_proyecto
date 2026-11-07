@@ -4,7 +4,7 @@ Juego de exploración y carrera espacial en Windows x64. La versión integrada e
 
 ## Jugar sin compilar
 
-Pide a David `CGICH-v0.4.0-rc.2-win64.zip` y `CGICH-v0.4.0-rc.2-win64.zip.sha256`. El ZIP probado corresponde al commit `ef80c32` y su SHA-256 es `5a6d8bd9c0034b992488968de4c30f59e41cadd3c50165beeaddb15ca3e62ee1`. No está almacenado en GitHub. Requiere Windows x64 y un controlador compatible con OpenGL 3.3.
+Obtener `CGICH-v0.4.0-rc.2-win64.zip` y `CGICH-v0.4.0-rc.2-win64.zip.sha256`. El ZIP probado corresponde al commit `ef80c32` y su SHA-256 es `5a6d8bd9c0034b992488968de4c30f59e41cadd3c50165beeaddb15ca3e62ee1`. No está almacenado en GitHub. Requiere Windows x64 y un controlador compatible con OpenGL 3.3.
 
 1. Antes de extraer, puedes comprobar el ZIP desde la carpeta que lo contiene con `Get-FileHash .\CGICH-v0.4.0-rc.2-win64.zip -Algorithm SHA256` y comparar el resultado con el hash anterior.
 2. Extrae el ZIP completo en una carpeta propia. Conserva `Models/`, `Textures/`, `shaders/`, las DLL y el EXE juntos.
