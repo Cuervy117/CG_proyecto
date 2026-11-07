@@ -705,6 +705,9 @@ void Superficie::GenerarDesierto(Mundo& m)
 	m.yawInicio = -90.0f;
 	m.claros.push_back({ glm::vec2(0.0f), RADIO_CLARO });
 	m.obstaculos.push_back({ glm::vec2(m.posCapsula.x, m.posCapsula.z), 2.6f });
+	// Claro y colisión de la plataforma del cohete animado de Jona.
+	m.claros.push_back({ glm::vec2(22.0f,14.0f), 7.0f });
+	m.obstaculos.push_back({ glm::vec2(22.0f,14.0f), 3.0f });
 
 	// --- NPCs: cerca uno del otro, alternando lado, sin pisar el camino ---
 	//          modelo              animación       s     lado  altura radio  a     b     h     omega alturaBase fase

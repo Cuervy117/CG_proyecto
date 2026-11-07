@@ -15,22 +15,23 @@ void LoadTextures()
 
 void LoadModels()
 {
-	// nave rival de la carrera
+	// Modelos independientes para los dos rivales de la carrera
 	Nave_M = Model();
-	Nave_M.LoadModel("Models/Fighter_03_Obj/Fighter_03.obj");
+	Nave_M.LoadModel("Models/X_wing_obj.obj");
+	FreezerStation_M.LoadModel("Models/freezer_station.obj");
+	Ufo_M = Model();
+	Ufo_M.LoadModel("Models/UFO.obj");
 
 	// planeta estilizado: solo se usa si no se pudo cargar planetaRoca.obj
 	Planeta_M = Model();
 	Planeta_M.LoadModel("Models/asteroide/Stylized_Planets.obj");
 
-	// satélite jerárquico: cada pieza es un modelo aparte para poder moverla desde su unión
-	SateliteBase_M = Model();
+	FighterHangar_M.LoadModel("Models/Fighter_02.obj");
+	Luna_M.LoadModel("Models/Moon.obj");
+	PlanetaReksai_M.LoadModel("Models/planet_reksai.obj");
 	SateliteBase_M.LoadModel("Models/satelite/satelite_base.fbx");
-	SatelitePanelDer_M = Model();
 	SatelitePanelDer_M.LoadModel("Models/satelite/satelite_panel_der.fbx");
-	SatelitePanelIzq_M = Model();
 	SatelitePanelIzq_M.LoadModel("Models/satelite/satelite_panel_izq.fbx");
-	SateliteAspa_M = Model();
 	SateliteAspa_M.LoadModel("Models/satelite/satelite_aspa_g.fbx");
 
 	printf("[OK] Modelos iniciales del espacio cargados; planetas y capsula quedan bajo demanda.\n");

@@ -49,3 +49,7 @@ reksai_referencia.jpg
 /manifest-dependencies.json
 /CAPTURAS_P09.md
 /P09_ANIMACION_BASICA.md
+
+# Archivos temporales de validación
+tmp/
+__pycache__/

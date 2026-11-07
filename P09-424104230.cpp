@@ -69,6 +69,8 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 //creación de mallas (Create.cpp) y carga de texturas, modelos y skybox (Load.cpp)
 #include "Create.hpp"
 #include "Load.hpp"
+#include "src/game/anim/CoheteKeyframes.h"
+CoheteKeyframes coheteJona;
 
 // NUEVO: módulos del escenario (cada .h explica qué hace y por qué existe)
 #include "Superficie.h"		// superficie de los planetas rocoso y selvático
@@ -93,6 +95,11 @@ Texture plainTexture;
 Texture llamaTexture;
 
 Model Nave_M;
+Model Ufo_M;
+Model FreezerStation_M;
+Model FighterHangar_M;
+Model PlanetaReksai_M;
+Model Luna_M;
 Model Planeta_M;
 Model PlanetaRocoso_M;
 Model PlanetaSelvatico_M;
@@ -183,7 +190,7 @@ float atmosferaRocoso = 22.0f;
 glm::vec3 posPlanetaSelvatico = glm::vec3(120.0f, 10.0f, 90.0f);
 float radioPlanetaSelvatico = 16.0f;
 float atmosferaSelvatico = 24.0f;
-// Luna visible del sistema; usa el planeta estilizado como malla y un tinte gris.
+// Luna visible del sistema con su modelo y mapa procedural de crateres.
 glm::vec3 posLuna = glm::vec3(48.0f, 36.0f, -82.0f);
 float radioLuna = 5.0f;
 float alturaCamaraSuperficie = 3.5f;
@@ -268,7 +275,7 @@ void PrepararRecursosSuperficie(ZonaActiva destino)
 	LoadCapsulaModels();
 	CalcularPuntosCapsula();
 	if (tipo == SUPERFICIE_SELVATICA) LoadPlanetaSelvatico();
-	else LoadPlanetaRocoso();
+	else { LoadPlanetaRocoso(); coheteJona.Cargar(); }
 	superficie.PrepararModelosSuperficie(tipo);
 
 	const bool planetaCargado = (tipo == SUPERFICIE_SELVATICA)
@@ -444,6 +451,19 @@ void CambiarModoCamara()
 }
 
 // Nave rival dentro de un planeta o del océano (en el espacio se dibuja con sus llamas y luces)
+glm::mat4 TransformarModeloRival(glm::mat4 model, RivalCarrera rival)
+{
+	Model& nave = rival == RivalCarrera::Primero ? Nave_M : Ufo_M;
+	const float largo = rival == RivalCarrera::Primero ? 9.0f : 7.0f;
+	model = glm::scale(model, glm::vec3(largo / fmaxf(nave.getTamano().z, 0.001f)));
+	// El morro del X-Wing apunta a -Z; la trayectoria usa +Z.
+	if (rival == RivalCarrera::Primero)
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0, 1, 0));
+	glm::vec3 centro = nave.getCentro();
+	centro.y -= nave.getTamano().y * 0.5f;
+	return glm::translate(model, -centro);
+}
+
 void DibujarRivalEn(RivalCarrera rival, LugarJugador lugar, GLuint uniformModel, GLuint uniformColor,
 	GLuint uniformSpecularIntensity, GLuint uniformShininess)
 {
@@ -453,13 +473,13 @@ void DibujarRivalEn(RivalCarrera rival, LugarJugador lugar, GLuint uniformModel,
 	if (lugarRival != lugar)
 		return;
 	glm::mat4 model(1.0);
-	model = MatrizOrientacion(pos, adelante, arriba);
+	model = TransformarModeloRival(MatrizOrientacion(pos, adelante, arriba), rival);
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	const glm::vec3 tinte = rival == RivalCarrera::Segundo ? glm::vec3(1.0f, 0.48f, 0.15f) : glm::vec3(1);
+	const glm::vec3 tinte(1.0f);
 	glUniform3fv(uniformColor, 1, glm::value_ptr(tinte));
 	plainTexture.UseTexture();
 	Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-	Nave_M.RenderModel();
+	(rival == RivalCarrera::Primero ? Nave_M : Ufo_M).RenderModel();
 	glUniform3f(uniformColor, 1, 1, 1);
 }
 
@@ -633,6 +653,80 @@ glm::vec3 CentroObservado(ParadaR4 parada)
 	}
 }
 
+// Una salida por pulsación: solo Disponible admite la tecla 4.
+enum class EstadoFighter { Disponible, EsperandoSalida, Saliendo, Paseo, Regresando, EsperandoEntrada, Aterrizando };
+EstadoFighter estadoFighter = EstadoFighter::Disponible;
+glm::vec3 posicionFighter(0, 1.2f, 0), frenteFighter(0, 0, 1);
+enum class EstadoPuertaHangar { Cerrada, Abriendo, Abierta, Cerrando };
+EstadoPuertaHangar estadoPuertaHangar = EstadoPuertaHangar::Cerrada;
+float aperturaPuertaHangar = 0.0f;
+void OrdenarPuertaHangar(bool abrir)
+{
+	if (abrir && estadoPuertaHangar != EstadoPuertaHangar::Abierta)
+		estadoPuertaHangar = EstadoPuertaHangar::Abriendo;
+	else if (!abrir && estadoPuertaHangar != EstadoPuertaHangar::Cerrada)
+		estadoPuertaHangar = EstadoPuertaHangar::Cerrando;
+}
+void ActualizarPuertaHangar(float dt)
+{
+	switch (estadoPuertaHangar) {
+	case EstadoPuertaHangar::Abriendo:
+		aperturaPuertaHangar = fminf(1.0f, aperturaPuertaHangar + dt / 2.0f);
+		if (aperturaPuertaHangar >= 1.0f) estadoPuertaHangar = EstadoPuertaHangar::Abierta;
+		break;
+	case EstadoPuertaHangar::Cerrando:
+		aperturaPuertaHangar = fmaxf(0.0f, aperturaPuertaHangar - dt / 2.0f);
+		if (aperturaPuertaHangar <= 0.0f) estadoPuertaHangar = EstadoPuertaHangar::Cerrada;
+		break;
+	default: break;
+	}
+}
+void ActualizarFighter(float dt, bool pulsado, bool puertaManual)
+{
+	dt = fmaxf(dt, 0.0f);
+	// La tecla 5 demuestra la puerta sola; no interfiere con un vuelo en curso.
+	if (puertaManual && estadoFighter == EstadoFighter::Disponible)
+		OrdenarPuertaHangar(estadoPuertaHangar == EstadoPuertaHangar::Cerrada ||
+			estadoPuertaHangar == EstadoPuertaHangar::Cerrando);
+	ActualizarPuertaHangar(dt);
+	if (!FighterHangar_M.estaCargado()) return;
+	glm::vec3 destino;
+	switch (estadoFighter) {
+	case EstadoFighter::Disponible:
+		if (pulsado) {
+			OrdenarPuertaHangar(true);
+			estadoFighter = EstadoFighter::EsperandoSalida;
+		}
+		return;
+	case EstadoFighter::EsperandoSalida:
+		if (estadoPuertaHangar == EstadoPuertaHangar::Abierta) estadoFighter = EstadoFighter::Saliendo;
+		return;
+	case EstadoFighter::EsperandoEntrada:
+		if (estadoPuertaHangar == EstadoPuertaHangar::Abierta) estadoFighter = EstadoFighter::Aterrizando;
+		return;
+	case EstadoFighter::Saliendo: destino = glm::vec3(0, 1.2f, 32); break;
+	case EstadoFighter::Paseo: destino = glm::vec3(65, 22, 65); break;
+	case EstadoFighter::Regresando: destino = glm::vec3(0, 1.2f, 32); break;
+	case EstadoFighter::Aterrizando: destino = glm::vec3(0, 1.2f, 0); break;
+	}
+	glm::vec3 delta = destino - posicionFighter;
+	float distancia = glm::length(delta);
+	if (distancia > 0.001f) frenteFighter = delta / distancia;
+	float paso = 12.0f * fmaxf(dt, 0.0f);
+	if (distancia > paso) { posicionFighter += frenteFighter * paso; return; }
+	posicionFighter = destino;
+	switch (estadoFighter) {
+	case EstadoFighter::Saliendo: OrdenarPuertaHangar(false); estadoFighter = EstadoFighter::Paseo; break;
+	case EstadoFighter::Paseo: estadoFighter = EstadoFighter::Regresando; break;
+	case EstadoFighter::Regresando: OrdenarPuertaHangar(true); estadoFighter = EstadoFighter::EsperandoEntrada; break;
+	case EstadoFighter::Aterrizando:
+		OrdenarPuertaHangar(false);
+		estadoFighter = EstadoFighter::Disponible;
+		frenteFighter = glm::vec3(0, 0, 1); break;
+	default: break;
+	}
+}
+
 void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmision,
 	GLuint uEspecular, GLuint uBrillo)
 {
@@ -654,12 +748,36 @@ void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmisio
 		pieza(false, {lado*15,2,0}, {3,9,18}, casco);
 		pieza(false, {lado*13.4f,2,8}, {0.5f,7,1}, baliza, 0.9f);
 	}
-	// Dos cápsulas en carriles separados cruzan la boca en sentidos opuestos.
-	for (int i = 0; i < 2; ++i) {
-		float fase = 0.42f * tiempoAnimacion + i * 3.14159265f;
-		glm::vec3 nave(i ? 5.0f : -5.0f, 1.2f, 12.0f + 17.0f * cosf(fase));
-		pieza(true, nave, {1.8f,1.3f,3.3f}, i ? glm::vec3(0.9f,0.48f,0.18f) : casco);
-		pieza(true, nave + glm::vec3(0,0.9f,0), {1.2f,0.7f,1.7f}, baliza, 0.45f);
+	// Puerta de dos hojas que se retraen lateralmente dentro del casco.
+	for (float lado : {-1.0f, 1.0f}) {
+		float x = lado * (6.75f + 13.5f * aperturaPuertaHangar);
+		pieza(false, {x,2,9.3f}, {13.5f,9,0.8f}, glm::vec3(0.10f,0.25f,0.38f), 0.05f);
+		pieza(false, {x - lado*6.2f,2,9.8f}, {0.25f,8,0.15f}, baliza, 0.6f);
+	}
+	// Superestructura sobre la cúpula del hangar; solape para ocultar la unión.
+	if (FreezerStation_M.estaCargado()) {
+		glm::vec3 tam = FreezerStation_M.getTamano();
+		float escala = 36.0f / fmaxf(fmaxf(tam.x, tam.z), 0.001f);
+		glm::vec3 apoyo = FreezerStation_M.getCentro();
+		apoyo.y -= tam.y * 0.5f;
+		glm::mat4 m = glm::translate(glm::mat4(1), centroHangar + glm::vec3(0, 9.5f, 0));
+		m = glm::scale(m, glm::vec3(escala));
+		m = glm::translate(m, -apoyo);
+		glUniformMatrix4fv(uModelo, 1, GL_FALSE, glm::value_ptr(m));
+		glUniform3f(uEmision, 0, 0, 0);
+		FreezerStation_M.RenderModel(uColor, glm::vec3(1));
+		plainTexture.UseTexture();
+	}
+	if (FighterHangar_M.estaCargado()) {
+		glm::vec3 tam = FighterHangar_M.getTamano();
+		glm::vec3 apoyo = FighterHangar_M.getCentro();
+		apoyo.y -= tam.y * 0.5f;
+		glm::mat4 m = MatrizOrientacion(centroHangar + posicionFighter, frenteFighter, glm::vec3(0,1,0));
+		m = glm::scale(m, glm::vec3(7.0f / fmaxf(tam.z, 0.001f)));
+		m = glm::translate(m, -apoyo);
+		glUniformMatrix4fv(uModelo, 1, GL_FALSE, glm::value_ptr(m));
+		glUniform3f(uEmision, 0,0,0);
+		FighterHangar_M.RenderModel(uColor, glm::vec3(1));
 	}
 	glUniform3f(uEmision, 0,0,0);
 	glUniform3f(uColor, 1,1,1);
@@ -730,7 +848,7 @@ int main(int argc, char** argv)
 		glm::distance(jugador.PosicionJugador(), posPlanetaSelvatico));
 	fflush(stdout);
 
-	ConstruirGuiaSatelite();
+
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
@@ -945,6 +1063,9 @@ int main(int argc, char** argv)
 		tiempoAnimacion += deltaTime;
 		espacio.ActualizarCohetes(deltaTime);
 		AnimarSatelite(deltaTime);
+		if (zonaVista == ZONA_PLANETA_ROCOSO)
+			coheteJona.Actualizar(deltaTime, entrada.wasPressed(GLFW_KEY_6), entrada.wasPressed(GLFW_KEY_7));
+		ActualizarFighter(deltaTime, entrada.wasPressed(GLFW_KEY_4), entrada.wasPressed(GLFW_KEY_5));
 		AnimarCapsula(deltaTime);
 
 		//textura con movimiento: el agua del océano corre despacio (u, v aumentan y se reinician en 1)
@@ -1120,23 +1241,21 @@ int main(int argc, char** argv)
 			model = glm::translate(model, posPlanetaRocoso);
 			model = glm::rotate(model, 0.12f * tiempoAnimacion, glm::vec3(0.0f, 1.0f, 0.0f));   // ángulo en radianes
 			Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-			if (PlanetaRocoso_M.estaCargado())
+			Model& exteriorRocoso = PlanetaReksai_M.estaCargado() ? PlanetaReksai_M : PlanetaRocoso_M;
+			if (exteriorRocoso.estaCargado())
 			{
-				model = glm::scale(model, glm::vec3(radioPlanetaRocoso / PlanetaRocoso_M.getRadio()));
-				model = glm::translate(model, -PlanetaRocoso_M.getCentro());
+				model = glm::scale(model, glm::vec3(radioPlanetaRocoso / exteriorRocoso.getRadio()));
+				model = glm::translate(model, -exteriorRocoso.getCentro());
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-				color = glm::vec3(1.0f, 1.0f, 1.0f);
-				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-				PlanetaRocoso_M.RenderModel();
+				glUniform3f(uniformColor, 1.0f, 1.0f, 1.0f);
+				exteriorRocoso.RenderModel();
 			}
-			else
+			else if (Planeta_M.estaCargado())
 			{
 				model = glm::scale(model, glm::vec3(radioPlanetaRocoso / Planeta_M.getRadio()));
 				model = glm::translate(model, -Planeta_M.getCentro());
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-				color = glm::vec3(0.62f, 0.52f, 0.38f);
-				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-				plainTexture.UseTexture();
+				glUniform3f(uniformColor, 0.5f, 0.25f, 0.7f);
 				Planeta_M.RenderModel();
 			}
 
@@ -1166,19 +1285,16 @@ int main(int argc, char** argv)
 				Planeta_M.RenderModel();
 			}
 
-			// Luna del sistema: cuerpo celeste visible en el espacio y en R4.
-			if (Planeta_M.estaCargado() && Planeta_M.getRadio() > 0.0f)
+			// Luna independiente; el modelo nuevo reemplaza al planeta decorativo.
+			if (Luna_M.estaCargado())
 			{
-				model = glm::mat4(1.0f);
-				model = glm::translate(model, posLuna);
-				model = glm::rotate(model, 0.05f * tiempoAnimacion, glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::scale(model, glm::vec3(radioLuna / Planeta_M.getRadio()));
-				model = glm::translate(model, -Planeta_M.getCentro());
+				model = glm::translate(glm::mat4(1.0f), posLuna);
+				model = glm::rotate(model, 0.05f * tiempoAnimacion, glm::vec3(0, 1, 0));
+				model = glm::scale(model, glm::vec3(radioLuna / Luna_M.getRadio()));
+				model = glm::translate(model, -Luna_M.getCentro());
 				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-				color = glm::vec3(0.72f, 0.76f, 0.84f);
-				glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 				Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-				Planeta_M.RenderModel(uniformColor, color);
+				Luna_M.RenderModel(uniformColor, glm::vec3(1.0f));
 			}
 
 			// NUEVO: cinturón de asteroides, planeta océano, pista de carreras y base (ver Espacio.h y Oceano.h)
@@ -1194,10 +1310,11 @@ int main(int argc, char** argv)
 			// avatar (Paul en la base o miNave en la pista) y miNave estacionada en la base
 			if (zonaVista == zonaActual)
 				jugador.DibujarJugador(LUGAR_ESPACIO, tiempoAnimacion, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
-			DibujarGuiaSatelite(glm::vec3(1.0f, 0.35f, 0.85f), uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 
-			// nave rival
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelNave));
+
+			// X-Wing con escala y origen normalizados.
+			glm::mat4 modeloXWing = TransformarModeloRival(modelNave, RivalCarrera::Primero);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modeloXWing));
 			color = glm::vec3(1.0f, 1.0f, 1.0f);
 			glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 			plainTexture.UseTexture();
@@ -1206,57 +1323,36 @@ int main(int argc, char** argv)
 				Nave_M.RenderModel();
 			DibujarRivalEn(RivalCarrera::Segundo, LUGAR_ESPACIO, uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
 
-			// Satélite (jerarquía): la base recorre la órbita y los paneles y el aspa heredan su matriz
-			glm::vec3 satPos = PosicionSatelite(estadoSatelite, thetaSatelite);
-			glm::vec3 satTan = TangenteSatelite(estadoSatelite, thetaSatelite);
-			float satYaw = atan2f(satTan.x, satTan.z);
-			model = glm::mat4(1.0);
-			model = glm::translate(model, satPos);
-			model = glm::rotate(model, satYaw, glm::vec3(0.0f, 1.0f, 0.0f));   // ángulo en radianes
-			modelaux = model;
+			// Satélite restaurado: órbita animada sin marcas de trayectoria.
+			if (SateliteBase_M.estaCargado())
+			{
+				glm::vec3 satPos = PosicionSatelite(estadoSatelite, thetaSatelite);
+				glm::vec3 satTan = TangenteSatelite(estadoSatelite, thetaSatelite);
+				modelaux = MatrizOrientacion(satPos, satTan, glm::vec3(0,1,0));
+				plainTexture.UseTexture();
+				Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelaux));
+				glUniform3f(uniformColor, 0.85f, 0.87f, 0.91f);
+				SateliteBase_M.RenderModel();
 
-			// NUEVO: el satélite se ilumina con una luz direccional que va de la cámara hacia él, para que
-			// siempre se vea claro aunque sea de noche; después se regresa la luz del sol
-			glm::vec3 dirSat = glm::normalize(ojo - satPos);
-			DirectionalLight luzSatelite(1.0f, 1.0f, 1.0f, 0.8f, 0.9f, dirSat.x, dirSat.y, dirSat.z);
-			shaderList[0].SetDirectionalLight(&luzSatelite);
+				model = glm::translate(modelaux, glm::vec3(0, 1.2f, 4.0f));
+				model = glm::rotate(model, rotPanelDer * toRadians, glm::vec3(0,1,0));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				glUniform3f(uniformColor, 0.18f, 0.72f, 0.48f);
+				SatelitePanelDer_M.RenderModel();
 
-			// base del satélite
-			color = glm::vec3(1.2f, 1.2f, 1.2f);
-			glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-			plainTexture.UseTexture();
-			Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			SateliteBase_M.RenderModel();
+				model = glm::translate(modelaux, glm::vec3(0, -1.2f, 4.0f));
+				model = glm::rotate(model, rotPanelIzq * toRadians, glm::vec3(0,1,0));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				SatelitePanelIzq_M.RenderModel();
 
-			// panel derecho: gira desde su unión con la base (tecla 3)
-			model = modelaux;
-			model = glm::translate(model, glm::vec3(0.0f, 1.2f, 4.0f));
-			model = glm::rotate(model, rotPanelDer * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-			color = glm::vec3(0.15f, 0.4f, 1.2f);
-			glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-			Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			SatelitePanelDer_M.RenderModel();
-
-			// panel izquierdo
-			model = modelaux;
-			model = glm::translate(model, glm::vec3(0.0f, -1.2f, 4.0f));
-			model = glm::rotate(model, rotPanelIzq * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			SatelitePanelIzq_M.RenderModel();
-
-			// aspa: gira sin parar sobre el eje Z
-			model = modelaux;
-			model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.5f));
-			model = glm::rotate(model, rotacionRotor * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-			color = glm::vec3(1.2f, 1.2f, 1.2f);
-			glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-			Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			SateliteAspa_M.RenderModel();
-
-			shaderList[0].SetDirectionalLight(&mainLight);
+				model = glm::translate(modelaux, glm::vec3(0, 0, -1.5f));
+				model = glm::rotate(model, rotacionRotor * toRadians, glm::vec3(0,0,1));
+				glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+				glUniform3f(uniformColor, 1.0f, 0.68f, 0.24f);
+				SateliteAspa_M.RenderModel();
+				glUniform3f(uniformColor, 1, 1, 1);
+			}
 
 			// llamas de los motores (blending aditivo: se suman al color de atrás, como fuego)
 			glEnable(GL_BLEND);
@@ -1339,6 +1435,11 @@ int main(int argc, char** argv)
 			for (auto rival : {RivalCarrera::Primero, RivalCarrera::Segundo})
 				DibujarRivalEn(rival, tipoSuperficie == SUPERFICIE_ROCOSA ? LUGAR_ROCOSO : LUGAR_SELVATICO,
 					uniformModel, uniformColor, uniformSpecularIntensity, uniformShininess);
+
+			if (tipoSuperficie == SUPERFICIE_ROCOSA) {
+				Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+				coheteJona.Dibujar(uniformModel, uniformColor, uniformEmision, meshListModel[1], llamaTexture);
+			}
 
 			// Cápsula de regreso (jerarquía): la puerta hereda la matriz del cuerpo y gira sobre su bisagra.
 			// La cápsula no trae texturas, solo colores en su .mtl: RenderModel(uniformColor, tinte) manda

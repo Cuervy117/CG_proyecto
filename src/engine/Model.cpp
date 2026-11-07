@@ -57,6 +57,7 @@ static std::string resolverRutaTextura(const std::string& rutaImportada,
 		agregar("Textures/" + ruta);
 
 	agregar("Textures/" + archivo);
+	if (archivo.find('.') == std::string::npos) agregar("Textures/" + archivo + ".png");
 	agregar(directorioModelo + "/" + ruta);
 	agregar(directorioModelo + "/" + archivo);
 	agregar(ruta);
@@ -271,6 +272,7 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 	newMesh->CreateMeshModel(&vertices[0], &indices[0], vertices.size(), indices.size());
 	MeshList.push_back(newMesh);
 	meshTotex.push_back(mesh->mMaterialIndex);
+	meshNames.push_back(mesh->mName.C_Str());
 	numTriangulos += (int)(indices.size() / 3);
 }
 
@@ -336,3 +338,17 @@ void Model::LoadMaterials(const aiScene * scene)
 	}
 }
 
+
+bool Model::HasPart(const std::string& name) const
+{
+	return std::find(meshNames.begin(), meshNames.end(), name) != meshNames.end();
+}
+void Model::RenderPart(const std::string& name)
+{
+	for (size_t i = 0; i < MeshList.size(); ++i) {
+		if (meshNames[i] != name) continue;
+		unsigned int material = meshTotex[i];
+		if (material < TextureList.size() && TextureList[material]) TextureList[material]->UseTexture();
+		MeshList[i]->RenderMeshModel();
+	}
+}

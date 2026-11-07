@@ -47,11 +47,13 @@ Ejecuta desde la raíz con los modelos y texturas del paquete actualizado superp
 | F5 / F6 / F7 / F8 | Accesos directos a selva, roca, océano y espacio |
 | WASD / ratón | Movimiento y orientación |
 | J / E | Embarcar o desembarcar junto a la nave / interactuar con el tránsito entre zonas |
-| 2 / 3 | Puerta de la cápsula / paneles del satélite |
+| 1 / 2 / 3 | Cohete de lanzamiento / puerta de cápsula / paneles del satélite |
+| 4 / 5 | Vuelo del Fighter_02 desde el hangar / puerta del hangar |
+| 6 / 7 (dentro de Rek’Sai, F6) | Reproducir los keyframes del cohete de Jona / reiniciar. Está a la derecha del punto de llegada. |
 | F / L / K | Linterna / faro de nave / foco de base |
 | C / F9 | Alternar cámara libre / liberar o capturar el cursor |
 
-**Recorrido R4.** Pulsa F4 para observar el cohete de Shinobi y 1 para lanzarlo. Tab recorre el hangar espacial con sus dos cápsulas, el planeta rocoso, el selvático, el satélite y el cohete de la base antes de volver al lanzamiento. La cámara muestra la zona del objetivo y el jugador conserva su posición durante la observación. F1, F2 y F3 retoman sus recorridos habituales.
+**Recorrido R4.** Pulsa F4 para observar el cohete de Shinobi y 1 para lanzarlo. Tab recorre el hangar espacial con Fighter_02, el planeta rocoso, el selvático, el satélite y el cohete de la base antes de volver al lanzamiento. Enfoca el hangar y pulsa 4 para la salida y el regreso, o 5 para abrir y cerrar su puerta. La cámara muestra la zona del objetivo y el jugador conserva su posición durante la observación. F1, F2 y F3 retoman sus recorridos habituales.
 
 ## Trabajo diario
 

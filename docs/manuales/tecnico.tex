@@ -1,0 +1,186 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[spanish]{babel}
+\usepackage{fontspec}
+\usepackage[margin=1.9cm]{geometry}
+\usepackage{graphicx,booktabs,longtable,array,xcolor,hyperref,fancyhdr,enumitem,listings}
+\setmainfont{Georgia}\setsansfont{Arial}
+\definecolor{azul}{HTML}{173B59}\definecolor{gris}{HTML}{F0F4F7}
+\hypersetup{colorlinks=true,linkcolor=azul,urlcolor=azul}
+\setlength{\parskip}{4pt}\setlength{\parindent}{0pt}
+\emergencystretch=3em
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small CGICH \textbar\ Manual técnico}\fancyhead[R]{\small 2027-1}\fancyfoot[C]{\thepage}
+\lstset{basicstyle=\ttfamily\scriptsize,backgroundcolor=\color{gris},frame=single,breaklines=true,tabsize=2,showstringspaces=false,columns=fullflexible}
+\newcommand{\ruta}[1]{\path{#1}}
+\newcommand{\captura}[3]{\begin{figure}[htbp]\centering\includegraphics[width=#2\linewidth,height=0.24\textheight,keepaspectratio]{../capturas/#1}\caption{#3}\end{figure}}
+\begin{document}
+\begin{titlepage}\color{azul}\sffamily\vspace*{2.4cm}
+{\Large UNIVERSIDAD NACIONAL AUTÓNOMA DE MÉXICO\par Facultad de Ingeniería\par}
+\vspace{1.5cm}{\Huge\bfseries Manual técnico de desarrollo\par}
+\vspace{0.5cm}{\Large Proyecto final de Computación Gráfica e IHC\par}
+\vspace{1.3cm}\rule{\linewidth}{2pt}\vspace{0.5cm}
+{\large David Díaz Antúnez\par Jonhatan Alexis Martínez Ojeda\par Venancio Miguel Tapia Verástegui\par}
+\vfill{\large Semestre 2027-1 \textbar\ 7 de noviembre de 2026\par}
+{\small Estado documentado: candidato Release \texttt{v0.4.0-rc.1}, commit \texttt{7ece353}.\par}
+\end{titlepage}\tableofcontents\newpage
+
+\section{Objetivo, alcance y arquitectura}
+El programa es un ambiente interactivo 3D de viajes espaciales y especies intergalácticas. El ejecutable integra cuatro recorridos, planetas con ambientación distinta, objetos animados, iluminación dinámica y un avatar articulado. Este documento relaciona los criterios de la rúbrica con archivos, mecanismos y capturas del programa integrado. Las capturas corresponden a pruebas guardadas en \ruta{docs/capturas/}; cada una ilustra el estado indicado en su pie.
+
+Se implementó en C++ y OpenGL 3.3, con GLFW para ventana/entrada, GLEW para funciones OpenGL, GLM para matrices y Assimp para modelos. \ruta{P09-424104230.cpp} contiene el ciclo principal y orquesta \ruta{src/game/world/}, \ruta{src/game/avatar/}, \ruta{src/scene/} y \ruta{src/ui/}. \ruta{P09-2-424104230.cpp} conserva pruebas de escena y cámara; no contiene el \texttt{main} compilado.
+
+\begin{center}\small
+\begin{tabular}{p{0.25\linewidth}p{0.63\linewidth}}\toprule
+Subsistema & Responsabilidad\\\midrule
+Motor OpenGL & Carga OBJ/materiales/texturas, shaders, skybox, luces y geometrías base.\\
+Mundo & Pista, estación, cohetes, dos superficies, océano, NPC y naves rivales.\\
+Escena/avatar & Árbol de nodos, transformaciones heredadas, Rek'Sai por piezas y caminata.\\
+Cámaras/entrada & Cuatro rigs, selección F1--F4, mouse, transiciones y controles contextuales.\\
+Interfaz & Indicador de modo/zona/estado y reloj del ciclo.\\\bottomrule
+\end{tabular}\end{center}
+
+\section{Geometría, mundos y estilo}
+\subsection{Escenario 3D y jerarquía}
+La pista y la base se generan con mallas y matrices OpenGL en \ruta{src/game/world/Espacio.cpp}; los elementos de superficie y sus caminos se ensamblan en \ruta{src/game/world/Superficie.cpp}. Los OBJ se cargan mediante \ruta{src/engine/Model.cpp}. La jerarquía se implementa en \ruta{src/scene/SceneNode.cpp}: cada nodo mantiene su transformación local y la compone con la matriz del padre. La visibilidad también se hereda.
+\begin{lstlisting}[language=C++,caption={Transformación jerárquica, extracto de SceneNode::updateWorld.}]
+world = (parent != nullptr ? parent->world : glm::mat4(1.0f)) * local();
+for (const std::unique_ptr<SceneNode>& child : m_children)
+    child->updateWorld();
+\end{lstlisting}
+La prueba integrada \ruta{probarJerarquiaEscena()} comprueba la posición heredada, búsqueda de hijos y ocultamiento de un subárbol; el registro se encuentra en \ruta{docs/capturas/ha1_jerarquia.txt}.
+
+\subsection{Ambientación, especies y planetas}
+El planeta rocoso usa terreno mineral, cristales, portales y fauna del Vacío; el selvático usa vegetación, camino y criaturas de referencia Shinobi. Sus NPC se colocan en claros a ambos lados del camino, con tipos y movimientos diferentes. Hay además un océano explorable. El contraste entre adaptaciones rocosas/excavadoras y criaturas del entorno selvático comunica la evolución temática mediante silueta, escala y hábitat; es una representación visual, no una simulación biológica.
+
+\ruta{Superficie::GenerarDesierto} y \ruta{Superficie::GenerarSelva} distribuyen objetos, claros, NPC y portales; \ruta{Superficie::DibujarSuperficie} los representa. \ruta{Espacio::ConstruirBase}, \ruta{Espacio::DibujarPista} y \ruta{Espacio::DibujarCinturon} completan el entorno espacial. La estación se construye en \ruta{DibujarHangar}: disco, cúpula, balizas y Fighter\_02 que sale y regresa mediante una máquina de estados, y puerta de dos hojas.
+\captura{fauna_vacio.png}{0.82}{Cuatro especies/variantes visibles en el planeta rocoso, con texturas y entorno mineral.}
+\captura{r4_hangar_2026-11-06.png}{0.77}{Estación espacial y Fighter\_02, observables con F4 y Tab.}
+
+\subsection{Circuito, lanzamiento y cuerpos celestes}
+\ruta{Espacio::ConstruirTramo}, \ruta{MallaTramo} y \ruta{PuntoEnPista} generan y muestrean el circuito. En \ruta{Jugador.cpp}, \ruta{ActualizarJugador} mantiene la nave sobre la pista y permite acelerar, frenar y cambiar de carril. \ruta{EstadoRival} calcula la posición de dos rivales según el tiempo. Hay lunas, asteroides y satélite en el espacio; el cinturón de asteroides se dibuja en \ruta{Espacio::DibujarCinturon}.
+
+El cohete existe en la base y en Shinobi. \ruta{Espacio::LanzarCohete} inicia el evento por tecla 1; \ruta{Espacio::ActualizarCohetes} recorre los estados plataforma, ignición, ascenso, órbita y reinicio. Su altura durante el ascenso depende del cuadrado del tiempo normalizado, con humo y llama asociados. El modo de observación puede enfocar ambos sitios.
+\begin{lstlisting}[language=C++,caption={Ascenso acelerado, extracto de Espacio::ActualizarCohetes.}]
+float t = glm::clamp(c.tiempoEstado / COHETE_DURACION_ASCENSO,
+                     0.0f, 1.0f);
+c.altura = COHETE_ALTURA_ORBITA * t * t;
+c.posicion = c.origen + Y * (ALTURA_PLATAFORMA_COHETE + c.altura);
+\end{lstlisting}
+\captura{r2_carrera_2026-11-06.png}{0.78}{Nave del jugador sobre el circuito espacial.}
+\captura{cohete_20261106_shinobi_ascenso.png}{0.78}{Cohete de Shinobi en ascenso, iniciado con 1.}
+
+\clearpage
+\section{Texturas, materiales y avatar}
+Los recursos visuales usan OBJ/MTL, imágenes de textura y materiales con parámetros especulares. \ruta{Model::LoadModel} resuelve rutas de texturas importadas y aplica una textura de respaldo si falta un mapa; \ruta{Texture::LoadTextureA} informa un fallo de carga. \ruta{Scene::render} configura textura, tinte, material y matrices para los nodos. El shader de iluminación recibe textura, normales, color, brillo, luz direccional, puntuales y focos. Las capturas permiten verificar el aspecto del resultado; una revisión de autoría y licencias de todos los recursos se gestiona por separado.
+
+Rek'Sai se divide en cuerpo, cabeza, cola, cuatro patas y dos brazos. \ruta{Avatar::attach} carga la geometría por partes, crea un nodo para cada pieza, les asigna la misma textura y los añade a un nodo raíz. La forma no humanoide es la del personaje controlable. \ruta{Avatar::update} orienta la raíz según el desplazamiento y, al caminar, rota extremidades contralaterales con funciones seno; al detenerse, reinicia los ángulos.
+\begin{lstlisting}[language=C++,caption={Paso alternado, extracto de Avatar::update.}]
+const float stride = std::sin(m_walkPhase) * 0.78f;
+const float oppositeStride =
+    std::sin(m_walkPhase + 3.1415926f) * 0.78f;
+m_legPivots[0]->rotationEuler.x = stride;
+m_legPivots[1]->rotationEuler.x = oppositeStride;
+\end{lstlisting}
+\captura{ha3_render_01.png}{0.78}{Prueba visual de Rek'Sai texturizada y del render de escena.}
+
+\section{Cuatro recorridos y cambio de cámaras}
+\ruta{CameraDirector::setMode} selecciona un \texttt{CameraRig} propio de cada modo: \ruta{FollowXZ} para planeta, \ruta{Chase} para carrera, \ruta{Flight} para vuelo y \ruta{Orbit} para observación. La proyección usa FOV de 45 grados convertido a radianes. \ruta{Input.cpp} convierte los flancos de F1--F4 en \texttt{ControlFrame}; el \texttt{main} cambia rig, zona y objeto seguido. F5--F8 permiten saltos de zona para demostración.
+
+\begin{center}\small\begin{tabular}{p{0.12\linewidth}p{0.19\linewidth}p{0.57\linewidth}}\toprule
+Modo & Cámara & Comprobación\\\midrule
+F1 & FollowXZ & Avatar a pie en roca/selva, altura ligada al plano del suelo.\\
+F2 & Chase & Nave del usuario sobre circuito; el objetivo es la nave en movimiento.\\
+F3 & Flight & Nave en vuelo espacial, con desplazamiento vertical Q/E.\\
+F4 & Orbit & Lanzamiento, hangar, planetas, satélite y cohete de base con Tab; el jugador no se teletransporta.\\\bottomrule
+\end{tabular}\end{center}
+
+El cambio correcto se comprueba en \ruta{probarCameraDirector()} y en capturas \ruta{ha4_4_f1_planeta.png} a \ruta{ha4_4_f4_observacion.png}. El cuarto recorrido usa una lista de encuadres en \ruta{P09-424104230.cpp}; \ruta{SiguienteParada} omite objetivos cuyos modelos no están disponibles.
+\begin{lstlisting}[language=C++,caption={Asignación de rig por modo, extracto de CameraDirector.cpp.}]
+case CameraMode::Planeta:     return std::make_unique<FollowXZ>();
+case CameraMode::Carrera:     return std::make_unique<Chase>();
+case CameraMode::Vuelo:       return std::make_unique<Flight>();
+case CameraMode::Observacion: return std::make_unique<Orbit>();
+\end{lstlisting}
+\captura{ha4_4_f3_vuelo.png}{0.75}{Prueba de la cámara de vuelo.}
+
+\section{Iluminación y cielo}
+\ruta{ActualizarCicloDiaNoche} calcula un ciclo de 120 s. El ángulo del sol determina dirección, intensidad y color de la luz direccional; \texttt{factorDia} también gobierna el estado nocturno de las luminarias. El shader recibe las luces en cada zona. Las dos luces puntuales junto a la cápsula reciben color juntas cuando \texttt{esDeNoche}; el mismo estado modifica su emisión visual. Se usan asimismo luces puntuales de elementos activos como el cohete.
+\begin{lstlisting}[language=C++,caption={Ciclo solar y criterio de noche, extractos del main.}]
+float anguloSol = (dosPi / duracionCicloDiaNoche) * tiempoAnimacion;
+float alturaSol = sinf(anguloSol);
+float factorDia = glm::clamp((alturaSol + 0.25f) / 1.25f,
+                             0.08f, 1.0f);
+bool esDeNoche = (factorDia < 0.45f);
+\end{lstlisting}
+\ruta{LoadSkybox} prepara seis caras para cada fondo. En el ciclo de dibujo se elige \texttt{Fondo::Espacio}, \texttt{Fondo::Roca} o \texttt{Fondo::Selva} según la zona visible. Los \texttt{SpotLight} de linterna, faro y plataforma se alternan con F, L y K; su posición y dirección se actualizan con la cámara o la nave.
+\captura{vacio_paleta.png}{0.78}{Paleta y cielo propios del planeta rocoso.}
+
+\section{Animaciones exigidas}
+\subsection{Tres acciones iniciadas por teclado}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Cohete (1):} \ruta{Espacio::LanzarCohete} inicia ignición/ascenso; una segunda activación desde órbita devuelve el cohete.
+\item \textbf{Puerta de cápsula (2):} \ruta{AnimarCapsula} interpola la apertura o cierre según su estado con la tecla 2.
+\item \textbf{Paneles de satélite (3):} \ruta{AnimarSatelite} actualiza la apertura o cierre de paneles según la tecla 3.
+\end{enumerate}
+Las tres son objetos distintos. La caminata del avatar se documenta aparte y no se cuenta en esta terna.
+
+\subsection{Tres ciclos continuos basados en funciones}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Naves rivales:} \ruta{Jugador::EstadoRival} calcula su avance continuo por los segmentos de la carrera según el tiempo.
+\item \textbf{NPC:} \ruta{Superficie::DibujarSuperficie} aplica rebotes, ochos, elipses, levitación o respiración parametrizados con seno/coseno según la especie.
+\item \textbf{Satélite en órbita:} \ruta{PosicionSatelite} orienta el satélite sobre una trayectoria de ocho sin dibujar marcas; sus paneles y rotor mantienen movimiento continuo.
+\end{enumerate}
+También giran asteroides y corren ondas luminosas en la pista. Para la evaluación conviene mostrar tres objetos distintos en el video y señalar su movimiento sin pulsar teclas.
+\begin{lstlisting}[language=C++,caption={Movimiento continuo del satélite.}]
+glm::vec3 satPos = PosicionSatelite(estadoSatelite, thetaSatelite);
+glm::vec3 satTan = TangenteSatelite(estadoSatelite, thetaSatelite);
+\end{lstlisting}
+
+\section{Compilación, distribución y validación}
+La solución \ruta{LabCGeIHC.sln} compila Release x64 con Visual Studio y el toolset v143. \ruta{scripts/Build.ps1} automatiza el build. \ruta{scripts/Package-Release.py} arma un ZIP con EXE, bibliotecas, shaders, modelos y texturas; incluye \ruta{release.json} con versión, commit y hashes por archivo. \ruta{Verify-Release.ps1} verifica el contenido distribuido y \ruta{Jugar.cmd --probar-release} recorre espacio, roca, selva, océano, carrera, lanzamiento y hangar. La bitácora de David registra compilación y prueba locales para \texttt{v0.4.0-rc.1}; la comprobación en otra PC debe registrarse de manera independiente antes de la entrega.
+
+\section{Conclusiones}
+\textbf{David Díaz Antúnez.} La integración de motor, cámaras y Release muestra la utilidad de separar rigs y probar los cambios en un ejecutable común. La carga diferida por zona redujo el tiempo de entrada observado; el registro de QA permite distinguir una compilación correcta de una experiencia visual comprobada.
+
+\textbf{Jonhatan Alexis Martínez Ojeda.} La construcción del mundo mediante caminos, superficies y colocación parametrizada permite reutilizar mecanismos sin hacer idénticos los planetas. La coordinación de modelos, escalas y rutas de recursos fue necesaria para que las piezas funcionaran en el programa integrado.
+
+\textbf{Venancio Miguel Tapia Verástegui.} El avatar articulado evidencia que separar piezas y pivotes permite animar la caminata con reglas sencillas. La entrada y el HUD ayudan a convertir funciones técnicas en recorridos que el usuario puede reconocer y controlar.
+
+\textbf{Conclusión grupal.} El proyecto une escenas 3D, interacción, animación e iluminación en una experiencia compartida. La división por ramas hizo posible desarrollar partes en paralelo, pero exigió validación de integración y un paquete de recursos coherente. Cada integrante debe revisar y ratificar su conclusión individual antes de entregar este manual.
+
+\section{Bibliografía y fuentes}
+\begin{enumerate}[leftmargin=*]
+\item Laboratorio de Computación Gráfica e IHC, Facultad de Ingeniería, UNAM. \emph{Lineamientos del proyecto final, grupos 2 y 3, semestre 2027-1}. PDF incluido en \ruta{docs/}.
+\item Equipo CGICH. \emph{Propuesta del proyecto final de gráfica}. PDF incluido en \ruta{docs/}.
+\item Equipo CGICH. Código fuente, \ruta{README.md}, \ruta{PLAN_MAESTRO.md} y bitácoras individuales, repositorio \url{https://github.com/Cuervy117/CG_proyecto}.
+\item The Khronos Group. \emph{OpenGL 3.3 Core Specification}; documentación de GLFW, GLM, GLEW y Assimp consultada para los subsistemas correspondientes.
+\end{enumerate}
+
+\section{Índice de comprobación de la rúbrica}
+Esta tabla sirve para localizar la demostración técnica. Una captura aislada acredita la apariencia de un instante; las animaciones y los controles se verifican al ejecutar el programa y en el video demo.
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{p{0.32\linewidth}p{0.59\linewidth}}\toprule
+Criterio del escenario & Implementación y evidencia\\\midrule\endhead
+Geometría 3D; jerarquía & \ruta{Espacio.cpp}, \ruta{Superficie.cpp}; \ruta{SceneNode.cpp}; Figura 5 y prueba \ruta{ha1_jerarquia.txt}.\\
+Ambientación y estilo visual & \ruta{Superficie::GenerarDesierto/GenerarSelva}, \ruta{DibujarHangar}; Figuras 1, 2 y 7.\\
+NPC de otras especies & \ruta{Superficie::ColocarNPC} y sus variantes; Figura 1.\\
+Pista y naves corriendo & \ruta{Espacio::ConstruirTramo}, \ruta{Jugador::EstadoRival}; Figura 3.\\
+Plataforma y lanzamiento & \ruta{Espacio::LanzarCohete/ActualizarCohetes}; Figura 4.\\
+Estación y entrada/salida & \ruta{DibujarHangar}; Figura 2 y cámara F4.\\
+Luna, asteroides y satélite & \ruta{Espacio::DibujarCinturon}, dibujo espacial en el main; F4/Tab.\\
+Dos planetas y evolución & \ruta{Superficie::GenerarDesierto/GenerarSelva}; Figuras 1 y 7; F5/F6.\\
+Texturas de escenario & \ruta{Model.cpp}, \ruta{Texture.cpp}, \ruta{Scene.cpp}; Figuras 1--7.\\
+Avatar no humanoide y jerárquico & \ruta{Avatar::attach}, \ruta{SceneNode::add}; Figura 5.\\
+Material y caminata del avatar & \ruta{Scene::render}, \ruta{Avatar::update}; Figura 5 y prueba WASD.\\
+R1: cada planeta y plano XZ & \ruta{FollowXZ.cpp}, F1, F5/F6; prueba \ruta{ha3_followxz.txt}.\\
+R2: nave en carrera & \ruta{Chase.cpp}, F2, \ruta{Jugador.cpp}; Figura 3.\\
+R3: vuelo entre planetas & \ruta{Flight.cpp}, F3 y Q/E; Figura 6.\\
+R4: cohete, estación y celestes & \ruta{Orbit.cpp}, \ruta{SiguienteParada}, F4/Tab; Figuras 2 y 4.\\
+Cambio correcto de cámaras & \ruta{CameraDirector.cpp}; prueba \ruta{ha4_4_camaras.txt}.\\
+Luz direccional y día/noche & \ruta{ActualizarCicloDiaNoche}; Figura 7.\\
+Puntuales sincronizadas & \ruta{pointLights}, \ruta{esDeNoche} en el main; 120 s.\\
+Skybox variable & \ruta{LoadSkybox}, \ruta{Skybox.cpp}; Figura 7.\\
+Spotlights por teclado & \ruta{SpotLight.cpp}, controles F/L/K; prueba interactiva.\\
+Tres animaciones por teclado & Cohete 1, puerta 2 y paneles 3; sección 6.1.\\
+Tres ciclos continuos & Rivales, NPC y satélite; sección 6.2.\\\bottomrule
+\end{longtable}
+\end{document}

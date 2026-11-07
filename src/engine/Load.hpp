@@ -15,7 +15,12 @@ extern Texture plainTexture;
 extern Texture llamaTexture;
 
 // Modelos
-extern Model Nave_M;				// nave rival (Fighter_03)
+extern Model Nave_M;				// primer rival (X-Wing)
+extern Model FreezerStation_M;
+extern Model FighterHangar_M;
+extern Model Ufo_M; // segundo rival (UFO)
+extern Model PlanetaReksai_M;
+extern Model Luna_M;
 extern Model Planeta_M;				// planeta estilizado (respaldo si falla planetaRoca.obj)
 extern Model PlanetaRocoso_M;		// planeta rocoso (Vacío)
 extern Model PlanetaSelvatico_M;	// planeta selvático (Shinobi)

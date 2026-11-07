@@ -66,7 +66,7 @@ const float BASE_ANTES_DE_META = 34.0f;		// a cuántas unidades antes de la meta
 // Cohete D1 y su plataforma de despegue
 const float RADIO_PLATAFORMA_COHETE = 4.0f;
 const float ALTURA_PLATAFORMA_COHETE = 0.30f;
-const float ESCALA_COHETE = 0.55f;
+const float ESCALA_COHETE = 10.0f;
 const float COHETE_ALTURA_ORBITA = 90.0f;
 const float COHETE_DURACION_IGNICION = 1.2f;
 const float COHETE_DURACION_ASCENSO = 5.0f;
@@ -852,10 +852,10 @@ void Espacio::ActualizarHumo(Cohete& cohete, float dt, bool encendido)
 void Espacio::InicializarCohete()
 {
 	Cohete_M = Model();
-	Cohete_M.LoadModel("Models/rocket/rocket.obj");
+	Cohete_M.LoadModel("Models/rocket.obj");
 	hayCohete = Cohete_M.estaCargado();
 	if (hayCohete)
-		printf("[OK] Cohete: Models/rocket/rocket.obj (%d triangulos)\n", Cohete_M.getNumTriangulos());
+		printf("[OK] Cohete: Models/rocket.obj (%d triangulos)\n", Cohete_M.getNumTriangulos());
 
 	fuegoTexture = Texture("Textures/fuego.png");
 	hayFuego = fuegoTexture.LoadTextureA();

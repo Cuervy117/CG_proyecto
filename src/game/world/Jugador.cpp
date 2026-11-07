@@ -8,11 +8,11 @@
 #include <gtc/type_ptr.hpp>
 
 const float ALTURA_PAUL = 4.0f;				// altura del avatar en el mundo
-const float LARGO_NAVE = 7.0f;				// largo de miNave en el mundo
+const float LARGO_NAVE = 9.0f;				// largo de la nave del jugador en el mundo
 const float ALTURA_NAVE = 1.0f;				// la nave flota un poco sobre la pista
 const float ALTURA_NAVE_CAMINO = 1.6f;		// sobre el camino de los planetas
 const float ALTURA_NAVE_AGUA = 2.4f;		// sobre el agua del océano
-const float LARGO_NAVE_PLANETA = 5.5f;		// en los caminos de los planetas va un poco más chica
+const float LARGO_NAVE_PLANETA = 7.0f;		// en los caminos de los planetas va un poco más chica
 const float VELOCIDAD_RIVAL = 18.0f;
 const float CARRIL_RIVAL_PISTA = -2.5f;
 const float CARRIL_RIVAL_CAMINO = -1.2f;
@@ -114,12 +114,12 @@ void Jugador::InicializarJugador(Superficie* superficiePlanetas, Espacio* espaci
 	if (paul == nullptr)
 		printf("[AVISO] No hay modelo para el avatar (ni Models/avatar/avatar.obj ni Paul.obj)\n");
 
-	printf("Cargando Models/miNave/miNave.obj ...\n");
+	printf("Cargando Models/Intergalactic_Spaceships_Version_2.obj ...\n");
 	MiNave_M = Model();
-	MiNave_M.LoadModel("Models/miNave/miNave.obj");
+	MiNave_M.LoadModel("Models/Intergalactic_Spaceships_Version_2.obj");
 	hayNave = MiNave_M.estaCargado();
 	if (hayNave)
-		printf("[OK] miNave: Models/miNave/miNave.obj (%d triangulos)\n", MiNave_M.getNumTriangulos());
+		printf("[OK] Nave intergalactica: Models/Intergalactic_Spaceships_Version_2.obj (%d triangulos)\n", MiNave_M.getNumTriangulos());
 }
 
 float Jugador::ColocarJugadorEnBase()

@@ -12,7 +12,8 @@ from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 ROOT = Path(__file__).resolve().parents[1]
 MODELS = """
 arbol/arbol asteroide/asteroide asteroide/Rocky_Asteroid_6 asteroide/Stylized_Planets
-capsula/capsulaCuerpo capsula/capsulaPuerta Fighter_03_Obj/Fighter_03 miNave/miNave
+capsula/capsulaCuerpo capsula/capsulaPuerta X_wing_obj UFO Fighter_02
+Intergalactic_Spaceships_Version_2 freezer_station Moon planet_reksai jona/cohete_jona
 npcRoca/Cerbero npcRoca/escorpion npcRoca/monstruoNegro npcRoca/serpienteAlas
 npcSelva/caballoDelfin npcSelva/calamardoGuapo npcSelva/naruto npcSelva/pulpo
 npcSelva/tigreFuego npcSelva/zorroBlanco pista/pista planetaOceano/planetaOceano
@@ -21,7 +22,7 @@ reksai/voidmite reksai/voidgrub reksai/void_spawn reksai/rift_herald
 """.split()
 DIRECT_TEXTURES = """
 arbolTexture asteroideTexture baseTexture fuego hud_reloj hud_digitos hud_iconos humo
-pistaTexture planetaOceanoTexture planetaRocaTexture planetaSelvaTexture plain reksai sueloRocoso sueloSelva
+L1_Bake1_PBR_Diffuse pistaTexture planetaOceanoTexture planetaRocaTexture planetaSelvaTexture plain reksai sueloRocoso sueloSelva
 """.split()
 
 
@@ -65,6 +66,9 @@ def runtime_files():
     files = {}
     for model in MODELS:
         add_model(files, model)
+    # El cohete de Jona usa cohete.mtl, no el archivo cohete_jona.mtl.
+    keyframes = Path("Models/jona/keyframes_cohete.txt")
+    files[keyframes.as_posix()] = ROOT / keyframes
     for part in ("base", "panel_der", "panel_izq", "aspa_g"):
         path = f"Models/satelite/satelite_{part}.fbx"
         files[path] = ROOT / path

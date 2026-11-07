@@ -17,6 +17,8 @@ public:
 
 	void LoadModel(const std::string& fileName);
 	void RenderModel();
+	void RenderPart(const std::string& name);
+	bool HasPart(const std::string& name) const;
 	void ClearModel();
 
 	// NUEVO: igual que RenderModel(), pero antes de cada malla manda al shader el color difuso (Kd)
@@ -49,6 +51,7 @@ private:
 	void LoadMaterials(const aiScene* scene);
 	std::string modelDirectory;
 	std::vector<MeshModel*>MeshList;
+	std::vector<std::string> meshNames;
 	std::vector<Texture*>TextureList;
 	std::vector<unsigned int>meshTotex;
 
