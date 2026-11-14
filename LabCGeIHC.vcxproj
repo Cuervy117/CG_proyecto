@@ -44,7 +44,7 @@
     <ClInclude Include="src\engine\Window.h" />
   </ItemGroup>
   <ItemGroup Label="A-engine-compile">
-    <ClCompile Include="P09-424104230.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\game\world\Espacio.cpp" />
     <ClCompile Include="src\game\world\Jugador.cpp" />
     <ClCompile Include="src\game\world\Reloj.cpp" />
@@ -105,7 +105,7 @@
   <ItemGroup Label="main-test">
     <ClInclude Include="Input.hpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="P09-2-424104230.cpp" />
+    <ClCompile Include="SceneVerification.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.frag" />
