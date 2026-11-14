@@ -44,6 +44,7 @@ artefactos/
 reksai_referencia.jpg
 
 # Documentos locales (cada integrante genera su AGENTS.md; ver PLAN §16.6-16.7)
+/docs/
 /AGENTS.md
 /LEEME.txt
 /manifest-dependencies.json
