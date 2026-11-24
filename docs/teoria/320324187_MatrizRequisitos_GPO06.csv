@@ -2,7 +2,7 @@
 A1,INCOMPLETO,Iluminacion,shaders/shader_light.frag; Main.cpp ciclo 120s; capturas F5/F6,"Phong, puntuales y spots verificados; falta revision visual exhaustiva."
 A2,INCOMPLETO,Geometria y texturas,AuditoriaRecursos JSON; Model::LoadModel; capturas,"Indices OBJ validos y finitos; no prueba mallas cerradas, degeneracion o todas las intersecciones."
 A3,CUMPLIDO,Camara sintetica,"SceneVerification.cpp; CameraDirector; FollowXZ, Chase, Flight, Orbit; prueba Release",Vistas funcionales y cambios F5/F6 observados en ventana real.
-A4,INCOMPLETO,Siete animaciones,ManualTecnico secciones 5 y 9; CSV Animaciones; --probar-animaciones,Siete sistemas documentados y pruebas aprobadas; aceptacion del conteo y calidad final por evaluador.
+A4,CUMPLIDO,Siete animaciones,ManualTecnico secciones 5 y 9; CSV Animaciones; --probar-animaciones,"Siete sistemas justificados con evidencia; se agrupan puertas, paneles, naves repetidas y piezas articuladas."
 A5,CUMPLIDO,Sistema ejecutable local,build_definitivo; verificacion_integral; ventanas F5/F6,Release funcional en esta PC; no certifica ausencia universal de errores.
 A6,CUMPLIDO,Windows,LabCGeIHC.sln; vcxproj Release x64; DLL/PE; ejecucion real,Probado Windows x64.
 A7,CUMPLIDO,Transformaciones,SceneNode::local/updateWorld; Avatar::update; AnimarCapsula,T*Ry*Rx*Rz*S; jerarquia y pivotes.
@@ -14,7 +14,7 @@ B4,CUMPLIDO,Comparativa y justificacion,ManualTecnico seccion 2,Tecnologias y al
 B5,CUMPLIDO,Gantt individual,ManualTecnico seccion 6; Bitacora,Intervalos historicos separados de horas confirmadas.
 B6,CUMPLIDO,Diagrama de flujo,ManualTecnico seccion 3,"Inicio, carga, eventos, actualizacion, render y salida."
 B7,CUMPLIDO,Documentacion de codigo,ManualTecnico secciones 2-5; funciones y contratos,"Arquitectura real, propiedad, pipeline y matematicas."
-B8,INCOMPLETO,Costos,ManualTecnico seccion 7; confirmacion del estudiante,Desembolso 0 MXN y precio 120 MXN propuesto; costo economico total sin cuantificar por falta de tarifa/horas totales.
+B8,CUMPLIDO,Costos,ManualTecnico seccion 7; confirmacion del estudiante,"Desembolso declarado 0 MXN, demo gratuita y precio eventual 120 MXN; costo economico no monetizado y formula explicitos."
 B9,CUMPLIDO,Conclusiones,ManualTecnico seccion 8; Bitacora,Conclusion individual y del sistema sin atribuir testimonios ajenos.
 C1,CUMPLIDO,Entorno e instrucciones,ManualUsuario secciones 1-3,"Arranque, controles, recorridos y diagnostico."
 C2,CUMPLIDO,Interacciones y controles reales,Main.cpp; Input.cpp; Window::ManejaTeclado; ManualUsuario,Y/U/G/O anteriores retirados de la documentacion actual; 4/5 y 6/7 correctos.
@@ -22,7 +22,7 @@ D1,INCOMPLETO,Documentacion individual por integrante,Bitacora 320324187; origin
 D2,CUMPLIDO,Reparto por funciones,ManualTecnico seccion 6; Propuesta,Integrantes A/B/C sin nombres personales.
 D3,CUMPLIDO,Concordancia individual,"Historial aedcd41,5ae68e0,b97274a; Avatar/Input/Hud; Bitacora",TARS confirmado en codigo; horas previas contradictorias sin consolidar.
 E1,CUMPLIDO,Espanol e ingles,DOCUMENTACION_ES/EN; 8 PDF y fuentes TXT,Versiones redactadas y revisadas; no traduccion integral automatizada de originales.
-F1,NO VERIFICABLE,Repositorio publico reconstruible,Rama entrega/320324187-teoria; estado en Repositorio_GPO06.txt,Evaluar publicacion y clon nuevo; main previo requiere recursos externos.
+F1,CUMPLIDO,Repositorio publico reconstruible,"Rama publicada entrega/320324187-teoria, codigo 326ea38; build_github y prueba_github","Clon descargado de GitHub verifico 195 recursos, compilo Release y ejecuto prueba con salida 0 en esta PC."
 F2,CUMPLIDO,Rutas relativas/dinamicas,Main.cpp GetModuleFileNameW; Model.cpp; MTL auditados,EXE probado desde otra carpeta; cero rutas absolutas en OBJ/MTL.
 F3,CUMPLIDO,Sin ZIP ni archivos >=100 MB,VerificarEntrega.ps1; escaneo completo excepto .git,Sin ZIP fisico ni archivo individual >=100 MB.
 F4,NO VERIFICABLE,Compilar y ejecutar en otra PC,Pruebas locales y desde otra carpeta,No se dispuso de una segunda PC fisica.

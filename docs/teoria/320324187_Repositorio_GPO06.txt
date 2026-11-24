@@ -1,0 +1,23 @@
+320324187 - GPO06 - REPOSITORIO
+
+Rama publicada: entrega/320324187-teoria
+URL para entregar:
+https://github.com/Cuervy117/CG_proyecto/tree/entrega/320324187-teoria
+
+Version de codigo comprobada: 326ea3808e0ca019453379b9b566a546dcf32134.
+Los commits posteriores solo actualizan registros de verificacion.
+Base: 41ba92c. Commits nuevos: cca3ce5, 7892c73 y 326ea38.
+
+Incluye fuentes, solucion, include/lib/glm, DLL y recursos optimizados;
+manuales ES/EN y evidencias estan en docs/teoria.
+No se hizo merge a main ni se reescribio historial ni se uso force push.
+El clon original sigue limpio. La publicacion de la rama fue aprobada por
+la autorizacion de red del entorno y termino correctamente.
+
+Para obtener esta version sin ZIP:
+git clone --single-branch --branch entrega/320324187-teoria https://github.com/Cuervy117/CG_proyecto.git
+
+El clon limpio local compilo Release y paso --probar-release. Esto se hizo
+en la misma computadora; no sustituye una prueba independiente en otra PC.
+El clon nuevo descargado desde GitHub tambien verifico los 195 recursos,
+compilo Release y paso --probar-release con salida 0, sin archivos externos.

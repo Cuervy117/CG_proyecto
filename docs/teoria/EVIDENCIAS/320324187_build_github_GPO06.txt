@@ -1,0 +1,174 @@
+
+  Main.cpp
+CLON_GITHUB\src\engine\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Main.cpp")
+  
+CLON_GITHUB\src\engine\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': redefinición de macro [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Main.cpp")
+      CLON_GITHUB\include\glfw3.h(123,11):
+      vea la definición anterior de “APIENTRY”
+  
+CLON_GITHUB\Main.cpp(1589,67): warning C4244: 'argumento': conversión de 'GLfloat' a 'int'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\Main.cpp(1589,37): warning C4244: 'argumento': conversión de 'GLfloat' a 'int'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  Espacio.cpp
+  Jugador.cpp
+  Reloj.cpp
+  Superficie.cpp
+  Oceano.cpp
+  Camera.cpp
+  Create.cpp
+  DirectionalLight.cpp
+CLON_GITHUB\src\engine\DirectionalLight.cpp(18,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\DirectionalLight.cpp(19,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\DirectionalLight.cpp(21,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\DirectionalLight.cpp(22,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  Light.cpp
+  Load.cpp
+  Material.cpp
+  Mesh_tn.cpp
+  Model.cpp
+CLON_GITHUB\src\engine\Model.cpp(272,83): warning C4267: 'argumento': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Model.cpp(272,67): warning C4267: 'argumento': conversión de 'size_t' a 'unsigned int'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  PointLight.cpp
+CLON_GITHUB\src\engine\PointLight.cpp(28,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\PointLight.cpp(29,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\PointLight.cpp(30,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\PointLight.cpp(32,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\PointLight.cpp(33,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\PointLight.cpp(34,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\PointLight.cpp(35,14): warning C4244: 'argumento': conversión de 'GLfloat' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  Shader_light.cpp
+CLON_GITHUB\src\engine\Shader_light.cpp(107,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(107,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(110,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(110,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(113,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(113,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(116,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(116,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(119,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(119,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(122,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(122,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(125,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(125,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(135,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(135,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(138,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(138,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(141,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(141,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(144,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(144,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(147,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(147,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(150,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(150,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(153,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(153,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(156,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(156,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(159,38): warning C4477: 'snprintf' : la cadena de formato '%d' requiere un argumento de tipo 'int', pero el argumento variádico 1 tiene el tipo 'size_t' [CLON_GITHUB\LabCGeIHC.vcxproj]
+      CLON_GITHUB\src\engine\Shader_light.cpp(159,38):
+      considere el uso de ' %zd' en la cadena de formato
+  
+CLON_GITHUB\src\engine\Shader_light.cpp(228,75): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(228,26): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(227,91): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(227,42): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(241,98): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(241,62): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(241,24): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(240,70): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(240,24): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(239,88): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(239,42): warning C4244: 'argumento': conversión de 'GLuint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Shader_light.cpp(293,24): warning C4267: '=': conversión de 'size_t' a 'GLint'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  Skybox.cpp
+  Sphere.cpp
+CLON_GITHUB\src\engine\Sphere.cpp(39,13): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Sphere.cpp(43,16): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Sphere.cpp(91,50): warning C4267: 'argumento': conversión de 'size_t' a 'GLsizei'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Sphere.cpp(94,51): warning C4267: 'argumento': conversión de 'size_t' a 'GLsizei'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Sphere.cpp(98,50): warning C4267: 'argumento': conversión de 'size_t' a 'GLsizei'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Sphere.cpp(108,42): warning C4267: 'argumento': conversión de 'size_t' a 'GLsizei'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  SpotLight.cpp
+  Texture.cpp
+  Compilando...
+  Window.cpp
+CLON_GITHUB\src\engine\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "src/engine/Window.cpp")
+  
+CLON_GITHUB\src\engine\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "src/engine/Window.cpp")
+  
+CLON_GITHUB\src\engine\Window.cpp(238,22): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Window.cpp(239,22): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Window.cpp(243,28): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Window.cpp(244,40): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Window.cpp(246,21): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+CLON_GITHUB\src\engine\Window.cpp(247,21): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  CameraDirector.cpp
+  CameraRig.cpp
+  Chase.cpp
+  Flight.cpp
+  FollowXZ.cpp
+  Orbit.cpp
+  Scene.cpp
+  SceneNode.cpp
+  Avatar.cpp
+  Tars.cpp
+  Hud.cpp
+  Input.cpp
+CLON_GITHUB\src\engine\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Input.cpp")
+  
+CLON_GITHUB\src\engine\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Input.cpp")
+  
+  SceneVerification.cpp
+CLON_GITHUB\src\engine\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "SceneVerification.cpp")
+  
+CLON_GITHUB\src\engine\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [CLON_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "SceneVerification.cpp")
+  
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+  All 3526 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  LabCGeIHC.vcxproj -> CLON_GITHUB\x64\Release\LabCGeIHC.exe
+Build completado. Copia las DLLs junto al exe y ejecuta desde raiz: .\x64\Release\LabCGeIHC.exe

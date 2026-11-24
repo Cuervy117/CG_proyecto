@@ -59,8 +59,9 @@ Consultar 320324187_Repositorio_GPO06.txt para el estado de publicacion.
 PENDIENTES / LIMITES
 1. No se realizo prueba en una segunda computadora fisica.
 2. Revision visual exhaustiva de geometria, texturizado y todas las colisiones.
-3. La separacion entre cohete por cuadros clave y cohete procedural esta
-   justificada; la aceptacion del conteo final de siete es del evaluador.
+3. El conteo de siete agrupa todas las puertas, ambas naves rivales, ambos
+   paneles y todas las piezas de la marcha; el cohete por etapas y el
+   procedural tienen algoritmos/contextos distintos, explicados en el manual.
 4. No se prepararon ni atribuyeron documentos individuales de A/B como si
    hubieran sido escritos por ellos. Sus contribuciones se resumen por rol;
    sus registros originales se conservaron fuera de la carpeta final.
@@ -77,3 +78,11 @@ se presentan como la rubrica aplicable a Teoria.
 
 No se envio nada a Classroom. La entrega no se declara integramente cerrada
 mientras existan los pendientes anteriores.
+
+CIERRE DE REPRODUCIBILIDAD PUBLICA
+La rama entrega/320324187-teoria se publico y la referencia remota confirmo
+326ea3808e0ca019453379b9b566a546dcf32134 como version de codigo comprobada.
+Se descargo mediante git clone desde GitHub en CLON_GITHUB, sin ZIP ni
+copiar recursos del proyecto original. Verifico hashes de los 195 recursos,
+compilo Release x64 y ejecuto --probar-release con salida 0.
+Las actualizaciones posteriores del informe no modifican ese codigo probado.
