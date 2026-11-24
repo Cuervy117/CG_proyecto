@@ -16,6 +16,10 @@ public:
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
 	bool* getsKeys() { return keys; }
+	bool consumePressed(int key) {
+		if (key < 0 || key >= 1024) return false;
+		const bool pressed = pendingPressed[key]; pendingPressed[key] = false; return pressed;
+	}
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
 
 	//Animaciones básicas que se inician con teclado (igual que luzHolocron o luzPinzaRover de la práctica)
@@ -44,6 +48,7 @@ private:
 	GLFWwindow *mainWindow;
 	GLint width, height;
 	bool keys[1024];
+	bool pendingPressed[1024] = {};
 	GLint bufferWidth, bufferHeight;
 	void createCallbacks();
 	GLfloat lastX;

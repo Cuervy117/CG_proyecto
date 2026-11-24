@@ -16,6 +16,8 @@ class CoheteKeyframes {
     float tiempo = 0;
     bool cargado = false, intentado = false, reproduciendo = false;
 public:
+    bool listo() const { return cargado; }
+    float tiempoActual() const { return tiempo; }
     void Cargar() {
         if (intentado) return;
         intentado = true;

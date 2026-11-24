@@ -73,6 +73,15 @@ int Window::Initialise()
 		return 1;
 	}
 	//Obtener tamaño de Buffer
+	// Arrancar en el monitor principal: evita posiciones fuera de pantalla.
+	if (GLFWmonitor* monitor = glfwGetPrimaryMonitor()) {
+		int x = 0, y = 0, ancho = 0, alto = 0;
+		glfwGetMonitorWorkarea(monitor, &x, &y, &ancho, &alto);
+		glfwSetWindowPos(mainWindow, x + (ancho > width ? (ancho - width) / 2 : 0),
+			y + (alto > height ? (alto - height) / 2 : 0));
+	}
+	glfwShowWindow(mainWindow);
+	glfwFocusWindow(mainWindow);
 	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
 
 	//asignar el contexto
@@ -209,6 +218,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		if (action == GLFW_PRESS)
 		{
 			theWindow->keys[key] = true;
+			theWindow->pendingPressed[key] = true;
 			//printf("se presiono la tecla %d'\n", key);
 		}
 		else if (action == GLFW_RELEASE)

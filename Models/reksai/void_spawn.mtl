@@ -1,0 +1,3 @@
+newmtl void_spawn_material
+Kd 1 1 1
+map_Kd void_spawn_diffuse.png

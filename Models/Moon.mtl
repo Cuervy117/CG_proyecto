@@ -1,0 +1,7 @@
+newmtl Material.001
+Ka 0.22 0.24 0.28
+Kd 1 1 1
+Ks 0.08 0.08 0.08
+Ns 32
+illum 2
+map_Kd Moon_procedural.png

@@ -1,0 +1,9 @@
+# Material de miNave (map_Kd corregido: la textura se llama miNaveTexture.png)
+newmtl model.001
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ns 128.000000
+d 1.000000
+illum 2
+map_Kd miNaveTexture.png

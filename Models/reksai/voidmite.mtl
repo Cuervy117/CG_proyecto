@@ -1,0 +1,3 @@
+newmtl voidmite_material
+Kd 1 1 1
+map_Kd voidmite_diffuse.png

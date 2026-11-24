@@ -1,0 +1,3 @@
+newmtl voidgrub_material
+Kd 1 1 1
+map_Kd voidgrub_diffuse.png

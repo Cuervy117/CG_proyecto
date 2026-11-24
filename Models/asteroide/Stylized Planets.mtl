@@ -1,0 +1,19 @@
+# Material de respaldo explicito; no sustituye atribuciones del modelo.
+newmtl MOON
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.1 0.1 0.1
+map_Kd ../../Textures/asteroideTexture.png
+
+newmtl Rings
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.1 0.1 0.1
+map_Kd ../../Textures/asteroideTexture.png
+
+newmtl Saturn
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.1 0.1 0.1
+map_Kd ../../Textures/asteroideTexture.png
+

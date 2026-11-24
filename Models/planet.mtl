@@ -1,0 +1,40 @@
+newmtl gliter
+Ka 0.3 0.2 0.4
+Kd 1 1 1
+Ks 0.3 0.2 0.4
+Ns 64
+illum 2
+map_Kd planet_reksai_procedural.png
+
+newmtl blink
+Ka 0.3 0.2 0.4
+Kd 1 1 1
+Ks 0.3 0.2 0.4
+Ns 64
+illum 2
+map_Kd planet_reksai_procedural.png
+
+newmtl broke_light
+Ka 0.3 0.2 0.4
+Kd 1 1 1
+Ks 0.3 0.2 0.4
+Ns 64
+illum 2
+map_Kd planet_reksai_procedural.png
+
+newmtl base
+Ka 0.3 0.2 0.4
+Kd 1 1 1
+Ks 0.3 0.2 0.4
+Ns 64
+illum 2
+map_Kd planet_reksai_procedural.png
+
+newmtl Material
+Ka 0.3 0.2 0.4
+Kd 1 1 1
+Ks 0.3 0.2 0.4
+Ns 64
+illum 2
+map_Kd planet_reksai_procedural.png
+

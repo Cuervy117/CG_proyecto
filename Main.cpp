@@ -39,6 +39,10 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include <chrono>
 #include <cmath>
 #include <fstream>
+#include <filesystem>
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <vector>
 #include <math.h>
 
@@ -786,7 +790,24 @@ void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmisio
 
 int main(int argc, char** argv)
 {
+	// Localizar recursos desde el ejecutable, incluso al abrirlo desde otra carpeta.
+	wchar_t rutaEjecutable[32768] = {};
+	const DWORD longitudRuta = GetModuleFileNameW(nullptr, rutaEjecutable, 32768);
+	if (longitudRuta > 0 && longitudRuta < 32768) {
+		auto carpeta = std::filesystem::path(rutaEjecutable).parent_path();
+		for (int nivel = 0; nivel < 4; ++nivel) {
+			if (std::filesystem::is_directory(carpeta / "Models") &&
+				std::filesystem::is_directory(carpeta / "Textures")) {
+				std::filesystem::current_path(carpeta);
+				break;
+			}
+			carpeta = carpeta.parent_path();
+		}
+	}
 	const bool pruebaRelease = argc == 2 && strcmp(argv[1], "--probar-release") == 0;
+	const bool pruebaAnimaciones = argc == 2 && strcmp(argv[1], "--probar-animaciones") == 0;
+	unsigned int frameAnimaciones = 0;
+	glm::vec3 inicioMarchaQA(0);
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -964,6 +985,35 @@ int main(int argc, char** argv)
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
+		if (pruebaAnimaciones) {
+			deltaTime = 1.0f / 60.0f;
+			auto ventanaQA = glfwGetCurrentContext();
+			auto callbackQA = glfwSetKeyCallback(ventanaQA, nullptr);
+			glfwSetKeyCallback(ventanaQA, callbackQA);
+			auto pulsarQA = [&](int tecla, bool soltar = true) {
+				if (!callbackQA) return;
+				callbackQA(ventanaQA, tecla, 0, GLFW_PRESS, 0);
+				if (soltar) callbackQA(ventanaQA, tecla, 0, GLFW_RELEASE, 0);
+			};
+			switch (frameAnimaciones) {
+			case 0: pulsarQA(GLFW_KEY_F6); break;
+			case 1: pulsarQA(GLFW_KEY_6); break;
+			case 1680: pulsarQA(GLFW_KEY_F4); break;
+			case 1681: pulsarQA(GLFW_KEY_1); break;
+			case 1920: pulsarQA(GLFW_KEY_TAB); break;
+			case 1921: pulsarQA(GLFW_KEY_4); break;
+			case 2160: case 2161: case 2162: pulsarQA(GLFW_KEY_TAB); break;
+			case 2163: pulsarQA(GLFW_KEY_3); break;
+			case 2400: pulsarQA(GLFW_KEY_F2); break;
+			case 2639: pulsarQA(GLFW_KEY_F6); break;
+			case 2640: pulsarQA(GLFW_KEY_F1); break;
+			case 2641: pulsarQA(GLFW_KEY_2); break;
+			case 2880: pulsarQA(GLFW_KEY_W, false); break;
+			case 3120:
+				if (callbackQA) callbackQA(ventanaQA, GLFW_KEY_W, 0, GLFW_RELEASE, 0);
+				pulsarQA(GLFW_KEY_F7); break;
+			}
+		}
 		auto entrada = captura.update(deltaTime);
 		if (pruebaRelease && pasosRelease[pasoPrueba].tecla)
 			entrada.pressed[pasosRelease[pasoPrueba].tecla] = true;
@@ -1146,8 +1196,12 @@ int main(int argc, char** argv)
 		director.update(deltaTime, objetivo);
 		// En modo Planeta se conserva la órbita del mouse alrededor del avatar. R4 mantiene
 		// la vista de su rig de observación aunque la cámara libre esté activa.
-		const glm::mat4 vista = ((camaraLibre || director.mode() == CameraMode::Planeta) && !enR4)
+		const glm::mat4 vistaNormal = ((camaraLibre || director.mode() == CameraMode::Planeta) && !enR4)
 			? camera.calculateViewMatrix() : director.view();
+		// Encuadre fijo exclusivo de QA para ver la separacion completa del cohete.
+		const glm::mat4 vista = pruebaAnimaciones && frameAnimaciones < 1680
+			? glm::lookAt(glm::vec3(60, 38, 65), glm::vec3(22, 20, 14), glm::vec3(0, 1, 0))
+			: vistaNormal;
 		projection = director.projection(float(mainWindow.getBufferWidth()) / mainWindow.getBufferHeight());
 		if (zonaAnterior != zonaActual || modoAnterior != director.mode() || control.nextObservationTarget) {
 			printf("Zona=%d camara=%d objetivo=%d nave=%d\n", int(zonaActual), int(director.mode()), observado, jugador.JugadorEnNave());
@@ -1537,7 +1591,50 @@ int main(int argc, char** argv)
 
 		glUseProgram(0);
 
+		if (pruebaRelease || (pruebaAnimaciones &&
+			(frameAnimaciones % 120 == 0 || frameAnimaciones == 1679))) {
+			std::filesystem::create_directories("evidencias-release");
+			const int w = static_cast<int>(mainWindow.getBufferWidth());
+			const int h = static_cast<int>(mainWindow.getBufferHeight());
+			std::vector<unsigned char> pixels(static_cast<size_t>(w) * h * 3);
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+			const std::string nombreFoto = pruebaRelease ? "paso-" + std::to_string(pasoPrueba)
+				: "animacion-" + std::to_string(frameAnimaciones);
+			std::ofstream foto("evidencias-release/" + nombreFoto + ".ppm", std::ios::binary);
+			foto << "P6\n" << w << ' ' << h << "\n255\n";
+			for (int fila = h - 1; fila >= 0; --fila)
+				foto.write(reinterpret_cast<const char*>(pixels.data() + static_cast<size_t>(fila) * w * 3), w * 3);
+		}
 		mainWindow.swapBuffers();
+		if (pruebaAnimaciones) {
+			bool correcto = true;
+			if (frameAnimaciones == 1679) {
+				correcto = coheteJona.listo() && coheteJona.tiempoActual() >= 25.0f;
+				printf("[Animaciones] keyframes tiempo=%.3f listo=%d\n", coheteJona.tiempoActual(), coheteJona.listo());
+			}
+			if (frameAnimaciones == 1800) correcto = espacio.CoheteEncendido(COHETE_SHINOBI);
+			if (frameAnimaciones == 2399) {
+				correcto = std::isfinite(thetaSatelite) && factorAperturaPaneles < 0.02f;
+				printf("[Animaciones] satelite theta=%.3f paneles=%.3f\n", thetaSatelite, factorAperturaPaneles);
+			}
+			if (frameAnimaciones == 2879) {
+				correcto = anguloPuertaCapsula > 70.0f;
+				inicioMarchaQA = jugador.PosicionJugador();
+				printf("[Animaciones] puerta=%.3f\n", anguloPuertaCapsula);
+			}
+			if (frameAnimaciones == 3000) {
+				auto* pataQA = avatar.root()->find("c.avatar.reksai.leg.right_front");
+				const float recorridoQA = glm::length(jugador.PosicionJugador() - inicioMarchaQA);
+				correcto = !jugador.JugadorEnNave() && recorridoQA > 0.1f && pataQA && std::fabs(pataQA->rotationEuler.x) > 0.001f;
+				printf("[Animaciones] marcha recorrido=%.3f pata=%.3f nave=%d\n", recorridoQA, pataQA ? pataQA->rotationEuler.x : 0.0f, jugador.JugadorEnNave());
+			}
+			if (!correcto) { fprintf(stderr, "[Animaciones] Fallo frame %u\n", frameAnimaciones); return 3; }
+		}
+		if (pruebaAnimaciones && ++frameAnimaciones >= 3360) {
+			puts("[Animaciones] Secuencia terminada: 3360 frames simulados a 60 Hz. Revisar capturas; no certifica calidad visual.");
+			break;
+		}
 		if (pruebaRelease) {
 			const int tecla = pasosRelease[pasoPrueba].tecla;
 			if (zonaVista != pasosRelease[pasoPrueba].zonaVista ||

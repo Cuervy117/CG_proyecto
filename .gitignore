@@ -19,18 +19,10 @@ LabCGeIHC/
 *.bak_refactor
 
 # Assets y dependencias locales (no se versionan; viven en la PC)
-Models/
-Textures/
-include/
-lib/
-glm/
+# Teoria: recursos y dependencias deben viajar con el codigo.
 Dependencias/
-*.dll
-*.obj
-*.fbx
-*.glb
+# Las mallas OBJ de Models son recursos; x64 ya esta ignorado.
 *.blend
-*.mtl
 *.zip
 
 # Capturas de trabajo y bundle de traspaso
@@ -54,3 +46,4 @@ reksai_referencia.jpg
 # Archivos temporales de validación
 tmp/
 __pycache__/
+evidencias-release/

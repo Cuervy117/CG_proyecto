@@ -76,7 +76,8 @@ const InputFrame& InputCapture::update(float dt)
     {
         const bool isDown = keys[key];
         m_frame.down[key] = isDown;
-        m_frame.pressed[key] = isDown && !m_previous[key];
+        const bool eventPressed = m_window.consumePressed(static_cast<int>(key));
+        m_frame.pressed[key] = eventPressed || (isDown && !m_previous[key]);
         m_previous[key] = isDown;
     }
     return m_frame;
