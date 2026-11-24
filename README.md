@@ -1,5 +1,27 @@
 # 320324187 - GPO06 - Computacion Grafica (Teoria)
 
+## Entrega al profesor
+
+La entrega completa esta en esta rama de GitHub. En la tarea de Classroom se
+adjunta la liga de la rama. Los documentos tambien estan en el repositorio.
+
+- Release: [LabCGeIHC.exe](LabCGeIHC.exe), en la raiz.
+- Inicio: [Jugar.cmd](Jugar.cmd). Conservar todas las carpetas y DLL.
+- Documentacion individual: [ES](docs/teoria/ES/) y [EN](docs/teoria/EN/).
+- [Propuesta historica anonimizada](docs/teoria/ANTECEDENTES/320324187_PropuestaHistorica_GPO06.pdf).
+- [Requerimientos originales LAB](docs/teoria/ANTECEDENTES/320324187_RequerimientosLaboratorio_GPO06.pdf).
+
+Los antecedentes LAB se adjuntan por la rubrica de Teoria. No hay acuse que
+acredite el envio de la propuesta antes del 20 de octubre.
+Para ejecutar el Release no hace falta Visual Studio. Descargar solamente
+el EXE desde GitHub no incluye sus recursos: obtener la rama completa.
+
+```powershell
+git clone --single-branch --branch entrega/320324187-teoria https://github.com/Cuervy117/CG_proyecto.git
+cd CG_proyecto
+.\Jugar.cmd
+```
+
 Entorno espacial Windows x64: exploracion, carrera, vuelo y observacion.
 Documentacion bilingue en docs/teoria/. Base 41ba92c; preparacion en
 entrega/320324187-teoria.

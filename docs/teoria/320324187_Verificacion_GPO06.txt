@@ -62,9 +62,9 @@ PENDIENTES / LIMITES
 3. El conteo de siete agrupa todas las puertas, ambas naves rivales, ambos
    paneles y todas las piezas de la marcha; el cohete por etapas y el
    procedural tienen algoritmos/contextos distintos, explicados en el manual.
-4. No se prepararon ni atribuyeron documentos individuales de A/B como si
-   hubieran sido escritos por ellos. Sus contribuciones se resumen por rol;
-   sus registros originales se conservaron fuera de la carpeta final.
+4. La documentacion propia de 320324187 esta completa en ES/EN. Cada
+   integrante A/B entrega la suya; no es un pendiente que deba fabricar
+   320324187.
 5. No hay acuse de la propuesta de octubre ni del envio de Teoria.
 6. El historial, bibliotecas y creditos se conservan. La procedencia/licencias
    de cada modelo no queda totalmente acreditada; no se presume permiso
@@ -86,3 +86,7 @@ Se descargo mediante git clone desde GitHub en CLON_GITHUB, sin ZIP ni
 copiar recursos del proyecto original. Verifico hashes de los 195 recursos,
 compilo Release x64 y ejecuto --probar-release con salida 0.
 Las actualizaciones posteriores del informe no modifican ese codigo probado.
+
+RUBRICA COMPLETA RECONFIRMADA
+La entrega reside en GitHub; Classroom recibe la liga de la rama.
+Propuesta y requerimientos originales LAB estan en docs/teoria/ANTECEDENTES.

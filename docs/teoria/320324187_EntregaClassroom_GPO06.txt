@@ -1,0 +1,24 @@
+320324187 - GPO06 - ENTREGA EXCLUSIVAMENTE MEDIANTE GITHUB
+
+En Classroom adjunta esta liga en la tarea del Proyecto Final:
+https://github.com/Cuervy117/CG_proyecto/tree/entrega/320324187-teoria
+
+La entrega completa esta DENTRO de esa rama de GitHub:
+- LabCGeIHC.exe: ejecutable Release en la raiz. Jugar.cmd: inicio.
+- Models, Textures, shaders y DLL: recursos para el EXE.
+- Main.cpp, Input.cpp, src, solucion y dependencias: fuentes separadas.
+- docs/teoria/ES y EN: manuales, bitacora, propuesta y tablas de animaciones.
+- docs/teoria/ANTECEDENTES: propuesta historica anonimizada y requerimientos
+  originales LAB. Son antecedentes, no la rubrica de Teoria.
+- docs/teoria/EVIDENCIAS: capturas y registros de pruebas.
+
+No sustituir GitHub por PDF, EXE suelto, Drive, comentarios o correo.
+Las copias locales sirven para revision. No se hizo el envio a Classroom.
+
+El profesor debe descargar/clonar ESTA rama completa, conservar las carpetas
+y DLL y abrir Jugar.cmd o LabCGeIHC.exe. No requiere Visual Studio para usar
+el ejecutable. Requiere Windows x64 y controlador con OpenGL 4.3 Core.
+No se garantiza hardware desconocido sin probar esa computadora.
+
+Limite indicado: antes de 00:00 del 24 noviembre 2026 (CDMX).
+El PDF historico no demuestra el envio antes del 20 octubre; no hay acuse.

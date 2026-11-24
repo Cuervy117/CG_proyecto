@@ -18,7 +18,7 @@ B8,CUMPLIDO,Costos,ManualTecnico seccion 7; confirmacion del estudiante,"Desembo
 B9,CUMPLIDO,Conclusiones,ManualTecnico seccion 8; Bitacora,Conclusion individual y del sistema sin atribuir testimonios ajenos.
 C1,CUMPLIDO,Entorno e instrucciones,ManualUsuario secciones 1-3,"Arranque, controles, recorridos y diagnostico."
 C2,CUMPLIDO,Interacciones y controles reales,Main.cpp; Input.cpp; Window::ManejaTeclado; ManualUsuario,Y/U/G/O anteriores retirados de la documentacion actual; 4/5 y 6/7 correctos.
-D1,INCOMPLETO,Documentacion individual por integrante,Bitacora 320324187; originales A/B fuera de entrega,Individual C lista; no se fabricaron versiones de Teoria firmadas por A/B.
+D1,CUMPLIDO,Documentacion individual por integrante,Bitacora 320324187; originales A/B fuera de entrega,Documentacion propia de 320324187 en ES/EN; A/B entregan la suya individualmente.
 D2,CUMPLIDO,Reparto por funciones,ManualTecnico seccion 6; Propuesta,Integrantes A/B/C sin nombres personales.
 D3,CUMPLIDO,Concordancia individual,"Historial aedcd41,5ae68e0,b97274a; Avatar/Input/Hud; Bitacora",TARS confirmado en codigo; horas previas contradictorias sin consolidar.
 E1,CUMPLIDO,Espanol e ingles,DOCUMENTACION_ES/EN; 8 PDF y fuentes TXT,Versiones redactadas y revisadas; no traduccion integral automatizada de originales.
@@ -28,6 +28,6 @@ F3,CUMPLIDO,Sin ZIP ni archivos >=100 MB,VerificarEntrega.ps1; escaneo completo 
 F4,NO VERIFICABLE,Compilar y ejecutar en otra PC,Pruebas locales y desde otra carpeta,No se dispuso de una segunda PC fisica.
 F5,CUMPLIDO,Fuentes legibles y Release,"Main.cpp, src, solution, include/lib/glm; EXE Release",No se sustituye el codigo por el EXE.
 F6,NO VERIFICABLE,Liga y envio a Classroom,PARA_CLASSROOM/QueSubir; enlace confirmado por separado,El estudiante realiza envio; no se verifico ni genero acuse.
-P1,INCOMPLETO,Propuesta antes de 20 octubre,PDF historico 14 paginas; portada 30 Sep; copia anonimizada,Propuesta localizada; no hay evidencia del envio antes del limite.
+P1,INCOMPLETO,Propuesta antes de 20 octubre,docs/teoria/ANTECEDENTES: propuesta historica y requerimientos originales LAB,Ambos antecedentes incluidos; envio antes de 20 octubre no acreditado.
 ID,CUMPLIDO,Identificacion y anonimato,8 PDF auditados; portadas/metadatos; anexo aplanado,Solo 320324187 y GPO06 como identificacion; originales y creditos preservados aparte.
 LAB,NO APLICA,ZIP/PDB/videos/videoblog,Rubrica de Teoria proporcionada,No se marcan como requisitos de Teoria.
