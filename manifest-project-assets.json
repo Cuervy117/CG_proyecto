@@ -132,11 +132,6 @@
       "sha256": "d17b29361e1d53cda3761adc01168b3182ec20bb179a3c9b8b70f48ea6c53e90"
     },
     {
-      "path": "Models/freezer_station/FreezerStation.blend",
-      "size": 225419,
-      "sha256": "a87b9bca13bb917b86842d14f9948cf10d8344518db28d6725bfaf402505bde6"
-    },
-    {
       "path": "Models/freezer_station/FreezerStation.blend1",
       "size": 225227,
       "sha256": "7606a591ecc2d679dfb15f526d34bd7ea1284d316172d87947bd779b60137dc9"
