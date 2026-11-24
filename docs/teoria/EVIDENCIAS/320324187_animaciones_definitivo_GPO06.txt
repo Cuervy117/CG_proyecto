@@ -1,0 +1,96 @@
+[carga] Models/X_wing_obj.obj | 35818 tris | 135.2 ms
+[carga] Models/freezer_station.obj | 15868 tris | 36.7 ms
+[carga] Models/UFO.obj | 35924 tris | 111.7 ms
+[carga] Models/asteroide/Stylized_Planets.obj | 12752 tris | 28.7 ms
+[carga] Models/Fighter_02.obj | 7156 tris | 25.9 ms
+[carga] Models/Moon.obj | 3968 tris | 10.4 ms
+[carga] Models/planet_reksai.obj | 34924 tris | 65.8 ms
+[carga] Models/satelite/satelite_base.fbx | 25222 tris | 39.5 ms
+[carga] Models/satelite/satelite_panel_der.fbx | 264 tris | 2.0 ms
+[carga] Models/satelite/satelite_panel_izq.fbx | 264 tris | 2.0 ms
+[carga] Models/satelite/satelite_aspa_g.fbx | 328 tris | 1.5 ms
+[OK] Modelos iniciales del espacio cargados; planetas y capsula quedan bajo demanda.
+[carga] Models/arbol/arbol.obj | 1300 tris | 14.0 ms
+[carga] Models/asteroide/Rocky_Asteroid_6.obj | 11996 tris | 24.4 ms
+[carga] Models/portal/asteroide.obj | 18000 tris | 40.3 ms
+[OK] Se omitio Models/npcRoca/Paul.obj: corresponde al portal y no se utiliza.
+[OK] Superficie rocosa: camino de 558 unidades, 369 objetos, 16 NPCs
+[OK] Superficie selvatica: camino de 577 unidades, 546 objetos, 6 NPCs
+[OK] Pista: tramos de 262 (meta en 154), 174 y 139 unidades
+[carga] Models/pista/pista.obj | 4584 tris | 15.0 ms
+[OK] Pista: Models/pista/pista.obj (4584 triangulos)
+Cargando Models/asteroide/asteroide.obj ...
+[carga] Models/asteroide/asteroide.obj | 18000 tris | 45.4 ms
+[carga] Models/asteroide/Rocky_Asteroid_6.obj | 11996 tris | 24.0 ms
+[OK] Base de inicio: plataforma de radio 15 bajo la pista, 34 unidades antes de la meta
+[OK] Cinturon de asteroides: 150 asteroides
+[carga] Models/rocket.obj | 17450 tris | 25.6 ms
+[OK] Cohete: Models/rocket.obj (17450 triangulos)
+[OK] Reloj en pantalla listo
+[carga] Models/planetaOceano/planetaOceano.obj | 4096 tris | 13.4 ms
+[OK] Planeta oceano: Models/planetaOceano/planetaOceano.obj
+[OK] Oceano por dentro: ola de 165 de alto a 520 unidades de donde se aparece
+[AVISO] No hay modelo para el avatar (ni Models/avatar/avatar.obj ni Paul.obj)
+Cargando Models/Intergalactic_Spaceships_Version_2.obj ...
+[carga] Models/Intergalactic_Spaceships_Version_2.obj | 20911 tris | 40.5 ms
+[OK] Nave intergalactica: Models/Intergalactic_Spaceships_Version_2.obj (20911 triangulos)
+H-A1 jerarquia: OK (hijo 1.000, 2.000, 2.000)
+A3.2 FollowXZ: OK (camara 3.000, 4.000, -12.000; objetivo 3.000, 2.000, -2.000)
+A4.1 Chase: OK (camara -7.000, 5.000, -2.000; objetivo 5.000, 2.000, -2.000)
+A4.2 Flight: OK (camara -11.000, 16.000, -3.000; objetivo 9.000, 12.000, -3.000; inclinada y 10.528/13.368)
+A4.3 Orbit: OK (camara 5.000, 22.000, 14.321; distancia 20.000; yaw 0.120)
+A4.4 CameraDirector: OK (rigs Planeta/Carrera/Vuelo/Observacion)
+A3.3 pivotes: OK (pivote 2.000, 0.000, 2.000; hoja 1.000, 0.000, 1.000)
+A3.3 camara-raiz: OK (camara 5.000, 6.000, -9.000; objetivo 5.000, 2.000, 3.000)
+A4.1 Chase RekSai: OK (avatar 30.386, -12.362, -43.928; camara 30.386, -7.362, -53.928)
+A4.2 Flight nave: OK (nave 0.000, 0.000, 0.000; camara 0.000, 6.000, -16.000; mallas 1)
+A4.3 Orbit nave: OK (nave 0.000, 0.000, 0.000; camara 0.000, 12.000, 17.321; mallas 1)
+[QA] Inicio: jugador=(30.4, -12.4, -43.9) camara=(30.4, -6.4, -43.9) dRoca=54.8 dSelva=162.7
+[carga] Models/capsula/capsulaCuerpo.obj | 16340 tris | 33.9 ms
+[carga] Models/capsula/capsulaPuerta.obj | 1296 tris | 6.8 ms
+Cargando Models/planetaRoca/planetaRoca.obj bajo demanda ...
+[carga] Models/planetaRoca/planetaRoca.obj | 18000 tris | 54.3 ms
+[carga] Models/jona/cohete_jona.obj | 17998 tris | 112.4 ms
+[Jona] Listo: 12 keyframes, 26.0 segundos; 6 reproducir, 7 reiniciar
+Cargando 8 NPCs de la superficie rocosa bajo demanda ...
+[carga] Models/npcRoca/monstruoNegro.obj | 18000 tris | 42.9 ms
+[carga] Models/npcRoca/escorpion.obj | 18000 tris | 44.7 ms
+[carga] Models/npcRoca/Cerbero.obj | 18000 tris | 46.2 ms
+[carga] Models/npcRoca/serpienteAlas.obj | 18000 tris | 43.9 ms
+[carga] Models/reksai/voidmite.obj | 2324 tris | 14.3 ms
+[carga] Models/reksai/voidgrub.obj | 5662 tris | 31.2 ms
+[carga] Models/reksai/void_spawn.obj | 832 tris | 9.7 ms
+[carga] Models/reksai/rift_herald.obj | 14373 tris | 55.1 ms
+[QA] Recursos rocosa: capsula=1 puerta=1 planeta=1 total=503.1 ms
+Zona=1 camara=0 objetivo=0 nave=0
+[Animaciones] keyframes tiempo=26.000 listo=1
+Cargando Models/planetaSelva/planetaSelvatico.obj bajo demanda ...
+[carga] Models/planetaSelva/planetaSelvatico.obj | 18000 tris | 36.6 ms
+Cargando 6 NPCs de la superficie selvatica bajo demanda ...
+[carga] Models/npcSelva/naruto.obj | 18000 tris | 37.3 ms
+[carga] Models/npcSelva/zorroBlanco.obj | 18000 tris | 36.1 ms
+[carga] Models/npcSelva/caballoDelfin.obj | 18000 tris | 36.2 ms
+[carga] Models/npcSelva/pulpo.obj | 17999 tris | 36.1 ms
+[carga] Models/npcSelva/tigreFuego.obj | 18000 tris | 38.6 ms
+[carga] Models/npcSelva/calamardoGuapo.obj | 18000 tris | 35.9 ms
+[QA] Recursos selvatica: capsula=1 puerta=1 planeta=1 total=260.4 ms
+Zona=1 camara=3 objetivo=0 nave=0
+R4 D1 SHINOBI zonaVista=2 distancia=45.0
+Zona=1 camara=3 objetivo=1 nave=0
+R4 HANGAR zonaVista=0 distancia=65.0
+Zona=1 camara=3 objetivo=2 nave=0
+R4 VACIO zonaVista=0 distancia=55.0
+Zona=1 camara=3 objetivo=3 nave=0
+R4 SHINOBI zonaVista=0 distancia=60.0
+Zona=1 camara=3 objetivo=4 nave=0
+R4 SATELITE zonaVista=0 distancia=24.0
+[Animaciones] satelite theta=1.434 paneles=0.000
+Zona=0 camara=1 objetivo=4 nave=1
+[QA] Recursos rocosa: capsula=1 puerta=1 planeta=1 total=0.0 ms
+Zona=1 camara=1 objetivo=4 nave=1
+Bajaste de miNave: J junto a ella para volver a subir
+Zona=1 camara=0 objetivo=4 nave=0
+[Animaciones] puerta=75.000
+[Animaciones] marcha recorrido=28.233 pata=-0.351 nave=0
+Zona=3 camara=0 objetivo=4 nave=1
+[Animaciones] Secuencia terminada: 3360 frames simulados a 60 Hz. Revisar capturas; no certifica calidad visual.

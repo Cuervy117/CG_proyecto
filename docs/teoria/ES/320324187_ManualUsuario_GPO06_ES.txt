@@ -1,0 +1,402 @@
+Manual de usuario
+320324187 - GPO06
+
+1. El entorno y cómo abrirlo
+
+Este entorno espacial permite explorar con Rek’Sai, usar una nave, recorrer una pista y observar elementos animados. Contiene una base y tres zonas planetarias: roca con cristales, selva y océano con una ola. La cámara de tercera persona sigue al personaje o a la nave; la cámara libre y la órbita permiten observar desde otros puntos.
+
+Requisitos: Windows x64 y controlador con soporte OpenGL 4.3. Abre PROYECTO_GITHUB y ejecuta Jugar.cmd o LabCGeIHC.exe de la raíz. Conserva Models, Textures, shaders y las DLL junto al EXE. No es necesario instalar Blender ni abrir Visual Studio para jugar. La aplicación busca sus recursos desde su propia ubicación, aunque la inicies desde otra carpeta.
+
+Al cargar aparece Rek’Sai en la base y puede aparecer una consola adicional. El reloj está arriba a la izquierda; el HUD inferior identifica modo, zona y estado. Con F9 puedes liberar el ratón. Una consola o un proceso por sí solos no confirman que el juego se haya mostrado: debe aparecer una escena como la siguiente.
+
+Figura 1. Inicio del Release: base, avatar y HUD.
+
+2. Controles implementados
+
+Las teclas se contrastaron con Main.cpp, Input.cpp y Window::ManejaTeclado. Las teclas Y, U, G y O de los documentos viejos no se presentan como controles de esta versión.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Tecla / acción'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Tecla / acción', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'_width_max': 55.748046875
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(47.251953125, ['Tecla', '/', 'acción'])], link=[], rise=0, text='Tecla / acción', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Resultado y contexto'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Resultado y contexto', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'_width_max': 85.958740234375
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(262.041259765625, ['Resultado', 'y', 'contexto'])], link=[], rise=0, text='Resultado y contexto', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'F1 / F2 / F3 / F4'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='F1 / F2 / F3 / F4', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(42.068115234375, ['F1 / F2 / F3 / F4'])], link=[], rise=0, text='F1 / F2 / F3 / F4', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Planeta a pie / carrera / vuelo / observación. Son modos de experiencia.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Planeta a pie / carrera / vuelo / observación. Son modos de experiencia.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(76.3154296875, ['Planeta a pie / carrera / vuelo / observación. Son modos de experiencia.'])], link=[], rise=0, text='Planeta a pie / carrera / vuelo / observación. Son modos de experiencia.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'F5 / F6 / F7 / F8'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='F5 / F6 / F7 / F8', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(42.068115234375, ['F5 / F6 / F7 / F8'])], link=[], rise=0, text='F5 / F6 / F7 / F8', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Selva / roca / océano / espacio. Cambian la zona.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Selva / roca / océano / espacio. Cambian la zona.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(160.89208984375, ['Selva / roca / océano / espacio. Cambian la zona.'])], link=[], rise=0, text='Selva / roca / océano / espacio. Cambian la zona.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'W A S D + mouse'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='W A S D + mouse', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(35.2158203125, ['W A S D + mouse'])], link=[], rise=0, text='W A S D + mouse', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Mover y orientar. En carrera W/S aceleran/frenan y A/D desplazan de carril.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Mover y orientar. En carrera W/S aceleran/frenan y A/D desplazan de carril.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(63.129638671875, ['Mover y orientar. En carrera W/S aceleran/frenan y A/D desplazan de carril.'])], link=[], rise=0, text='Mover y orientar. En carrera W/S aceleran/frenan y A/D desplazan de carril.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Q / E'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Q / E', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(83.63427734375, ['Q / E'])], link=[], rise=0, text='Q / E', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Descender / ascender en vuelo; E también interactúa según el contexto.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Descender / ascender en vuelo; E también interactúa según el contexto.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(76.30712890625, ['Descender / ascender en vuelo; E también interactúa según el contexto.'])], link=[], rise=0, text='Descender / ascender en vuelo; E también interactúa según el contexto.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'J'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='J', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(98.75, ['J'])], link=[], rise=0, text='J', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Abordar o bajar de la nave donde el estado y la zona lo permiten.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Abordar o bajar de la nave donde el estado y la zona lo permiten.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(101.811279296875, ['Abordar o bajar de la nave donde el estado y la zona lo permiten.'])], link=[], rise=0, text='Abordar o bajar de la nave donde el estado y la zona lo permiten.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'C'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='C', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(96.861572265625, ['C'])], link=[], rise=0, text='C', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Alternar cámara libre.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Alternar cámara libre.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(266.747802734375, ['Alternar cámara libre.'])], link=[], rise=0, text='Alternar cámara libre.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Tab / mouse wheel'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Tab / mouse wheel', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(31.185791015625, ['Tab / mouse wheel'])], link=[], rise=0, text='Tab / mouse wheel', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'En F4: siguiente objetivo / distancia.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='En F4: siguiente objetivo / distancia.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(211.921142578125, ['En F4: siguiente objetivo / distancia.'])], link=[], rise=0, text='En F4: siguiente objetivo / distancia.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '1'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='1', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(98.272705078125, ['1'])], link=[], rise=0, text='1', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Activar/reiniciar cohete procedural del espacio o de D1 en selva. En F4 debe observarse un cohete.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Activar/reiniciar cohete procedural del espacio o de D1 en selva. En F4 debe observarse un cohete.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(0.72021484375, ['Activar/reiniciar cohete procedural del espacio o de D1 en selva. En F4 debe observarse un']), (320.11767578125, ['cohete.'])], link=[], rise=0, text='Activar/reiniciar cohete procedural del espacio o de D1 en selva. En F4 debe observarse un cohete.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '2 / 3'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='2 / 3', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(86.460693359375, ['2 / 3'])], link=[], rise=0, text='2 / 3', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Alternar puerta de cápsula / paneles del satélite.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Alternar puerta de cápsula / paneles del satélite.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(166.080078125, ['Alternar puerta de cápsula / paneles del satélite.'])], link=[], rise=0, text='Alternar puerta de cápsula / paneles del satélite.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '4 / 5'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='4 / 5', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(86.460693359375, ['4 / 5'])], link=[], rise=0, text='4 / 5', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Salida y regreso del Fighter / puerta del hangar; 5 actúa estando estacionado.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Salida y regreso del Fighter / puerta del hangar; 5 actúa estando estacionado.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(54.55908203125, ['Salida y regreso del Fighter / puerta del hangar; 5 actúa estando estacionado.'])], link=[], rise=0, text='Salida y regreso del Fighter / puerta del hangar; 5 actúa estando estacionado.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '6 / 7'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='6 / 7', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(86.460693359375, ['6 / 7'])], link=[], rise=0, text='6 / 7', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'En roca: reproducir / reiniciar cohete por cuadros clave.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='En roca: reproducir / reiniciar cohete por cuadros clave.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(139.17724609375, ['En roca: reproducir / reiniciar cohete por cuadros clave.'])], link=[], rise=0, text='En roca: reproducir / reiniciar cohete por cuadros clave.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'F / L / K'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='F / L / K', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(73.24169921875, ['F / L / K'])], link=[], rise=0, text='F / L / K', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Linterna / faro de nave / foco de la base.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Linterna / faro de nave / foco de la base.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(195.842529296875, ['Linterna / faro de nave / foco de la base.'])], link=[], rise=0, text='Linterna / faro de nave / foco de la base.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'F9 / Esc'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='F9 / Esc', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 103
+'_wrapWidths': [103, 103]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(71.826416015625, ['F9 / Esc'])], link=[], rise=0, text='F9 / Esc', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Liberar o capturar el cursor / cerrar el programa.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Liberar o capturar el cursor / cerrar el programa.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 348
+'_wrapWidths': [348, 348]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(166.5947265625, ['Liberar o capturar el cursor / cerrar el programa.'])], link=[], rise=0, text='Liberar o capturar el cursor / cerrar el programa.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+Modo, zona y vista
+
+F1-F4 no significan primera, segunda, tercera o cuarta persona. F5-F8 cambian de lugar. C activa una cámara libre y en F4 la rueda ajusta distancia; esos cambios de vista no crean un modo nuevo de juego.
+
+3. Recorrido sugerido
+
+1) Revisa la base y el HUD. 2) Usa F6 para ir a roca y F1 para caminar con Rek’Sai; prueba WASD y ratón. 3) Con 2 observa la puerta de la cápsula. Con 6 reproduce el cohete por piezas y con 7 lo reinicias. 4) Usa F5 para la selva. 5) Con F2 entra en carrera; con W/S regula velocidad y con A/D el carril. 6) En F3 vuela entre planetas. Acercarte a la atmósfera cambia de zona; E actúa según el contexto y los portales permiten salir. En océano el recorrido de la nave sigue la ola hasta su salida.
+
+En F4, Tab recorre D1, hangar, roca, selva, satélite y cohete de la base cuando están disponibles. En el hangar, 4 inicia la salida/regreso del Fighter y 5 demuestra la puerta. En el satélite, 3 repliega los paneles. Con F1 vuelves al recorrido a pie del último planeta. F8 regresa al espacio.
+
+Figura 2. Hangar observado desde F4.
+
+Si algo falla
+
+Si no aparece ventana, comprueba las DLL y recursos completos y consulta el registro de --probar-release; un fallo de dependencias puede cerrar el EXE antes de mostrar texto. Si no ves el cursor, usa F9. Si te pierdes, usa F8 o F6/F1. Si una tecla no responde durante una carga, espera y vuelve a pulsarla. La primera visita puede cargar modelos. No se garantiza compatibilidad con equipos sin OpenGL 4.3.

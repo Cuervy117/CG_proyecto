@@ -1,0 +1,8 @@
+﻿Animacion,Objeto,Contexto,Implementacion,Transformacion o matematica,Evidencia,Prueba y limite
+Marcha,Rek’Sai,Locomocion del jugador,src/game/avatar/Avatar.cpp: Avatar::update,Fases sinusoidales opuestas; pivotes jerarquicos,Animacion2880 / Animacion3000,"28.233 unidades, pata=-0.351 rad; 1 sistema articulado"
+Cuadros clave,Rocket / cohete,Lanzamiento por etapas,"src/game/anim/CoheteKeyframes.h: Actualizar, Dibujar",20 canales interpolados; giro en pivote; orbita,SecuenciaCohete; Animacion0/480/960/1679,26 s completados; piezas nombradas; un sistema por piezas
+Lanzamiento procedural,D1 / base,Despegue y reinicio,src/game/world/Espacio.cpp: ActualizarCohetes,"h=H*tau^2, finite-state machine",Animacion1680 / Animacion1800,Comprobacion de ignicion aprobada; dos sitios cuentan una vez
+Puertas,Capsule / hangar,Acceso,"Main.cpp: AnimarCapsula, ActualizarPuertaHangar",T(p) R(theta) T(-p); clamped transition,Animacion1920/2040; 2640/2760,Capsula a 75 grados; todas las puertas agrupadas
+Paneles,Satellite / satelite,Despliegue,Main.cpp: AnimarSatelite,Giros opuestos; factor de apertura suavizado,Animacion2160 / Animacion2280,Factor 0.000; un sistema para ambos paneles
+Trayectoria orbital,Satellite / satelite,Objetivo de observacion movil,"Main.cpp: PosicionSatelite, TangenteSatelite","x=side*Rx*(1-cos t), y=h+A*sin(2t), z=Rz*sin t",Animacion2160 / Animacion2280,"theta=1.434; rotor incluido, no contado aparte"
+Rivales de carrera,Two ships / dos naves,Competencia,src/game/world/Jugador.cpp: EstadoRival,d=(offset+18t) mod L; segment selection and tangent,Animacion2400 / Animacion2520,Muestras renderizadas de trayectoria; ambos rivales cuentan una vez

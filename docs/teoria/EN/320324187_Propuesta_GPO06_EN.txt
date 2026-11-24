@@ -1,0 +1,164 @@
+Updated proposal
+320324187 - GPO06
+
+1. Proposal and located source
+
+Virtual environment for space travel and intergalactic species evolution. The located historical proposal is a 14-page PDF whose cover states 30 September 2026 as its preparation date. It proposed two planets and a space zone. The original remains unchanged in the original project. This is a Theory edition with corrected identification and an updated description; it does not establish that the proposal was submitted to Classroom before 20 October.
+
+The product lets users control Rek’Sai and a ship across surfaces and space. It combines rock and crystals, forest and an ocean wave with a base, track, capsules, satellite and hangar. Fictional-universe references describe the academic prototype’s visual inspiration; they do not imply an official franchise production.
+
+Current scope checked against implementation
+
+Four experiences remain: planet, racing, flight and observation. Worlds are separate states, entered through proximity/interaction and left through portals or zone transitions. The avatar is animated through parts. There are procedural rockets, a keyframed rocket, doors, panels and computed trajectories. TARS is confirmed in Main.cpp and Tars.cpp. Gohan, domes and other planned models are not treated as completed merely because they appear in the proposal.
+
+Figure 1. Racing in the Release implementation.
+
+2. Organization, changes and completion criteria
+
+Member A focuses on engine, cameras, lighting, builds and integration; Member B on worlds, infrastructure, assets and environmental animations; Member C - 320324187 on Rek’Sai, input, experiences and HUD. The individual scope is documented in the technical manual and work log. This edition does not replace the individual logs of A and B.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Earlier proposal'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Earlier proposal', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'_width_max': 64.717041015625
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(94.282958984375, ['Earlier', 'proposal'])], link=[], rise=0, text='Earlier proposal', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Implementation / revision'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Implementation / revision', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'_width_max': 102.493896484375
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(189.506103515625, ['Implementation', '/', 'revision'])], link=[], rise=0, text='Implementation / revision', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Two planets'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Two planets', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(113.17138671875, ['Two planets'])], link=[], rise=0, text='Two planets', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rock, forest and ocean in current code.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rock, forest and ocean in current code.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(143.64013671875, ['Rock, forest and ocean in current code.'])], link=[], rise=0, text='Rock, forest and ocean in current code.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rek’Sai as avatar'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rek’Sai as avatar', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(92.38623046875, ['Rek’Sai as avatar'])], link=[], rise=0, text='Rek’Sai as avatar', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Nine parts, pivots and alternating gait phases.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Nine parts, pivots and alternating gait phases.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(119.53466796875, ['Nine parts, pivots and alternating gait phases.'])], link=[], rise=0, text='Nine parts, pivots and alternating gait phases.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Experiences'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Experiences', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(112.22509765625, ['Experiences'])], link=[], rise=0, text='Experiences', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'F1-F4 are modes; F5-F8 are destinations.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='F1-F4 are modes; F5-F8 are destinations.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(134.68359375, ['F1-F4 are modes; F5-F8 are destinations.'])], link=[], rise=0, text='F1-F4 are modes; F5-F8 are destinations.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Externally distributed assets'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Externally distributed assets', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(53.17333984375, ['Externally distributed assets'])], link=[], rise=0, text='Externally distributed assets', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Complete optimized copy; evaluate delivery branch and publication record.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Complete optimized copy; evaluate delivery branch and publication record.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(11.34228515625, ['Complete optimized copy; evaluate delivery branch and publication record.'])], link=[], rise=0, text='Complete optimized copy; evaluate delivery branch and publication record.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+Theory completion criteria
+
+Completion requires seven justified animations, a functional camera, coherent lighting and transforms, reviewed geometry/textures, an executable Release and bilingual individual documentation. Models + Textures must remain below 100 MB. The GitHub link must support rebuilding the project. Videos, a video blog, ZIP archives and PDB files are not added as requirements of this Theory rubric.
+
+Conclusion
+
+Updating the proposal explains changes without rewriting the past. The project moved from two planned surfaces to three zones with distinct experiences. Its academic value lies in connecting models, matrices, animation, lighting and interaction within one scene. Submission claims must be supported by concrete tests while retaining portability and visual-review limitations. The stated Theory deadline is before 00:00 on 24 November 2026, Mexico City time; the student will submit the work.
+
+Sources: local 14-page proposal PDF, cover dated 30 Sep 2026; Drive proposal 10ZSUCcTl6NHdS9TP59f8Lie2TOvQx9AN5i7RtobtPJw; original clone PLAN_MAESTRO section 15. No Classroom submission receipt was located.

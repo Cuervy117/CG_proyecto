@@ -1,0 +1,22 @@
+
+  Main.cpp
+PROYECTO_GITHUB\src\engine\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [PROYECTO_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Main.cpp")
+  
+PROYECTO_GITHUB\src\engine\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos [PROYECTO_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': redefinición de macro [PROYECTO_GITHUB\LabCGeIHC.vcxproj]
+  (compilando archivo de origen "Main.cpp")
+      PROYECTO_GITHUB\include\glfw3.h(123,11):
+      vea la definición anterior de “APIENTRY”
+  
+PROYECTO_GITHUB\Main.cpp(1589,67): warning C4244: 'argumento': conversión de 'GLfloat' a 'int'; posible pérdida de datos [PROYECTO_GITHUB\LabCGeIHC.vcxproj]
+PROYECTO_GITHUB\Main.cpp(1589,37): warning C4244: 'argumento': conversión de 'GLfloat' a 'int'; posible pérdida de datos [PROYECTO_GITHUB\LabCGeIHC.vcxproj]
+  Generando código
+  3 of 3526 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    24 functions had inline decision re-evaluated but remain unchanged
+  Generación de código finalizada
+  LabCGeIHC.vcxproj -> PROYECTO_GITHUB\x64\Release\LabCGeIHC.exe
+Build completado. Copia las DLLs junto al exe y ejecuta desde raiz: .\x64\Release\LabCGeIHC.exe

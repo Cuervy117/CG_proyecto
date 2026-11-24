@@ -1,0 +1,164 @@
+Propuesta actualizada
+320324187 - GPO06
+
+1. Propuesta y antecedente localizado
+
+Ambiente virtual de viajes espaciales y evolución de especies intergalácticas. La propuesta histórica localizada es un PDF de 14 páginas cuya portada declara elaboración el 30 de septiembre de 2026. Planteaba dos planetas y una zona espacial. La copia original se conserva en el proyecto original y no se modifica. Este documento es una edición de Teoría con identificación corregida y descripción actualizada; no acredita que la propuesta se enviara a Classroom antes del 20 de octubre.
+
+El producto permite controlar a Rek’Sai y una nave para recorrer superficies y espacio. La escena combina roca y cristales, una selva y un océano con una ola, además de base, pista, cápsulas, satélite y hangar. Las referencias a universos de ficción describen la inspiración visual del prototipo académico; no implican que el proyecto sea una obra oficial de esas franquicias.
+
+Alcance actual contrastado
+
+Se conservan cuatro experiencias: planeta, carrera, vuelo y observación. Los mundos son estados distintos, con entrada por proximidad/interacción y salidas por portal o transición de zona. El avatar se anima por piezas. Hay cohetes procedurales y uno por cuadros clave, puertas, paneles y trayectorias calculadas. La presencia de TARS se comprueba en Main.cpp y Tars.cpp. El contenido de Gohan, domos u otros modelos de la planeación no se da por terminado solo por aparecer en la propuesta.
+
+Figura 1. Carrera en la implementación Release.
+
+2. Organización, cambios y criterio de cierre
+
+Integrante A se concentra en motor, cámaras, luz, compilación e integración; Integrante B en mundos, infraestructura, recursos y animaciones del entorno; Integrante C - 320324187 en Rek’Sai, entrada, experiencias y HUD. El alcance individual se documenta en el manual técnico y la bitácora. Esta edición no pretende sustituir las bitácoras individuales de A y B.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Antecedente'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Antecedente', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'_width_max': 51.01245117187501
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(107.987548828125, ['Antecedente'])], link=[], rise=0, text='Antecedente', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Implementación / revisión'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Implementación / revisión', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'_width_max': 104.390625
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(187.609375, ['Implementación', '/', 'revisión'])], link=[], rise=0, text='Implementación / revisión', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Dos planetas'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Dos planetas', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(109.38623046875, ['Dos planetas'])], link=[], rise=0, text='Dos planetas', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Roca, selva y océano en el código actual.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Roca, selva y océano en el código actual.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(135.12353515625, ['Roca, selva y océano en el código actual.'])], link=[], rise=0, text='Roca, selva y océano en el código actual.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rek’Sai como avatar'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rek’Sai como avatar', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(80.578369140625, ['Rek’Sai como avatar'])], link=[], rise=0, text='Rek’Sai como avatar', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Nueve piezas, pivotes y marcha de fase alternada.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Nueve piezas, pivotes y marcha de fase alternada.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(101.115234375, ['Nueve piezas, pivotes y marcha de fase alternada.'])], link=[], rise=0, text='Nueve piezas, pivotes y marcha de fase alternada.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Recorridos'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Recorridos', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(117.90283203125, ['Recorridos'])], link=[], rise=0, text='Recorridos', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'F1-F4 son modos; F5-F8 son destinos.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='F1-F4 son modos; F5-F8 son destinos.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(145.54931640625, ['F1-F4 son modos; F5-F8 son destinos.'])], link=[], rise=0, text='F1-F4 son modos; F5-F8 son destinos.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Distribución de recursos externa'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Distribución de recursos externa', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 159
+'_wrapWidths': [159, 159]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(37.111328125, ['Distribución de recursos externa'])], link=[], rise=0, text='Distribución de recursos externa', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Copia completa y optimizada; evaluar rama de entrega y registro de publicación.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Copia completa y optimizada; evaluar rama de entrega y registro de publicación.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 292
+'_wrapWidths': [292, 292]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(34.032470703125, ['Copia completa y optimizada; evaluar rama de entrega y registro de']), (247.109375, ['publicación.'])], link=[], rise=0, text='Copia completa y optimizada; evaluar rama de entrega y registro de publicación.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+Criterios de Teoría
+
+El cierre exige siete animaciones justificadas, cámara funcional, luz y transformaciones coherentes, geometría/texturas revisadas, Release ejecutable y documentación individual bilingüe. El conjunto Models + Textures debe quedar por debajo de 100 MB. La liga de GitHub debe permitir reconstruir el proyecto. Videos, videoblog, ZIP y PDB no se añaden como requisitos de esta rúbrica de Teoría.
+
+Conclusión
+
+La actualización de la propuesta permite explicar los cambios sin reescribir el pasado. El proyecto pasó de dos superficies previstas a tres zonas con modos de recorrido diferenciados. Su valor académico está en vincular modelos, matrices, animación, luz e interacción en una misma escena. La entrega debe respaldar esas capacidades con pruebas concretas y conservar los pendientes de portabilidad y revisión visual. El plazo declarado para Teoría es el 24 de noviembre de 2026 antes de las 00:00, hora de Ciudad de México; el estudiante realizará el envío.
+
+Antecedentes: PDF local de propuesta, 14 páginas, portada 30 Sep 2026; propuesta de Drive 10ZSUCcTl6NHdS9TP59f8Lie2TOvQx9AN5i7RtobtPJw; PLAN_MAESTRO sección 15 del clon original. No se localizó un acuse de Classroom.

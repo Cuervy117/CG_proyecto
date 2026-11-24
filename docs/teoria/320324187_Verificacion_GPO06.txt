@@ -1,0 +1,79 @@
+320324187 - GPO06 - VERIFICACION DE TEORIA
+Fecha: 23 noviembre 2026, Ciudad de Mexico.
+
+RESULTADO LOCAL
+Release x64 compilado con MSBuild/VS 18 y toolset v143. EXE funcional:
+PROYECTO_GITHUB/LabCGeIHC.exe. Ventana real observada en base, roca y selva;
+F6 y F5 cambiaron la zona por teclado y Escape cerro la ventana.
+Las capturas de ventana estan en EVIDENCIAS/320324187_VentanaF5_GPO06.jpg
+y 320324187_VentanaF6_GPO06.jpg. No se confunde proceso con ventana visible.
+
+La prueba --probar-release termino con salida 0 y cubrio espacio, roca,
+selva, oceano, carrera, observacion D1, lanzamiento y hangar. Tambien paso
+desde una carpeta distinta. --probar-animaciones termino con salida 0:
+3360 frames a 60 Hz simulados, cohete a 26 s, puerta a 75 grados,
+paneles a factor 0, desplazamiento del avatar 28.233 y pata -0.351 rad.
+No son mediciones de rendimiento. Las capturas son de renderizado real.
+
+MODELOS Y TEXTURAS
+195 archivos; 96,057,850 bytes = 96.057850 MB decimales.
+Menos de 100 MB tanto en criterio decimal como binario.
+Sin archivos individuales >=100,000,000 bytes y sin ZIPs en el proyecto.
+OBJ: indices dentro de rango y valores finitos. No quedaron MTL declarados
+ausentes ni rutas absolutas en OBJ/MTL. Hay materiales explicitos de respaldo.
+No se certifica que todas las mallas sean cerradas, que no existan caras
+degeneradas ni ausencia universal de intersecciones. Se redujeron texturas
+y modelos de copias; los originales se mantienen fuera de la entrega.
+
+DOCUMENTACION
+Ocho PDF: manual tecnico (9 paginas por idioma), usuario (3), bitacora (2)
+y propuesta actualizada (2), ES/EN. Se revisaron las paginas renderizadas,
+controles, contenido y metadatos. No se detectaron nombres personales de
+integrantes o docente en los PDF finales. Autor y creador: 320324187.
+Las dos tablas CSV de animaciones completan los siete campos solicitados.
+Los TXT son copias editables de texto; los diagramas y figuras estan en PDF.
+
+COSTOS Y TIEMPOS
+Desembolso directo declarado: 0 MXN; equipo previamente disponible.
+Horas confirmadas parciales: 2.5 h HUD + 0.5 h integracion + 4 h documentos.
+No se inventaron otras horas, tarifas, depreciacion ni cotizaciones.
+Propuesta: demo gratuita; precio eventual aproximado 120 MXN.
+
+PROPUESTA HISTORICA
+Se encontro el PDF de 14 paginas con portada fechada 30 septiembre 2026.
+Se conserva intacto en ORIGINALES_NO_SUBIR, fuera de esta carpeta.
+EVIDENCIAS/320324187_PropuestaHistorica_GPO06.pdf es una copia aplanada y
+anonimizada, con portada nueva y avisos LAB. Conserva el texto historico en
+espanol; no sustituye las ediciones actuales ES/EN ni la rubrica de Teoria.
+No se encontro acuse de envio a Classroom antes del 20 octubre.
+
+CONTROL DE VERSIONES
+Clon original conservado y limpio. Rama de entrega: entrega/320324187-teoria,
+basada en main remoto 41ba92c. Se incorporaron por fast-forward los renombres
+Main.cpp y SceneVerification.cpp y las retiradas ya presentes en el remoto;
+no se borraron archivos del clon original ni se reescribio historia.
+AGENTS.md se genero siguiendo seccion 15 del PLAN_MAESTRO original y sigue
+local/ignorado. Las correcciones estan en esta copia de entrega.
+Consultar 320324187_Repositorio_GPO06.txt para el estado de publicacion.
+
+PENDIENTES / LIMITES
+1. No se realizo prueba en una segunda computadora fisica.
+2. Revision visual exhaustiva de geometria, texturizado y todas las colisiones.
+3. La separacion entre cohete por cuadros clave y cohete procedural esta
+   justificada; la aceptacion del conteo final de siete es del evaluador.
+4. No se prepararon ni atribuyeron documentos individuales de A/B como si
+   hubieran sido escritos por ellos. Sus contribuciones se resumen por rol;
+   sus registros originales se conservaron fuera de la carpeta final.
+5. No hay acuse de la propuesta de octubre ni del envio de Teoria.
+6. El historial, bibliotecas y creditos se conservan. La procedencia/licencias
+   de cada modelo no queda totalmente acreditada; no se presume permiso
+   comercial. No se eliminaron atribuciones para simular anonimato.
+
+LABORATORIO, POR SEPARADO
+ZIP, PDB, videos y videoblog no se consideran requisitos de Teoria.
+Un PDB ya versionado en el remoto se conserva en el clon; no se propone
+subirlo a Classroom para esta entrega. Los originales historicos de LAB no
+se presentan como la rubrica aplicable a Teoria.
+
+No se envio nada a Classroom. La entrega no se declara integramente cerrada
+mientras existan los pendientes anteriores.

@@ -18,7 +18,7 @@ LabCGeIHC/
 *.bak3
 *.bak_refactor
 
-# Assets y dependencias locales (no se versionan; viven en la PC)
+# Recursos de Teoria versionados; fuentes de autor y paquetes temporales aparte.
 # Teoria: recursos y dependencias deben viajar con el codigo.
 Dependencias/
 # Las mallas OBJ de Models son recursos; x64 ya esta ignorado.
@@ -36,7 +36,8 @@ artefactos/
 reksai_referencia.jpg
 
 # Documentos locales (cada integrante genera su AGENTS.md; ver PLAN §16.6-16.7)
-/docs/
+/docs/*
+!/docs/teoria/
 /AGENTS.md
 /LEEME.txt
 /manifest-dependencies.json

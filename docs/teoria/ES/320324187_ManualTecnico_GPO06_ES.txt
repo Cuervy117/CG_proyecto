@@ -1,0 +1,822 @@
+Manual técnico
+320324187 - GPO06
+
+1. Objetivo y alcance
+
+Desarrollar y documentar un entorno interactivo tridimensional en Windows que conecte exploración planetaria, carrera, vuelo y observación. La contribución individual comprende el avatar Rek’Sai, su animación jerárquica, la captura de entrada y el HUD, integrados con el mundo y el motor del equipo.
+
+El alcance implementado incluye una base espacial y tres superficies: roca, selva y océano. El cambio de zona es un cambio de estado y de escena; no es un aterrizaje continuo sobre una esfera. Los modos F1-F4 describen experiencias. La cámara de seguimiento, persecución, vuelo u órbita define cómo se observa la experiencia.
+
+Limitantes
+
+El sistema solicita un contexto OpenGL 4.3 Core en Window::Initialise, aunque documentación previa mencionaba 3.3. Se evalúa Windows x64, con C++17 y toolset v143. No se implementa una simulación biológica ni un motor físico general. Las texturas se redujeron a un máximo de 512 × 512 en la copia de entrega; esto reduce detalle visual. No hay medición de rendimiento ni prueba independiente en una segunda computadora.
+
+Estado del arte
+
+La rasterización programable separa atributos de vértice, transformaciones, muestreo de texturas e iluminación por fragmento [1]. En este proyecto se usa ese flujo para mostrar modelos importados y geometría procedural. GLFW gestiona la ventana, el contexto y los eventos [2]; GLM representa vectores y matrices [3]; Assimp convierte archivos de modelos en una escena importada [4]. La animación implementada se basa en transformaciones jerárquicas, trayectorias paramétricas y cuadros clave. Este enfoque permite estudiar explícitamente las matemáticas de cada frame.
+
+2. Tecnologías y decisiones
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Tecnología'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Tecnología', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'_width_max': 44.86572265625
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(43.13427734375, ['Tecnología'])], link=[], rise=0, text='Tecnología', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Uso y justificación'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Uso y justificación', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'_width_max': 75.101318359375
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(115.898681640625, ['Uso', 'y', 'justificación'])], link=[], rise=0, text='Uso y justificación', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Alternativa / límite'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Alternativa / límite', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'_width_max': 73.217041015625
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(84.782958984375, ['Alternativa', '/', 'límite'])], link=[], rise=0, text='Alternativa / límite', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'C++17 / Visual Studio'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='C++17 / Visual Studio', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(5.78076171875, ['C++17 / Visual Studio'])], link=[], rise=0, text='C++17 / Visual Studio', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Código nativo, solución Windows y bibliotecas existentes.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Código nativo, solución Windows y bibliotecas existentes.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(14.770263671875, ['Código nativo, solución Windows y bibliotecas']), (150.36767578125, ['existentes.'])], link=[], rise=0, text='Código nativo, solución Windows y bibliotecas existentes.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Más control manual que un motor integrado.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Más control manual que un motor integrado.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(29.018310546875, ['Más control manual que un motor']), (120.194091796875, ['integrado.'])], link=[], rise=0, text='Más control manual que un motor integrado.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'OpenGL / GLSL'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='OpenGL / GLSL', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(27.04736328125, ['OpenGL / GLSL'])], link=[], rise=0, text='OpenGL / GLSL', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Transformación y luz explícitas, acordes con el laboratorio.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Transformación y luz explícitas, acordes con el laboratorio.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(11.9521484375, ['Transformación y luz explícitas, acordes con el']), (148.47509765625, ['laboratorio.'])], link=[], rise=0, text='Transformación y luz explícitas, acordes con el laboratorio.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Un motor integrado reduciría código propio; ocultaría parte del pipeline.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Un motor integrado reduciría código propio; ocultaría parte del pipeline.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(20.036865234375, ['Un motor integrado reduciría código']), (27.582275390625, ['propio; ocultaría parte del pipeline.'])], link=[], rise=0, text='Un motor integrado reduciría código propio; ocultaría parte del pipeline.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'GLFW / GLEW'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='GLFW / GLEW', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(31.33056640625, ['GLFW / GLEW'])], link=[], rise=0, text='GLFW / GLEW', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Ventana, entrada y acceso a funciones OpenGL.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Ventana, entrada y acceso a funciones OpenGL.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(7.183349609375, ['Ventana, entrada y acceso a funciones OpenGL.'])], link=[], rise=0, text='Ventana, entrada y acceso a funciones OpenGL.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Usar Win32 directamente exigiría más código de plataforma.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Usar Win32 directamente exigiría más código de plataforma.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(11.5576171875, ['Usar Win32 directamente exigiría más']), (76.25390625, ['código de plataforma.'])], link=[], rise=0, text='Usar Win32 directamente exigiría más código de plataforma.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'GLM'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='GLM', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(69.58056640625, ['GLM'])], link=[], rise=0, text='GLM', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Matrices compatibles con convenciones GLSL.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Matrices compatibles con convenciones GLSL.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(14.30126953125, ['Matrices compatibles con convenciones GLSL.'])], link=[], rise=0, text='Matrices compatibles con convenciones GLSL.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Implementar álgebra propia añadiría riesgo.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Implementar álgebra propia añadiría riesgo.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(18.61328125, ['Implementar álgebra propia añadiría']), (132.487548828125, ['riesgo.'])], link=[], rise=0, text='Implementar álgebra propia añadiría riesgo.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Assimp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Assimp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(60.13427734375, ['Assimp'])], link=[], rise=0, text='Assimp', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Carga de OBJ/FBX, mallas, materiales y triangulación.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Carga de OBJ/FBX, mallas, materiales y triangulación.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(36.0576171875, ['Carga de OBJ/FBX, mallas, materiales y']), (140.43994140625, ['triangulación.'])], link=[], rise=0, text='Carga de OBJ/FBX, mallas, materiales y triangulación.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rek’Sai usa además un lector OBJ por grupos.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rek’Sai usa además un lector OBJ por grupos.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(9.179443359375, ['Rek’Sai usa además un lector OBJ por']), (129.648681640625, ['grupos.'])], link=[], rise=0, text='Rek’Sai usa además un lector OBJ por grupos.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Blender'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Blender', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 88
+'_wrapWidths': [88, 88]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(58.702392578125, ['Blender'])], link=[], rise=0, text='Blender', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Preparación de piezas y reducción de polígonos de copias locales.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Preparación de piezas y reducción de polígonos de copias locales.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 191
+'_wrapWidths': [191, 191]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(7.1875, ['Preparación de piezas y reducción de polígonos']), (123.431640625, ['de copias locales.'])], link=[], rise=0, text='Preparación de piezas y reducción de polígonos de copias locales.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'No se requiere Blender para jugar.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='No se requiere Blender para jugar.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 158
+'_wrapWidths': [158, 158]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(27.590576171875, ['No se requiere Blender para jugar.'])], link=[], rise=0, text='No se requiere Blender para jugar.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+Organización real del código
+
+Main.cpp coordina el bucle, las zonas, las luces y las acciones de infraestructura. SceneVerification.cpp contiene las verificaciones integradas, no un segundo main. src/engine contiene Window, Model, Texture, Shader_light y las clases de luz. src/scene contiene SceneNode, Scene y CameraDirector con FollowXZ, Chase, Flight y Orbit. src/game/world contiene Superficie, Espacio, Oceano, Jugador y Reloj. Avatar.cpp y Tars.cpp gestionan modelos articulados. Input.cpp separa captura y mapeo; src/ui/Hud.cpp dibuja el estado. CoheteKeyframes.h carga y reproduce veinte canales del cohete por piezas.
+
+3. Flujo del sistema y contratos
+
+Datos, propiedad y orden
+
+InputCapture actualiza teclas sostenidas, flancos, desplazamiento del ratón y rueda. La corrección de entrega conserva pulsaciones recibidas y liberadas dentro de un solo glfwPollEvents; consume cada evento una vez. Los modos de CameraDirector y la zona activa son estados independientes. El bucle limita dt a 0.05 s; las pruebas de animación usan un paso fijo de 1/60 s.
+
+SceneNode posee hijos mediante unique_ptr y mantiene referencias prestadas a recursos gráficos. updateWorld propaga las matrices antes de que cámaras y render las consuman. Avatar::attach clasifica grupos del OBJ y construye nueve piezas con pivotes locales. Model::LoadModel importa mallas y materiales; resolverRutaTextura busca recursos relativos. Los planetas se preparan bajo demanda en PrepararRecursosSuperficie.
+
+El arranque localiza Models y Textures a partir de la ruta del EXE y sus carpetas superiores. Window::Initialise centra la ventana en el área de trabajo del monitor principal. El contexto se crea antes de cargar recursos GPU. Las fuentes permanecen legibles junto con la solución y las dependencias locales.
+
+4. Transformaciones e iluminación
+
+SceneNode::local construye Mlocal = T · Ry · Rx · Rz · S. updateWorld aplica Mworld = Mpadre · Mlocal. El punto de una pieza se transforma primero en espacio local y después hereda el desplazamiento del padre. Para girar alrededor de una bisagra p se usa T(p) · R(θ) · T(-p); Main.cpp aplica ese patrón a la cápsula y CoheteKeyframes::Dibujar a las piezas del cohete.
+
+shaders/shader_light.frag calcula ambiente, difusión y reflexión especular de tipo Phong: Id = kd · max(N·L,0) e Is = ks · max(V·R,0)^s. La luz puntual se atenúa con la distancia y la spotlight añade un cono de corte. El material controla brillo e intensidad especular. La emisión aporta brillo propio, pero no sustituye la iluminación que recibe la geometría.
+
+El ciclo de iluminación usa θ = 2πt/120 y alturaSol = sen(θ). El factor diurno se limita para conservar luz ambiente; también controla luminarias. Las teclas F, L y K alternan tres focos. Las capturas muestran zonas deliberadamente oscuras; no se considera demostrada la ausencia de defectos de iluminación solo porque el shader exista.
+
+Figura 1. Roca: avatar, cápsula, cristales y luminarias en el render Release.
+
+5. Siete sistemas de animación
+
+El conteo agrupa repeticiones y todas las piezas de una marcha. Se separa el cohete por cuadros clave del lanzamiento procedural porque el primero combina separación articulada y órbita por veinte canales, mientras el segundo usa una máquina de estados con ascenso acelerado. La aceptación de esa distinción corresponde a la evaluación docente; existen además NPC paramétricos en Superficie::MatrizNPC y la salida/regreso del Fighter como alternativas verificables.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'ID / objeto'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='ID / objeto', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'_width_max': 41.08056640625
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(44.91943359375, ['ID', '/', 'objeto'])], link=[], rise=0, text='ID / objeto', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Contexto y conteo'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Contexto y conteo', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'_width_max': 74.142578125
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(102.857421875, ['Contexto', 'y', 'conteo'])], link=[], rise=0, text='Contexto y conteo', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Implementación'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Implementación', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'_width_max': 64.708740234375
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(109.291259765625, ['Implementación'])], link=[], rise=0, text='Implementación', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '1 Rek’Sai'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='1 Rek’Sai', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(49.621826171875, ['1 Rek’Sai'])], link=[], rise=0, text='1 Rek’Sai', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Marcha completa; una sola animación articulada.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Marcha completa; una sola animación articulada.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(31.47900390625, ['Marcha completa; una sola animación']), (137.782958984375, ['articulada.'])], link=[], rise=0, text='Marcha completa; una sola animación articulada.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Avatar::update<br/>src/game/avatar/Avatar.cpp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Avatar::update', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/avatar/Avatar.cpp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 22
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=55.287353515625, descent=-1.7888183593750002, extraSpace=118.712646484375, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Avatar::update', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=103.93408203125, descent=-1.7888183593750002, extraSpace=70.06591796875, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/avatar/Avatar.cpp', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '2 Cohete por cuadros clave'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='2 Cohete por cuadros clave', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(1.892333984375, ['2 Cohete por cuadros']), (66.156982421875, ['clave'])], link=[], rise=0, text='2 Cohete por cuadros clave', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Despegue y separación: un sistema, no una animación por pieza.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Despegue y separación: un sistema, no una animación por pieza.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(8.78466796875, ['Despegue y separación: un sistema, no una']), (98.56591796875, ['animación por pieza.'])], link=[], rise=0, text='Despegue y separación: un sistema, no una animación por pieza.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'CoheteKeyframes::Actualizar / Dibujar<br/>src/game/anim/CoheteKeyframes.h'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='CoheteKeyframes::Actualizar / Dibujar', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/anim/CoheteKeyframes.h', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 22
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=144.089111328125, descent=-1.7888183593750002, extraSpace=29.910888671875, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='CoheteKeyframes::Actualizar / Dibujar', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=133.223388671875, descent=-1.7888183593750002, extraSpace=40.776611328125, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/anim/CoheteKeyframes.h', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '3 Cohete procedural'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='3 Cohete procedural', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(8.97705078125, ['3 Cohete procedural'])], link=[], rise=0, text='3 Cohete procedural', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Ignición, ascenso, órbita y retorno; ambos sitios cuentan una vez.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Ignición, ascenso, órbita y retorno; ambos sitios cuentan una vez.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(16.832275390625, ['Ignición, ascenso, órbita y retorno; ambos']), (90.53076171875, ['sitios cuentan una vez.'])], link=[], rise=0, text='Ignición, ascenso, órbita y retorno; ambos sitios cuentan una vez.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Espacio::ActualizarCohetes<br/>src/game/world/Espacio.cpp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Espacio::ActualizarCohetes', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/world/Espacio.cpp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 22
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=103.9423828125, descent=-1.7888183593750002, extraSpace=70.0576171875, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Espacio::ActualizarCohetes', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=106.295654296875, descent=-1.7888183593750002, extraSpace=67.704345703125, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/world/Espacio.cpp', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '4 Puertas'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='4 Puertas', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(49.61767578125, ['4 Puertas'])], link=[], rise=0, text='4 Puertas', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Acceso a cápsula/hangar; conservadoramente se agrupan todas las puertas.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Acceso a cápsula/hangar; conservadoramente se agrupan todas las puertas.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 33
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(76.826171875, ['Acceso a cápsula/hangar;']), (18.235107421875, ['conservadoramente se agrupan todas las']), (146.287109375, ['puertas.'])], link=[], rise=0, text='Acceso a cápsula/hangar; conservadoramente se agrupan todas las puertas.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'AnimarCapsula / ActualizarPuertaHangar<br/>Main.cpp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='AnimarCapsula / ActualizarPuertaHangar', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Main.cpp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 22
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=155.436279296875, descent=-1.7888183593750002, extraSpace=18.563720703125, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='AnimarCapsula / ActualizarPuertaHangar', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=34.48974609375, descent=-1.7888183593750002, extraSpace=139.51025390625, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Main.cpp', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '5 Paneles de satélite'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='5 Paneles de satélite', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(7.08447265625, ['5 Paneles de satélite'])], link=[], rise=0, text='5 Paneles de satélite', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Repliegue de paneles; dos paneles cuentan una vez.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Repliegue de paneles; dos paneles cuentan una vez.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(9.23291015625, ['Repliegue de paneles; dos paneles cuentan']), (144.86767578125, ['una vez.'])], link=[], rise=0, text='Repliegue de paneles; dos paneles cuentan una vez.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'AnimarSatelite<br/>Main.cpp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='AnimarSatelite', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Main.cpp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 22
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=55.27490234375, descent=-1.7888183593750002, extraSpace=118.72509765625, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='AnimarSatelite', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=34.48974609375, descent=-1.7888183593750002, extraSpace=139.51025390625, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Main.cpp', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '6 Trayectoria de satélite'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='6 Trayectoria de satélite', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(22.220947265625, ['6 Trayectoria de']), (59.068115234375, ['satélite'])], link=[], rise=0, text='6 Trayectoria de satélite', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Inspección de un objeto orbital; rotor incluido en el mismo sistema.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Inspección de un objeto orbital; rotor incluido en el mismo sistema.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(5.949951171875, ['Inspección de un objeto orbital; rotor incluido']), (97.17138671875, ['en el mismo sistema.'])], link=[], rise=0, text='Inspección de un objeto orbital; rotor incluido en el mismo sistema.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'PosicionSatelite / TangenteSatelite / AnimarSatelite<br/>Main.cpp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='PosicionSatelite / TangenteSatelite / AnimarSatelite', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Main.cpp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 33
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=176.238037109375, descent=-1.7888183593750002, extraSpace=35.082275390625, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='PosicionSatelite / TangenteSatelite / ', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=55.27490234375, descent=-1.7888183593750002, extraSpace=118.72509765625, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='AnimarSatelite', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=34.48974609375, descent=-1.7888183593750002, extraSpace=139.51025390625, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Main.cpp', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': '7 Naves rivales'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='7 Naves rivales', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(27.89453125, ['7 Naves rivales'])], link=[], rise=0, text='7 Naves rivales', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Competencia en un circuito; ambas naves cuentan una vez.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Competencia en un circuito; ambas naves cuentan una vez.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 177
+'_wrapWidths': [177, 177]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(16.359130859375, ['Competencia en un circuito; ambas naves']), (112.258056640625, ['cuentan una vez.'])], link=[], rise=0, text='Competencia en un circuito; ambas naves cuentan una vez.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Jugador::EstadoRival<br/>src/game/world/Jugador.cpp'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Jugador::EstadoRival', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/world/Jugador.cpp', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 174
+'_wrapWidths': [174, 174]
+'height': 22
+'blPara': ParaLines(kind=1, lines=[FragLine(ascent=6.188232421875001, currentWidth=80.795654296875, descent=-1.7888183593750002, extraSpace=93.204345703125, fontSize=8.5, kind=1, lineBreak=True, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Jugador::EstadoRival', textColor=Color(0,0,0,1), us_lines=[]), ParaFrag(__tag__='br', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, lineBreak=True, link=[], rise=0, text='', textColor=Color(0,0,0,1), us_lines=[])]), FragLine(ascent=6.188232421875001, currentWidth=106.77294921875, descent=-1.7888183593750002, extraSpace=67.22705078125, fontSize=8.5, kind=1, lineBreak=False, maxWidth=174, wordCount=1, words=[ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='src/game/world/Jugador.cpp', textColor=Color(0,0,0,1), us_lines=[])])])
+) #Paragraph,)
+
+La página siguiente detalla las ecuaciones y el procedimiento de prueba. Una imagen aislada acredita renderizado, no continuidad temporal.
+
+Matemática y prueba de animaciones
+
+1. Rek’Sai
+
+Patas opuestas: 0.78 sen(φ) y 0.78 sen(φ+π). Brazos, cabeza y cola derivan de la misma fase; φ avanza con dt y velocidad.
+
+2. Cohete por cuadros clave
+
+20 canales; α=(t-ti)/(ti+1-ti); v=(1-α)vi+αvi+1. Incluye traslación, giro en pivote, separación y órbita.
+
+3. Cohete procedural
+
+Ascenso h=Hτ² con τ limitado a [0,1]; vibración de ignición y oscilación orbital.
+
+4. Puertas
+
+Cápsula: θ←θ+(θobjetivo-θ)min(1,6dt); bisagra local. Hangar: apertura limitada de dos segundos.
+
+5. Paneles de satélite
+
+Factor interpolado hacia 0/1, giro hacia ±85° y oscilaciones opuestas al desplegarse.
+
+6. Trayectoria de satélite
+
+Dos lóbulos paramétricos; tangente normalizada para orientar el objeto. θ←θ+ωdt; la guía ajusta el paso por la norma de la derivada.
+
+7. Naves rivales
+
+d=(desfase+18t) mod L. Distancia acumulada selecciona tramo; posición y base tangente se obtienen de pista, superficie u océano.
+
+Reproducir LabCGeIHC.exe --probar-animaciones. La secuencia inyecta eventos en el mismo callback GLFW usado por el teclado, avanza 3360 frames a dt=1/60 y guarda capturas cada 120 frames. Activa 6 en roca, F4/1 para D1, Tab/4 para hangar, Tab/3 para satélite, F2 para rivales y F1/W para la marcha. No reemplaza una revisión manual de encuadre, ausencia de intersecciones ni calidad artística.
+
+6. Gantt individual y responsabilidades
+
+El diagrama muestra actividades realizadas del Integrante C. Los intervalos de 17, 30-31 de octubre y 7 de noviembre proceden del registro histórico; no son horas confirmadas para esta entrega. El 2 y 6 de noviembre y el 12-14 de noviembre corresponden a las confirmaciones actuales. No se convierten fechas de commits en duración de trabajo.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Función'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Función', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 111
+'_wrapWidths': [111, 111]
+'_width_max': 33.049560546875
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(77.950439453125, ['Función'])], link=[], rise=0, text='Función', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Responsabilidad documentada'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Responsabilidad documentada', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 340
+'_wrapWidths': [340, 340]
+'_width_max': 125.63232421875
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(214.36767578125, ['Responsabilidad', 'documentada'])], link=[], rise=0, text='Responsabilidad documentada', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Integrante A'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Integrante A', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 111
+'_wrapWidths': [111, 111]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(64.68994140625, ['Integrante A'])], link=[], rise=0, text='Integrante A', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Motor, escena, cámaras, iluminación, compilación, merges y Release.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Motor, escena, cámaras, iluminación, compilación, merges y Release.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 340
+'_wrapWidths': [340, 340]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(76.387939453125, ['Motor, escena, cámaras, iluminación, compilación, merges y Release.'])], link=[], rise=0, text='Motor, escena, cámaras, iluminación, compilación, merges y Release.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Integrante B'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Integrante B', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 111
+'_wrapWidths': [111, 111]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(64.68994140625, ['Integrante B'])], link=[], rise=0, text='Integrante B', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Mundos, recursos, infraestructura y sus animaciones.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Mundos, recursos, infraestructura y sus animaciones.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 340
+'_wrapWidths': [340, 340]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(138.74755859375, ['Mundos, recursos, infraestructura y sus animaciones.'])], link=[], rise=0, text='Mundos, recursos, infraestructura y sus animaciones.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Integrante C - 320324187'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Integrante C - 320324187', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 111
+'_wrapWidths': [111, 111]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(14.12158203125, ['Integrante C - 320324187'])], link=[], rise=0, text='Integrante C - 320324187', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rek’Sai, entrada, experiencias, integración y HUD; TARS aparece como incorporación posterior en Git.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rek’Sai, entrada, experiencias, integración y HUD; TARS aparece como incorporación posterior en Git.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 340
+'_wrapWidths': [340, 340]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(11.650146484375, ['Rek’Sai, entrada, experiencias, integración y HUD; TARS aparece como incorporación']), (279.52880859375, ['posterior en Git.'])], link=[], rise=0, text='Rek’Sai, entrada, experiencias, integración y HUD; TARS aparece como incorporación posterior en Git.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+7. Análisis de costos y precio
+
+Desembolso directo declarado: $0 MXN. El equipo ya disponía de computadoras; no se registraron compras específicas. Esto no significa que el desarrollo carezca de costo económico: no se midieron electricidad, depreciación ni horas totales de las tres personas. Hay 7 horas individuales confirmadas para HUD, integración y documentación, pero no se definió una tarifa por hora y el registro no representa todo el proyecto.
+
+Modelo de valoración: Cdesarrollo = Σ(hi · ri) + Cenergía + Cequipo + Ccompras. Los términos sin registro permanecen sin cuantificar. La propuesta del estudiante es publicar una demo gratuita para obtener comentarios, detectar fallos y orientar mejoras; después, una versión de aproximadamente $120 MXN. Es una intención de precio, no una venta, cotización validada ni proyección de ingresos. El punto de equilibrio no puede calcularse sin costo total y gastos de distribución.
+
+8. Verificación y reproducibilidad
+
+Se compiló Release x64 con MSBuild de Visual Studio instalado. La compilación concluyó con advertencias de conversión ya presentes, principalmente C4244/C4305. --probar-release completó espacio, roca, selva, océano, carrera, lanzamiento D1 y hangar con código de salida 0. Se probó el EXE desde otra carpeta. Una ventana real fue observada y capturada en la base espacial. Las capturas automáticas documentan el framebuffer de las zonas.
+
+Los modelos OBJ se revisan por índices dentro de rango y valores finitos; se corrigen materiales de respaldo y rutas absolutas encontradas. Esta prueba no demuestra mallas cerradas, ausencia de caras degeneradas o ausencia total de intersecciones. La optimización reduce detalle; su calidad artística y todas las colisiones requieren recorrido visual más amplio. TARS sí está integrado, actualizado y visible por condición en el océano. La estación inspirada en Freezer se carga; no se equipara automáticamente a todas las versiones previas de nave.
+
+Conclusión individual
+
+Trabajar con Rek’Sai me permitió relacionar grupos de geometría, pivotes y matrices con un movimiento visible. La marcha requiere coordinación entre piezas: no basta girar patas por separado. La integración con entrada, cámaras y HUD hizo necesario separar intención del usuario, estado del mundo y representación. También aprendí que compilar no garantiza que otra persona vea una ventana o encuentre los recursos. Documentar el código y repetir pruebas del ejecutable completo permite distinguir una función implementada de una experiencia realmente comprobada.
+
+Conclusión del sistema y límites de la entrega
+
+La escena reúne técnicas de transformaciones, cámara sintética, iluminación y animación procedural en un programa común. El trabajo por funciones ayudó a integrar modelos y recorridos, pero recursos externos y documentación desactualizada generaron discrepancias. La preparación actual mejora portabilidad, tamaño y trazabilidad sin sustituir pruebas pendientes. La versión evaluable debe identificarse por la rama entrega/320324187-teoria y su commit, no solo por main. La publicación se acredita en el informe de verificación. La prueba en otra computadora y la revisión completa de geometría permanecen pendientes.
+
+Fuentes consultadas [1]-[5]
+
+[1] Khronos Group. The OpenGL Graphics System, version 4.3 Core Profile (2013). https://registry.khronos.org/OpenGL/specs/gl/glspec43.core.pdf
+
+[2] GLFW. Documentation. https://www.glfw.org/documentation.html
+
+[3] G-Truc Creation. OpenGL Mathematics. https://glm.g-truc.net/0.9.9/index.html
+
+[4] Assimp. Working with the Asset-Importer-Lib. https://the-asset-importer-lib-documentation.readthedocs.io/en/latest/usage/use_the_lib.html
+
+[5] Repository / repositorio: https://github.com/Cuervy117/CG_proyecto; base 41ba92c; local preparation branch / rama local entrega/320324187-teoria.
+
+9. Evidencia de animación y resultados
+
+La secuencia reproducible terminó con salida 0. El cohete por cuadros clave llegó a t=26.000 s; el satélite avanzó a θ=1.434 con paneles plegados a factor 0.000; la puerta de cápsula alcanzó 75.000°; Rek’Sai se desplazó 28.233 unidades a pie con una pata a -0.351 rad. Los números pertenecen a la prueba simulada, no a una medición de rendimiento.
+
+La tabla de siete animaciones con objeto, contexto, función, matemática, evidencia y procedimiento se entrega también en 320324187_Animaciones_GPO06_ES.csv y su equivalente EN. Las imágenes se denominan por el frame de prueba; por ejemplo, 2880/3000 para marcha, 1920/2040 para hangar y 2400/2520 para rivales. El encuadre del cohete de esta figura es exclusivo de la prueba.
+
+Figura 2. Frames 0, 480, 960 y 1679: ascenso, separación y caída de piezas.

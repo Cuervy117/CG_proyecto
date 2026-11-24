@@ -1,0 +1,1448 @@
+{
+  "assets_bytes": 96283269,
+  "files": [
+    {
+      "path": "Models/arbol/arbol.mtl",
+      "bytes": 167,
+      "sha256": "7d6a9727bf9ccc36a6bac8925e9a276db6a53ea22d6818fb5cbf13ff5ee120d8"
+    },
+    {
+      "path": "Models/arbol/arbol.obj",
+      "bytes": 141672,
+      "sha256": "7944d56676cdf4c06a28c680a0e8ae1e2ae756943bef64fec70b452153bf5468"
+    },
+    {
+      "path": "Models/arbol/arbol_lod0.mtl",
+      "bytes": 167,
+      "sha256": "7d6a9727bf9ccc36a6bac8925e9a276db6a53ea22d6818fb5cbf13ff5ee120d8"
+    },
+    {
+      "path": "Models/arbol/arbol_lod0.obj",
+      "bytes": 2125198,
+      "sha256": "12da073bf2cd3a3e7b9a85e4bc850162fe8aa4f3f63891df46c4ef876198197c"
+    },
+    {
+      "path": "Models/arbol/arbol_lod1.mtl",
+      "bytes": 167,
+      "sha256": "7d6a9727bf9ccc36a6bac8925e9a276db6a53ea22d6818fb5cbf13ff5ee120d8"
+    },
+    {
+      "path": "Models/arbol/arbol_lod1.obj",
+      "bytes": 411696,
+      "sha256": "41cd24a99a2bf3d9f78334e19ac37087abc839f4137e1bc48153c202cb4c5af9"
+    },
+    {
+      "path": "Models/arbol/arbol_lod2.mtl",
+      "bytes": 167,
+      "sha256": "7d6a9727bf9ccc36a6bac8925e9a276db6a53ea22d6818fb5cbf13ff5ee120d8"
+    },
+    {
+      "path": "Models/asteroide/asteroide.mtl",
+      "bytes": 262,
+      "sha256": "07b1bb124f3a9a45f4b9757e0bfba53df5b7ab9a0ba662344783a907448a9aa1"
+    },
+    {
+      "path": "Models/asteroide/asteroide.obj",
+      "bytes": 1621213,
+      "sha256": "14fe770842da0e8d333b8ec05f979ce92941c096aa908b9dcbda9e55cd1c59db"
+    },
+    {
+      "path": "Models/asteroide/roca_baja.mtl",
+      "bytes": 141,
+      "sha256": "9d07c40ea46023c5d2a0b9c8d8cded90871303cda08948c7cb7c33e498f562bd"
+    },
+    {
+      "path": "Models/asteroide/roca_baja.obj",
+      "bytes": 310500,
+      "sha256": "04a15cc4d6996f8b796249805e76d462b0b2c5736ee2c1b22e418df0eca06a32"
+    },
+    {
+      "path": "Models/asteroide/Rocky_Asteroid_6.mtl",
+      "bytes": 180,
+      "sha256": "51c6e68b57f642d9981fcbea9200981404bc56e378535d5f7a3b5f68cc1f5482"
+    },
+    {
+      "path": "Models/asteroide/Rocky_Asteroid_6.obj",
+      "bytes": 824564,
+      "sha256": "71a33c66fffd397f430328574061119ba816b6c7f01c8304ab56f0c3b340f6b2"
+    },
+    {
+      "path": "Models/asteroide/Stylized Planets.mtl",
+      "bytes": 361,
+      "sha256": "4aef4cdc3ae31553cacfcd817624529aa89e996e185d814244615703fbcd9093"
+    },
+    {
+      "path": "Models/asteroide/Stylized_Planets.obj",
+      "bytes": 872242,
+      "sha256": "393b7c4c6bdfec32ca9d884d5ff6a297bf2f73c9ba58960ad429bbce8261d94b"
+    },
+    {
+      "path": "Models/c_reksai_articulada.blend",
+      "bytes": 537540,
+      "sha256": "9d05c01ad5800a5ea3e47b37f5c24d60fd2b4314c66ac74fa384f8c700be8e2f"
+    },
+    {
+      "path": "Models/capsula/capsulaCuerpo.mtl",
+      "bytes": 1273,
+      "sha256": "81debf7bf8b79a142830dfc3576c29b70d5ddad6e2446e788dc22defc905d691"
+    },
+    {
+      "path": "Models/capsula/capsulaCuerpo.obj",
+      "bytes": 1314682,
+      "sha256": "62f14c1a445cbb0a230f55b79ee0817fa1874033131dcb26f3dfdfbaf1ca9f35"
+    },
+    {
+      "path": "Models/capsula/capsulaPuerta.mtl",
+      "bytes": 464,
+      "sha256": "aeb80b45e8f070a4793d60cf0dd4ddaba87cc0019d9e12b4499a78be5472898d"
+    },
+    {
+      "path": "Models/capsula/capsulaPuerta.obj",
+      "bytes": 72124,
+      "sha256": "bd6457b1657005f311cde1ab97e072353c28db3de085949b5fd05c9d567a316e"
+    },
+    {
+      "path": "Models/Fighter_02.mtl",
+      "bytes": 1236,
+      "sha256": "e3c7bfceb9e45697a3e65f13ddc848046d12de68d133f0502c7eef786cc5fc8f"
+    },
+    {
+      "path": "Models/Fighter_02.obj",
+      "bytes": 493297,
+      "sha256": "96668f5153f2354b54613f53cdc343cd498b160df3e7f3e51d34789eeeb3e25b"
+    },
+    {
+      "path": "Models/Fighter_03_Obj/Fighter_03.mtl",
+      "bytes": 1364,
+      "sha256": "0dd548a0a6273fd23099a44075564ebed22d51d516613f25bebc53579100be32"
+    },
+    {
+      "path": "Models/Fighter_03_Obj/Fighter_03.obj",
+      "bytes": 297791,
+      "sha256": "04b21e8f63cfa812155ef2b661633a8539ce0c57411333c19dc54610151735b0"
+    },
+    {
+      "path": "Models/freezer_station/freezer_station.mtl",
+      "bytes": 1494,
+      "sha256": "7bfa8ac5073de399c60a70f805cca3dc2ee4804800e23b408d7fdffc2f1c6479"
+    },
+    {
+      "path": "Models/freezer_station/freezer_station.obj",
+      "bytes": 1260600,
+      "sha256": "d17b29361e1d53cda3761adc01168b3182ec20bb179a3c9b8b70f48ea6c53e90"
+    },
+    {
+      "path": "Models/freezer_station/FreezerStation.blend",
+      "bytes": 225419,
+      "sha256": "a87b9bca13bb917b86842d14f9948cf10d8344518db28d6725bfaf402505bde6"
+    },
+    {
+      "path": "Models/freezer_station/FreezerStation.blend1",
+      "bytes": 225227,
+      "sha256": "7606a591ecc2d679dfb15f526d34bd7ea1284d316172d87947bd779b60137dc9"
+    },
+    {
+      "path": "Models/freezer_station.mtl",
+      "bytes": 2090,
+      "sha256": "803c1aa156cf778e5d8afafbd5516c7668474eb2b25de7a38bbb79888ec725ed"
+    },
+    {
+      "path": "Models/freezer_station.obj",
+      "bytes": 1375036,
+      "sha256": "d99bca1f5d6fee325861b4e7e9d314709738e49ee18fbda06ca3ee27d9c82316"
+    },
+    {
+      "path": "Models/Intergalactic_Spaceships_Version_2.mtl",
+      "bytes": 726,
+      "sha256": "73b34a7fafec90010c4818fa30d23837309ebb9a3dc4c22110c72097d0cc16c2"
+    },
+    {
+      "path": "Models/Intergalactic_Spaceships_Version_2.obj",
+      "bytes": 1990605,
+      "sha256": "05edfc9d63dedecb9fbcdd001ce8149183f54525d9c89bbd0e81ae774d462de7"
+    },
+    {
+      "path": "Models/jona/cohete.mtl",
+      "bytes": 155,
+      "sha256": "489eca7439d834e91d2f9e8c7cbc8dcb42e70a076f55360856bae109c0b3f27a"
+    },
+    {
+      "path": "Models/jona/cohete_jona.jpeg",
+      "bytes": 40303,
+      "sha256": "003571439feca4bdd945a54acbaf1342880c45cc5f44ecf7d388fb743db121e2"
+    },
+    {
+      "path": "Models/jona/cohete_jona.obj",
+      "bytes": 4210366,
+      "sha256": "97078e1257ae27792342f9c9404060d42e5901374e4b8ded2776532124fbe99b"
+    },
+    {
+      "path": "Models/jona/keyframes_cohete.txt",
+      "bytes": 1808,
+      "sha256": "f608a1c9d444a42cad1760b5bf64386c192d6efc6d24cd77715cf907922c1163"
+    },
+    {
+      "path": "Models/miNave/miNave.mtl",
+      "bytes": 253,
+      "sha256": "79a227235914db6ff12981bf4cd3fca41e14da4598e470c205e7315393c8a6a3"
+    },
+    {
+      "path": "Models/miNave/miNave.obj",
+      "bytes": 8168079,
+      "sha256": "ae4ef6a51e846ed4888b5f8754e0acfaec82e76b40f6a00f50fcdf0af8cc4452"
+    },
+    {
+      "path": "Models/miNave/nave.mtl",
+      "bytes": 253,
+      "sha256": "79a227235914db6ff12981bf4cd3fca41e14da4598e470c205e7315393c8a6a3"
+    },
+    {
+      "path": "Models/Moon.mtl",
+      "bytes": 113,
+      "sha256": "22015581633a76b690ecac79bf3fad5261c7eff3fdb6d8dce780d1d488fd9bb5"
+    },
+    {
+      "path": "Models/Moon.obj",
+      "bytes": 270703,
+      "sha256": "e5120c0d048f47e5228ad76188790e3a7f44f4810b0b867849534453eaa3a98e"
+    },
+    {
+      "path": "Models/npcRoca/capsulaCuerpo.mtl",
+      "bytes": 1273,
+      "sha256": "81debf7bf8b79a142830dfc3576c29b70d5ddad6e2446e788dc22defc905d691"
+    },
+    {
+      "path": "Models/npcRoca/capsulaCuerpo.obj",
+      "bytes": 1314682,
+      "sha256": "62f14c1a445cbb0a230f55b79ee0817fa1874033131dcb26f3dfdfbaf1ca9f35"
+    },
+    {
+      "path": "Models/npcRoca/capsulaPuerta.mtl",
+      "bytes": 464,
+      "sha256": "aeb80b45e8f070a4793d60cf0dd4ddaba87cc0019d9e12b4499a78be5472898d"
+    },
+    {
+      "path": "Models/npcRoca/capsulaPuerta.obj",
+      "bytes": 72124,
+      "sha256": "bd6457b1657005f311cde1ab97e072353c28db3de085949b5fd05c9d567a316e"
+    },
+    {
+      "path": "Models/npcRoca/Cerbero.mtl",
+      "bytes": 330,
+      "sha256": "9fecc626882c23cc053f39c1ad744a868f2342c72e4538610f5f208a7ae624d9"
+    },
+    {
+      "path": "Models/npcRoca/Cerbero.obj",
+      "bytes": 1652669,
+      "sha256": "1576b53516d8a8ae46c5ce105499b890edeba99050ef28b840cab505cf613107"
+    },
+    {
+      "path": "Models/npcRoca/escorpion.mtl",
+      "bytes": 332,
+      "sha256": "ba779041f0e19690d4fee04a039eaf39d5645236e290b00001ce2e0c3142e355"
+    },
+    {
+      "path": "Models/npcRoca/escorpion.obj",
+      "bytes": 1598200,
+      "sha256": "1ce83415aa58c57cd88793a4e0d44e9410fcde309168fd0c506807bb8e68e1be"
+    },
+    {
+      "path": "Models/npcRoca/monstruoNegro.mtl",
+      "bytes": 266,
+      "sha256": "66c2e9dad468def4baf3755798ad85e723ad306db60f9c96636f46722376a578"
+    },
+    {
+      "path": "Models/npcRoca/monstruoNegro.obj",
+      "bytes": 1589891,
+      "sha256": "c52c2f3a6c19015fdb93568fd8c520e7f306f42438fa22ccfbbbf5ed2e2c241b"
+    },
+    {
+      "path": "Models/npcRoca/Paul.mtl",
+      "bytes": 257,
+      "sha256": "ef21f823bb26508a003130babed390c8f22d1f82c87ec79125949cf9767d0d59"
+    },
+    {
+      "path": "Models/npcRoca/Paul.obj",
+      "bytes": 1604616,
+      "sha256": "e601af71911f82fe9402219142e5dbdbbb1f233260073eca603fedcb42c3a956"
+    },
+    {
+      "path": "Models/npcRoca/serpienteAlas.mtl",
+      "bytes": 336,
+      "sha256": "adbfe4a400d99ba34eeee1670c7332e5abb295831490f5d6c384882bca9521e9"
+    },
+    {
+      "path": "Models/npcRoca/serpienteAlas.obj",
+      "bytes": 1663827,
+      "sha256": "1b4e085d40f58667f5778d062b3f24d680e72549c648c8da2b2f0fa64d8bb8a4"
+    },
+    {
+      "path": "Models/npcSelva/caballoDelfin.mtl",
+      "bytes": 336,
+      "sha256": "05051d2796ae75fdca03a31c061857018a8d6fde3b8c07bfa682fed04032cb4b"
+    },
+    {
+      "path": "Models/npcSelva/caballoDelfin.obj",
+      "bytes": 1608683,
+      "sha256": "aeff84763b4f6f98470b46a026cf5570c82fc561a0830af77e73b429cc8a8e77"
+    },
+    {
+      "path": "Models/npcSelva/calamardoGuapo.mtl",
+      "bytes": 337,
+      "sha256": "144905bce3764562ce038e6afbe7fe9fcb5b73021882d8415af9dc5d0733d049"
+    },
+    {
+      "path": "Models/npcSelva/calamardoGuapo.obj",
+      "bytes": 1590354,
+      "sha256": "d2dc56d292aff5e0414402bfa02ee3a2174458691f95316dda3b4d952d2e7437"
+    },
+    {
+      "path": "Models/npcSelva/naruto.mtl",
+      "bytes": 329,
+      "sha256": "3fab1e8ccc5149a23e4162fb24ddce9ff8c3013c9530d34c82a2e3ca5a7a121b"
+    },
+    {
+      "path": "Models/npcSelva/naruto.obj",
+      "bytes": 1628757,
+      "sha256": "d0900d39618fd1f0269cdfcae738faa3fc9d981b5e77e270f3aa8ec8af243a00"
+    },
+    {
+      "path": "Models/npcSelva/pulpo.mtl",
+      "bytes": 328,
+      "sha256": "e655a37cc5934b31e6cc612638a822aff21a01c3b309b711bc624c5ab75110dc"
+    },
+    {
+      "path": "Models/npcSelva/pulpo.obj",
+      "bytes": 1614511,
+      "sha256": "8c0adb3f1af01bd111342c71ab5fad85a6167c8b1d762bc862837df67e2d5271"
+    },
+    {
+      "path": "Models/npcSelva/tigreFuego.mtl",
+      "bytes": 333,
+      "sha256": "07132229e20d5db6a6576ee10f3ebb155141b0115988cc97b75f2388eae8dd3d"
+    },
+    {
+      "path": "Models/npcSelva/tigreFuego.obj",
+      "bytes": 1619218,
+      "sha256": "356f64db2028d5c996b547e90e71cad805809ddfbbbc4add5e0d7de940e5457e"
+    },
+    {
+      "path": "Models/npcSelva/zorroBlanco.mtl",
+      "bytes": 334,
+      "sha256": "c646c84623ec9380d6f75b2f55209167594f7bb86d7c7faceddb20a8a63d6423"
+    },
+    {
+      "path": "Models/npcSelva/zorroBlanco.obj",
+      "bytes": 1591810,
+      "sha256": "59a332044a40400e576280ce0dfbe65cd11742c5aa07b173178b511b089abb50"
+    },
+    {
+      "path": "Models/pista/pista.mtl",
+      "bytes": 196,
+      "sha256": "05796a3ba624777843218571b6f30ab43825e395c1948c28c723f6c4df78071d"
+    },
+    {
+      "path": "Models/pista/pista.obj",
+      "bytes": 538913,
+      "sha256": "6c31d98c2a00514b5eae1cfd42a89f66a432159b0752f59f1f4c018165cfb2af"
+    },
+    {
+      "path": "Models/planet.mtl",
+      "bytes": 564,
+      "sha256": "55c3e1b49c6bfc29c46bef05217fd7ccfbdb3104c26578344615e18568a41285"
+    },
+    {
+      "path": "Models/planet_reksai.obj",
+      "bytes": 2805435,
+      "sha256": "9fd29f8a1763003b7a385ee63f3124ea5196020de06f9a9a4e25e1d5357f862f"
+    },
+    {
+      "path": "Models/planetaOceano/planetaOceano.mtl",
+      "bytes": 118,
+      "sha256": "477b4e06c69aa4402bf6b2b2cc5090d894c7ec559f902452cf63faa4a87dddff"
+    },
+    {
+      "path": "Models/planetaOceano/planetaOceano.obj",
+      "bytes": 334976,
+      "sha256": "7b4010c54693f1f333d5390ff5c95ff601c671f81c3b2f58efcc55ec5aeb0c69"
+    },
+    {
+      "path": "Models/planetaRoca/planetaRoca.mtl",
+      "bytes": 334,
+      "sha256": "48ccbede0f2496c5400d36bc841a8e26bcd635b3ca9b77bc1a27bf13c7c79cba"
+    },
+    {
+      "path": "Models/planetaRoca/planetaRoca.obj",
+      "bytes": 1569608,
+      "sha256": "f8d6fb00440737ba5c4d56bf04e30310a044f5952e850983b267c6fc9657e470"
+    },
+    {
+      "path": "Models/planetaSelva/planetaSelvatico.mtl",
+      "bytes": 335,
+      "sha256": "9c4bae8851925e57ecf42960c44c541dc1c6a0762d16ce57534fb16f67b225dd"
+    },
+    {
+      "path": "Models/planetaSelva/planetaSelvatico.obj",
+      "bytes": 1570817,
+      "sha256": "a531b71e97b00e243d813b4163220980cac3207cee66e91b723745f09ac64444"
+    },
+    {
+      "path": "Models/portal/asteroide.mtl",
+      "bytes": 259,
+      "sha256": "4f39349fd79f183a36df96b06053cfd5a59a320a7dca682c8e27976087dde1ec"
+    },
+    {
+      "path": "Models/portal/asteroide.obj",
+      "bytes": 1590061,
+      "sha256": "848ed2319319d2bdc8efea107347b35cc9894d53a6305be7ae3d9ce472e1a0b9"
+    },
+    {
+      "path": "Models/reksai/reksai.mtl",
+      "bytes": 282,
+      "sha256": "4dc89fc14c00154d7a3f59e882ad44553a6d01d33c5bf7b1dd2fad8f3dac872e"
+    },
+    {
+      "path": "Models/reksai/reksai.obj",
+      "bytes": 493502,
+      "sha256": "4abfe2537cfcf4eb05d475ba652041941703806d85470646983ff4ce69c0d4b3"
+    },
+    {
+      "path": "Models/reksai/rift_herald.mtl",
+      "bytes": 71,
+      "sha256": "8175a1909e857d9f99f73784a43a7d35d21fddea27a3a1cff43d80c078f8bb45"
+    },
+    {
+      "path": "Models/reksai/rift_herald.obj",
+      "bytes": 1456333,
+      "sha256": "529723927b708dd6a7c47a60bfe3ad923020f2a943e05b6c4ecf86309c4a8ed0"
+    },
+    {
+      "path": "Models/reksai/rift_herald_diffuse.png",
+      "bytes": 360991,
+      "sha256": "73cc7f179cee8e76e8e60d08a5d8e848c1949e9e093ee05af3afd0f8387076d2"
+    },
+    {
+      "path": "Models/reksai/void_spawn.mtl",
+      "bytes": 69,
+      "sha256": "a4e8484a5cc7683382c28b8cbad650ae4d2487e3b641fd0260ecd3a5f9cc6336"
+    },
+    {
+      "path": "Models/reksai/void_spawn.obj",
+      "bytes": 75032,
+      "sha256": "6756ff4dfcba10c0d0703b2e25de6402eba8d6d313e0a47ec567fbea7c9ba4ca"
+    },
+    {
+      "path": "Models/reksai/void_spawn_diffuse.png",
+      "bytes": 51746,
+      "sha256": "7d6aeb4a013a7b1866169d8d1d0a0e160378a9dfc4704f8a3e4aa25500434533"
+    },
+    {
+      "path": "Models/reksai/voidgrub.mtl",
+      "bytes": 65,
+      "sha256": "4c2a7fbeb80aa8b9728c24a9821b0d0a12147dadf7141ba5d0615c5241915ece"
+    },
+    {
+      "path": "Models/reksai/voidgrub.obj",
+      "bytes": 527718,
+      "sha256": "87b492407647607c242a5a30f57bce2df9440ea288fa5b0fca9fbd949da68c30"
+    },
+    {
+      "path": "Models/reksai/voidgrub_diffuse.png",
+      "bytes": 169120,
+      "sha256": "1436c4588294349d038db4be2fb26aa0bdfb3f56e7be0c4386d3d58b6a1d261f"
+    },
+    {
+      "path": "Models/reksai/voidmite.mtl",
+      "bytes": 65,
+      "sha256": "2d020388c28f12341c3d9e1293b0e6dbf4dcec342801192e9d878543958557cb"
+    },
+    {
+      "path": "Models/reksai/voidmite.obj",
+      "bytes": 206885,
+      "sha256": "e85829e2c11c09379e5383887cdeffbffe6ccdfc01db9ba8f4b7ad234a232811"
+    },
+    {
+      "path": "Models/reksai/voidmite_diffuse.png",
+      "bytes": 48241,
+      "sha256": "bc58c9875e2fa100f11d1dc77827e9eb94f93d9b222cd16725954a117415889a"
+    },
+    {
+      "path": "Models/reksai.mtl",
+      "bytes": 294,
+      "sha256": "c0317427a3f9ee92df077d8cc4dd79272beae107114d26be85466b2c5e6726e4"
+    },
+    {
+      "path": "Models/reksai.obj",
+      "bytes": 493502,
+      "sha256": "4abfe2537cfcf4eb05d475ba652041941703806d85470646983ff4ce69c0d4b3"
+    },
+    {
+      "path": "Models/rocket/rocket.mtl",
+      "bytes": 2150,
+      "sha256": "6ad40994b755ed7c4e8fd7be9454e1163f2b74d6d5e3c887a440c147632d3851"
+    },
+    {
+      "path": "Models/rocket/rocket.obj",
+      "bytes": 2662118,
+      "sha256": "3fe330c37730601a143827327c6957d0bb4450202cdc962313ca316e8dd06f3e"
+    },
+    {
+      "path": "Models/rocket.mtl",
+      "bytes": 917,
+      "sha256": "c28198c555273cef37a181776e4fd40d2c73c7c7453769ea887778e7e126a048"
+    },
+    {
+      "path": "Models/rocket.obj",
+      "bytes": 1207676,
+      "sha256": "8e3726a663d50616ad244ec72ed08b86b8e2d7303ddc103227bf39e527b74997"
+    },
+    {
+      "path": "Models/satelite/satelite_aspa_g.fbx",
+      "bytes": 30316,
+      "sha256": "74aa61e9552034525d25e6f93e28aeff626b805da09a4be0ce6cd0c51d5a62f6"
+    },
+    {
+      "path": "Models/satelite/satelite_base.fbx",
+      "bytes": 1068684,
+      "sha256": "185b98b4dbee2ccb4465657df34776b62b71fe490af8e64db5db2d9ec2d8a0c6"
+    },
+    {
+      "path": "Models/satelite/satelite_panel_der.fbx",
+      "bytes": 31916,
+      "sha256": "596959646eb5497d1c09944c998c55e008b0624bef40a826cd2ce5e0e83e6aea"
+    },
+    {
+      "path": "Models/satelite/satelite_panel_izq.fbx",
+      "bytes": 31660,
+      "sha256": "abed5df1ff8371872df46cccc07295bc2574572baa28b66abebe44817d1f9a54"
+    },
+    {
+      "path": "Models/UFO.mtl",
+      "bytes": 373,
+      "sha256": "45f7638bc4c0ca7087f073f1065d37f8d2daeb6a37de41eceb7bc3dd44934018"
+    },
+    {
+      "path": "Models/UFO.obj",
+      "bytes": 3710547,
+      "sha256": "6bd5816c5b414c2320521cfe1e0858da95554370c8b3d43477851aac02c70b09"
+    },
+    {
+      "path": "Models/X_wing_obj.obj",
+      "bytes": 3938455,
+      "sha256": "6e5082804b8ce26b6c2141aca7d8e5f0c6c40e35701f0170be3371338cd24412"
+    },
+    {
+      "path": "Textures/Agave.jpg",
+      "bytes": 16092,
+      "sha256": "520788ca2de8ca07e77ac52388a5a4660451e543add661a55ae6f0d3f5d73a10"
+    },
+    {
+      "path": "Textures/Agave.tga",
+      "bytes": 1048620,
+      "sha256": "ee1e7a6c4425856738eab2f5222ad7b7f9ec1644cc05d13fff8285dd3eb36d14"
+    },
+    {
+      "path": "Textures/aguaOceanoTexture.png",
+      "bytes": 406362,
+      "sha256": "e8691cea54a063988e383811a3d3384745ed8aeb0029803631b3fb0cb84a1c3e"
+    },
+    {
+      "path": "Textures/arbolTexture.png",
+      "bytes": 442192,
+      "sha256": "7cf10478874ca7f009c8cc37d5eeb7705ed87ec05a2cfb99d08725235179f2df"
+    },
+    {
+      "path": "Textures/asteroideTexture.png",
+      "bytes": 374546,
+      "sha256": "5478f73e26fee088ca21cdcc36be9c869fffd112161b87d1d31fd03fad97a54b"
+    },
+    {
+      "path": "Textures/avion_textura.png",
+      "bytes": 237883,
+      "sha256": "d3b54e6884a13332dd75bf372691a1e2acbc658cffd6400ef49072ebd9fa24bd"
+    },
+    {
+      "path": "Textures/baseTexture.png",
+      "bytes": 181536,
+      "sha256": "f8cdf2701015af8d3bb1767c4ff3f1cf724cdd3a4221750bdb09effc50efcbf1"
+    },
+    {
+      "path": "Textures/brick.png",
+      "bytes": 371584,
+      "sha256": "a0c18f0b2d89732c09218b06a8bd2410023f4773f9930a6ea216b3ffda6349b6"
+    },
+    {
+      "path": "Textures/caballoDelfinTexture.png",
+      "bytes": 218043,
+      "sha256": "59fb02b74311fc1f4044007c5971d5466a12c0299f0a90b577b7627c37eaf616"
+    },
+    {
+      "path": "Textures/calamardoGuapoTexture.png",
+      "bytes": 230800,
+      "sha256": "4ec05f3f77734f4d4f8031351c1fd3024e8f7bb2cd16af3f2d4958b56547a15a"
+    },
+    {
+      "path": "Textures/cerberoTexture.png",
+      "bytes": 371763,
+      "sha256": "1cd81c49bd5820843a7e36bf7636247a079ce6e04717fe319702751b36c99513"
+    },
+    {
+      "path": "Textures/dado-de-numeros.png",
+      "bytes": 5542,
+      "sha256": "873ca2bd265a5db32b9d76fb7a8b6008a3ee60eeb008d5d14e9d946e77add4dc"
+    },
+    {
+      "path": "Textures/DIFFUSE.002.png",
+      "bytes": 12038,
+      "sha256": "8d131e1ac5c55db58f8653005333d4ddcc324f19c8b841bfa8bc6f967338702e"
+    },
+    {
+      "path": "Textures/dirt.png",
+      "bytes": 780887,
+      "sha256": "22775316809f3aeb57b01993d4dbf3c3095a5c539a0f633a40a06a64643510c0"
+    },
+    {
+      "path": "Textures/escorpionTexture.png",
+      "bytes": 344869,
+      "sha256": "16023ef68354033c79b8b8d3a94e7672823216785df9a6fba101c0877c2e5521"
+    },
+    {
+      "path": "Textures/Fighter_02_Body_BaseColor.png",
+      "bytes": 402098,
+      "sha256": "b57eab1a204e51e9f4916bb79f8e2ec4d289a077fc9debc4b9aeec51e327b7b9"
+    },
+    {
+      "path": "Textures/Fighter_02_Missile_BaseColor.png",
+      "bytes": 29283,
+      "sha256": "b5b93d3fafb437d2c5c239672df02313446e6c6b755a1f99d922b660bbb25585"
+    },
+    {
+      "path": "Textures/Fighter_02_Window_BaseColor.png",
+      "bytes": 6535,
+      "sha256": "05da844ed11b29ef781203b37a9c755350be43a0dea20abc3dfc1f303bfc1b06"
+    },
+    {
+      "path": "Textures/Fighter_03_Body_BaseColor.png",
+      "bytes": 327285,
+      "sha256": "ecc7f0317f22a04257cf164225d431365265b08fe2486d67450d17b8ad29e787"
+    },
+    {
+      "path": "Textures/Fighter_03_Windows_BaseColor.png",
+      "bytes": 51845,
+      "sha256": "691f10f16abd7eee412109a8a500c599bb4af16f5f1e52f79de9c0c0fbf2e60d"
+    },
+    {
+      "path": "Textures/flechas.tga",
+      "bytes": 1048620,
+      "sha256": "cadce2b7ca0d4ded0984fb50aa80abd3af1cef66f34f7fa1da384ec655c8c16e"
+    },
+    {
+      "path": "Textures/fuego.png",
+      "bytes": 82873,
+      "sha256": "227ab9a8786008487a14d9fb610b6d808082ced0b19b5e93802c2b43fc61902c"
+    },
+    {
+      "path": "Textures/fuselage.jpg",
+      "bytes": 32699,
+      "sha256": "7da5c4748d0bf77d588e9444753e502c6f6eb5fed455142a1eb23be41bc5b490"
+    },
+    {
+      "path": "Textures/holocronunwrap.png",
+      "bytes": 54473,
+      "sha256": "6ad539e19e42119ff99b2eb2f469e39583d7186f2c2cb1c0068c9405f94d3da0"
+    },
+    {
+      "path": "Textures/hud_digitos.png",
+      "bytes": 56437,
+      "sha256": "1ab0113f87b0fb55c49e7fe601364f6b5fe20d2c725b11ff515960a9071283ef"
+    },
+    {
+      "path": "Textures/hud_iconos.png",
+      "bytes": 7611,
+      "sha256": "c915ee6796e54994b218f001f28bd9ba493d6f061a55b7439eb90f0b9fec7957"
+    },
+    {
+      "path": "Textures/hud_reloj.png",
+      "bytes": 118367,
+      "sha256": "ae109c1189165de2095c59f35046b03451e2d4730d330cc597827bfa54c05559"
+    },
+    {
+      "path": "Textures/humo.png",
+      "bytes": 11494,
+      "sha256": "eb38d83b81426dc482dd7be3d8ac3540a9ad62f24b1cbd299b63832327661465"
+    },
+    {
+      "path": "Textures/Intergalactic_Spaceship_color_4.jpg",
+      "bytes": 54082,
+      "sha256": "4e8947201419b8eca9a49efc9d2aea3f2ef3383e93cd3f010c91e4ae5d76e928"
+    },
+    {
+      "path": "Textures/L1_Bake1_PBR_Diffuse.png",
+      "bytes": 736,
+      "sha256": "e1183ab1ff67ac4b04ff527e9e7df0751e042af156344a0da389fd244fe2095b"
+    },
+    {
+      "path": "Textures/ladrillos.tga",
+      "bytes": 1044524,
+      "sha256": "1cc6f217eed2914eb9e0d882ae6811f1cee51948b425f8f3a18b2f1f2619ed2e"
+    },
+    {
+      "path": "Textures/logo_lol.png",
+      "bytes": 214735,
+      "sha256": "1795045659088ecbeb7bbf2544447edf05515c33679b692c114b8fb854845ebb"
+    },
+    {
+      "path": "Textures/miNaveTexture.png",
+      "bytes": 259478,
+      "sha256": "7914693f0ec7798b60053c2fcb09e57f3d601e9d41adb27f6f807511da97e66a"
+    },
+    {
+      "path": "Textures/monstruoNegroTexture.png",
+      "bytes": 180484,
+      "sha256": "916ec85e6a8467084fa5778dcccb8bb339aa0043353439f02d8e60818a1962ec"
+    },
+    {
+      "path": "Textures/Moon_procedural.png",
+      "bytes": 43918,
+      "sha256": "ef819f057088b6f4c2e597191f439b0a8feb22938fd2aca8a0fd35980db2e4d8"
+    },
+    {
+      "path": "Textures/narutoTexture.png",
+      "bytes": 282627,
+      "sha256": "18f058209deb725e8bb3e098d0757d6a81e06a98c4673f8558d3ac9cc3b337fd"
+    },
+    {
+      "path": "Textures/numero1.tga",
+      "bytes": 262188,
+      "sha256": "8c8e0e1bd35e282e6c9d81ada55433bc26ad720bd056c8906b502e327382b8ab"
+    },
+    {
+      "path": "Textures/numero2.tga",
+      "bytes": 262188,
+      "sha256": "d03e47720a5968005a67c8336c32e54610b20be28302afe7ea828909a5048349"
+    },
+    {
+      "path": "Textures/numerosbase.tga",
+      "bytes": 1048620,
+      "sha256": "27a85147446efa96ae4d20f47c4325da587f20f2ac790b3ad20847e739550c37"
+    },
+    {
+      "path": "Textures/pal.jpg",
+      "bytes": 32967,
+      "sha256": "03c726c48159c800fddb14ef2325808bf860b3ae34e6390bb8ff9d79cbfd9dee"
+    },
+    {
+      "path": "Textures/panel.jpg",
+      "bytes": 44248,
+      "sha256": "26dc4c0683920b70da36625170b9b11e217f3f3cbfc54fdbe443f5346b07ea84"
+    },
+    {
+      "path": "Textures/PaulTexture.png",
+      "bytes": 286399,
+      "sha256": "78c0209b808a85c0184eb6b6546dc2741551979208c5f707033c02c8ce454b03"
+    },
+    {
+      "path": "Textures/piso.png",
+      "bytes": 155,
+      "sha256": "a09a956e7c4300cf2a5cb9de5959f529c2bee1c50d13f2babdc1e22b401615fc"
+    },
+    {
+      "path": "Textures/piso.tga",
+      "bytes": 1048620,
+      "sha256": "13b3005f0bdcdacfa31860d298655eea12e425ae1ec7eb5aade2aecb31858879"
+    },
+    {
+      "path": "Textures/pistaTexture.png",
+      "bytes": 134689,
+      "sha256": "12fc9b8589d980fc1d44bd0fe201d823d5df942452a65775f9994067947788ee"
+    },
+    {
+      "path": "Textures/plain.png",
+      "bytes": 155,
+      "sha256": "a09a956e7c4300cf2a5cb9de5959f529c2bee1c50d13f2babdc1e22b401615fc"
+    },
+    {
+      "path": "Textures/planet_reksai_procedural.png",
+      "bytes": 63943,
+      "sha256": "2ca5ebe9e1fbc388b40a92452b7393268846bb2bbaa539e2c860042a3ecaadc4"
+    },
+    {
+      "path": "Textures/planetaOceanoTexture.png",
+      "bytes": 57070,
+      "sha256": "3fd6447b65ae64663595b4bebda01c0173efaefe9f889a43081ebfa10c5fbfdb"
+    },
+    {
+      "path": "Textures/planetaRocaTexture.png",
+      "bytes": 358141,
+      "sha256": "03b118b932e894101fbab4683276bbf150518b485e03306b4794094753cf10d2"
+    },
+    {
+      "path": "Textures/planetaSelvaTexture.png",
+      "bytes": 329173,
+      "sha256": "96d94336bc28a984134fe5df733ffa7451fe934c8a13432f78e495088dd758b5"
+    },
+    {
+      "path": "Textures/Plt.jpg",
+      "bytes": 42806,
+      "sha256": "fd80e7f451d12cdab2af1fd778592331af8a4b58001177a5eea0f753fd2a9cd5"
+    },
+    {
+      "path": "Textures/portalTexture.png",
+      "bytes": 307074,
+      "sha256": "216d402cd14185b449437f19e57403ccdb25690f52254f62f016557e438979e1"
+    },
+    {
+      "path": "Textures/pulpoTexture.png",
+      "bytes": 223362,
+      "sha256": "0e8a2b194b3ec410634d8c5db901129d8af9848f2ef3333b17e4e04f831275ad"
+    },
+    {
+      "path": "Textures/reksai.png",
+      "bytes": 213256,
+      "sha256": "3a1d65ca2f0f9e54dd3f4209fd124d5d40bf71f47cd353503de7b22bd55ff6d6"
+    },
+    {
+      "path": "Textures/rocket_diffuse.jpg",
+      "bytes": 18045,
+      "sha256": "6b88791bd78fa271f0ea79e97c8e637367cd6d685c04e8527c073c135481bd59"
+    },
+    {
+      "path": "Textures/serpienteAlasTexture.png",
+      "bytes": 501899,
+      "sha256": "1ecad733dc41e74095f75ae62ae295cf16b327880de86d061b099a6ad88ad471"
+    },
+    {
+      "path": "Textures/Skybox/cupertin-lake_bk.tga",
+      "bytes": 774143,
+      "sha256": "03ca4e400bdc204fd921dd92ca65f842410007cf82b79da56094b7f14d6a5c07"
+    },
+    {
+      "path": "Textures/Skybox/cupertin-lake_dn.tga",
+      "bytes": 776097,
+      "sha256": "bb06444d120207e437e14eb10ca50367134dbf15e4a65748ad1ef1ab1cffcf9e"
+    },
+    {
+      "path": "Textures/Skybox/cupertin-lake_ft.tga",
+      "bytes": 786476,
+      "sha256": "20d72efc8b5420ffc47bba14681703d8e2000c11046b384e600789eff2cfa08b"
+    },
+    {
+      "path": "Textures/Skybox/cupertin-lake_lf.tga",
+      "bytes": 786476,
+      "sha256": "1b04a6063c6205d4f124d78c340f957d599cd1969a80fcd23821b8414f64d31f"
+    },
+    {
+      "path": "Textures/Skybox/cupertin-lake_rt.tga",
+      "bytes": 768235,
+      "sha256": "bab0e16e7de16d5098411dbb2edb0754817188142eeaf2172c35997e8d35122b"
+    },
+    {
+      "path": "Textures/Skybox/cupertin-lake_up.tga",
+      "bytes": 752621,
+      "sha256": "1e692927858e628e1f2e4d730a1b38e80b071a6020a1742a895c97e54e0b3fd0"
+    },
+    {
+      "path": "Textures/skyboxp1.jpeg",
+      "bytes": 15905,
+      "sha256": "14355fc2595761cd06c9655f586cbb769045a0984d7458a5a87dd125288f87c0"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulabk.png",
+      "bytes": 90407,
+      "sha256": "d526e70657bff5652589e313c73e06cff0d5bd9a505d853f4b977940a3b01b70"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulabk.tga",
+      "bytes": 245060,
+      "sha256": "dc6345c5115d83e86cc4bed21ca7fe190993e1a5e0fefa8a794c066cfe898f6f"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebuladn.png",
+      "bytes": 89493,
+      "sha256": "5ae59ba13765ae0bb433df0cc6f2417cc57b22f46c991895984d556acc5f6078"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebuladn.tga",
+      "bytes": 244998,
+      "sha256": "2c49c2047d5b62de2b835c3692dc08bc2b18ec029c4c747edcf06487ee309033"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulaft.png",
+      "bytes": 99506,
+      "sha256": "0f3ea028081bd8f36fe567cfd0cd774de52ed80119d105558c1a0f14465a11e7"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulaft.tga",
+      "bytes": 254772,
+      "sha256": "afa04fbf20b53acd4a7b7dde2554069050a6ff412ce56553c014f407d4d398aa"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulalf.png",
+      "bytes": 80895,
+      "sha256": "2605727f149fc60ff67eb15ece32b796922acea95e7da434e832802363c9cc9f"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulalf.tga",
+      "bytes": 241566,
+      "sha256": "b8e713411ba30e14f548097078523af056a92593a105f84ada70d39cc628c43b"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulart.png",
+      "bytes": 91899,
+      "sha256": "0e7b4e2d4c8741b83bca3ee5097c34d6551e9f8d2a77acb38fe386faa7aaf829"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulart.tga",
+      "bytes": 235542,
+      "sha256": "e568ed08946932a58af06a3e7cb15ca2f24bb6173b83e428625dc572ff66b362"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulaup.png",
+      "bytes": 91370,
+      "sha256": "e23f5d74ba62acf377a5b2f8218592f7e01411a8fc5614e37b8bfa617126b969"
+    },
+    {
+      "path": "Textures/spacenebulaskybox/nebulaup.tga",
+      "bytes": 247386,
+      "sha256": "0ae9094fd0b8590ad7be9c35205406d1a12f080294d33575bef05f20fdcabd0d"
+    },
+    {
+      "path": "Textures/star wars logos.png",
+      "bytes": 218194,
+      "sha256": "a6c59697892eecc292488b90936f4ce522dbaef575a789c362e8bd7d99cd534d"
+    },
+    {
+      "path": "Textures/sueloRocoso.png",
+      "bytes": 663787,
+      "sha256": "2680016fd92fd0167e11b93b9e132d700a1d934b629f53c6821d99abcaee22db"
+    },
+    {
+      "path": "Textures/sueloSelva.png",
+      "bytes": 430723,
+      "sha256": "7b0d136e1e66d4d0082d08f271245afc3a42425b14905f24f79b73788c6bad15"
+    },
+    {
+      "path": "Textures/swl_holo.png",
+      "bytes": 304367,
+      "sha256": "0ab3f4b95f56e63d63825307840e9e3a2c596538991e3f45409670904a7ff06d"
+    },
+    {
+      "path": "Textures/tigreFuegoTexture.png",
+      "bytes": 371865,
+      "sha256": "f9ba7cc4fdc757e2ca114d4edf211b57529e50aeae0e9671955de0986ad252fc"
+    },
+    {
+      "path": "Textures/UFO_Glass_BaseColor.png",
+      "bytes": 476964,
+      "sha256": "386af944b757b0da5a6957a20e76a2f29a88183953731920908bd2659dd5c97d"
+    },
+    {
+      "path": "Textures/UFO_Metal_BaseColor.png",
+      "bytes": 527195,
+      "sha256": "7a716fc8824d423596e6139cc675776101eebdcabc9210a81be024a7f8821371"
+    },
+    {
+      "path": "Textures/Vacio/cielo_bk.png",
+      "bytes": 101255,
+      "sha256": "3023cd2e09f89c33b882d1ec7d8127db57cf8d73c20a0d668dfa72d60ce86455"
+    },
+    {
+      "path": "Textures/Vacio/cielo_dn.png",
+      "bytes": 91119,
+      "sha256": "3a09872716f47e10c420f83d013e4ee7a2b8879a175449f2f8c92d052ec0a2d3"
+    },
+    {
+      "path": "Textures/Vacio/cielo_ft.png",
+      "bytes": 108305,
+      "sha256": "1265a5dca08013d537e223c43dea3ee3b299a47fac6734fe7d89a99125dee585"
+    },
+    {
+      "path": "Textures/Vacio/cielo_lf.png",
+      "bytes": 91845,
+      "sha256": "ff56fa0784fe0c2a7d548a557beaf3b05a8e616a942a9ba03a8160805938bc90"
+    },
+    {
+      "path": "Textures/Vacio/cielo_rt.png",
+      "bytes": 111407,
+      "sha256": "8b820383bf9ad2002fb787229f9cf2de85e6ec343f9bf607e36418c5affc2897"
+    },
+    {
+      "path": "Textures/Vacio/cielo_up.png",
+      "bytes": 92588,
+      "sha256": "663041fdb63a5cc610d3547067eac60b002ef0b59ac3288bde0d296b265ac6d0"
+    },
+    {
+      "path": "Textures/Vacio/pizarra.png",
+      "bytes": 285777,
+      "sha256": "0a1160a0d0ebc72a49cef80fac4ec6643b87dcce40b3c54ea8acfc23cae6999e"
+    },
+    {
+      "path": "Textures/zorroBlancoTexture.png",
+      "bytes": 210433,
+      "sha256": "856f6048ddc8dc716ce6bd5154e65892b739efd813d7d8139ee59deacc6589b5"
+    }
+  ],
+  "obj": [
+    {
+      "path": "Models/arbol/arbol.obj",
+      "v": 234,
+      "vt": 3855,
+      "vn": 234,
+      "faces": 1300,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/arbol/arbol_lod0.obj",
+      "v": 6588,
+      "vt": 47936,
+      "vn": 6588,
+      "faces": 16000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/arbol/arbol_lod1.obj",
+      "v": 985,
+      "vt": 10454,
+      "vn": 985,
+      "faces": 3500,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/asteroide/asteroide.obj",
+      "v": 8998,
+      "vt": 11532,
+      "vn": 9018,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/asteroide/roca_baja.obj",
+      "v": 1202,
+      "vt": 7064,
+      "vn": 1202,
+      "faces": 2400,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/asteroide/Rocky_Asteroid_6.obj",
+      "v": 6000,
+      "vt": 6178,
+      "vn": 6000,
+      "faces": 5998,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/asteroide/Stylized_Planets.obj",
+      "v": 6470,
+      "vt": 6598,
+      "vn": 6021,
+      "faces": 6504,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/capsula/capsulaCuerpo.obj",
+      "v": 12196,
+      "vt": 5381,
+      "vn": 7141,
+      "faces": 16340,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/capsula/capsulaPuerta.obj",
+      "v": 652,
+      "vt": 0,
+      "vn": 652,
+      "faces": 1296,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/Fighter_02.obj",
+      "v": 3590,
+      "vt": 7951,
+      "vn": 800,
+      "faces": 3590,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/Fighter_03_Obj/Fighter_03.obj",
+      "v": 2276,
+      "vt": 4477,
+      "vn": 571,
+      "faces": 2254,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/freezer_station/freezer_station.obj",
+      "v": 8072,
+      "vt": 7504,
+      "vn": 7749,
+      "faces": 15288,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/freezer_station.obj",
+      "v": 8376,
+      "vt": 7801,
+      "vn": 10627,
+      "faces": 15688,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/Intergalactic_Spaceships_Version_2.obj",
+      "v": 13684,
+      "vt": 10871,
+      "vn": 13445,
+      "faces": 20911,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/jona/cohete_jona.obj",
+      "v": 56062,
+      "vt": 23226,
+      "vn": 24520,
+      "faces": 17998,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/miNave/miNave.obj",
+      "v": 155254,
+      "vt": 23513,
+      "vn": 25027,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/Moon.obj",
+      "v": 1986,
+      "vt": 2390,
+      "vn": 1986,
+      "faces": 1984,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/capsulaCuerpo.obj",
+      "v": 12196,
+      "vt": 5381,
+      "vn": 7141,
+      "faces": 16340,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/capsulaPuerta.obj",
+      "v": 652,
+      "vt": 0,
+      "vn": 652,
+      "faces": 1296,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/Cerbero.obj",
+      "v": 8982,
+      "vt": 12243,
+      "vn": 9487,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/escorpion.obj",
+      "v": 9002,
+      "vt": 10599,
+      "vn": 9009,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/monstruoNegro.obj",
+      "v": 9004,
+      "vt": 10274,
+      "vn": 9026,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/Paul.obj",
+      "v": 8970,
+      "vt": 10930,
+      "vn": 8984,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcRoca/serpienteAlas.obj",
+      "v": 8968,
+      "vt": 10680,
+      "vn": 11102,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcSelva/caballoDelfin.obj",
+      "v": 9002,
+      "vt": 10737,
+      "vn": 9234,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcSelva/calamardoGuapo.obj",
+      "v": 8992,
+      "vt": 10361,
+      "vn": 9018,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcSelva/naruto.obj",
+      "v": 9020,
+      "vt": 11701,
+      "vn": 9051,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcSelva/pulpo.obj",
+      "v": 8990,
+      "vt": 10933,
+      "vn": 9241,
+      "faces": 17999,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcSelva/tigreFuego.obj",
+      "v": 9004,
+      "vt": 11377,
+      "vn": 9018,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/npcSelva/zorroBlanco.obj",
+      "v": 8996,
+      "vt": 10438,
+      "vn": 9000,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/pista/pista.obj",
+      "v": 4608,
+      "vt": 4608,
+      "vn": 4608,
+      "faces": 4584,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/planet_reksai.obj",
+      "v": 24192,
+      "vt": 520,
+      "vn": 22481,
+      "faces": 34924,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/planetaOceano/planetaOceano.obj",
+      "v": 2145,
+      "vt": 2145,
+      "vn": 2145,
+      "faces": 4096,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/planetaRoca/planetaRoca.obj",
+      "v": 9002,
+      "vt": 9302,
+      "vn": 9002,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/planetaSelva/planetaSelvatico.obj",
+      "v": 9002,
+      "vt": 9298,
+      "vn": 9002,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/portal/asteroide.obj",
+      "v": 9000,
+      "vt": 10308,
+      "vn": 9006,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/reksai/reksai.obj",
+      "v": 3170,
+      "vt": 1786,
+      "vn": 5117,
+      "faces": 5126,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/reksai/rift_herald.obj",
+      "v": 9599,
+      "vt": 6413,
+      "vn": 14254,
+      "faces": 14373,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/reksai/void_spawn.obj",
+      "v": 579,
+      "vt": 308,
+      "vn": 832,
+      "faces": 832,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/reksai/voidgrub.obj",
+      "v": 3351,
+      "vt": 1807,
+      "vn": 5591,
+      "faces": 5662,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/reksai/voidmite.obj",
+      "v": 1413,
+      "vt": 711,
+      "vn": 2257,
+      "faces": 2324,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/reksai.obj",
+      "v": 3170,
+      "vt": 1786,
+      "vn": 5117,
+      "faces": 5126,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/rocket/rocket.obj",
+      "v": 27721,
+      "vt": 11640,
+      "vn": 21479,
+      "faces": 18000,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/rocket.obj",
+      "v": 8795,
+      "vt": 10295,
+      "vn": 7662,
+      "faces": 8849,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/UFO.obj",
+      "v": 19321,
+      "vt": 27859,
+      "vn": 22639,
+      "faces": 35924,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    },
+    {
+      "path": "Models/X_wing_obj.obj",
+      "v": 21294,
+      "vt": 34255,
+      "vn": 20422,
+      "faces": 35818,
+      "invalid_indices": 0,
+      "nonfinite": 0,
+      "missing_mtl": []
+    }
+  ],
+  "absolute_paths": []
+}
