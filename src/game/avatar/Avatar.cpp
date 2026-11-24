@@ -51,6 +51,7 @@ bool contains(const std::string& text, const char* part)
 
 PartId classifyGroup(const std::string& group)
 {
+    // El OBJ trae varios grupos por pieza; aqui los reunimos para moverlos juntos.
     if (contains(group, "Tail"))
         return Tail;
     if (group == "Head" || group == "Neck" || contains(group, "Jaw") ||
@@ -250,6 +251,7 @@ bool loadObjParts(const std::string& path, std::array<PartGeometry, PartCount>& 
         PartGeometry& part = parts[partIndex];
         if (part.indices.empty() || part.positionCount == 0)
             continue;
+        // Usamos la union con el cuerpo cuando existe, para que la pieza no gire desde lejos.
         part.pivot = part.positionSum / static_cast<float>(part.positionCount);
         if (part.attachmentCount > 0 && partIndex != Body)
         {
@@ -364,14 +366,15 @@ void Avatar::update(float dt, const glm::vec3& direction, float speed)
     if (speed > 0.05f && directionLength2 > 0.0001f)
     {
         m_walkPhase = std::fmod(m_walkPhase + safeDt * (4.0f + speed * 2.0f), 6.2831853f);
-        // The exported Rek'Sai OBJ runs along Z with its feet below the body
-        // on Y. From the side, X is the hinge axis for a visible stride.
+        // El modelo mira hacia Z. Giramos las patas en X para que avancen y retrocedan.
+        // Las patas opuestas llevan media vuelta de diferencia para alternar el paso.
         const float stride = std::sin(m_walkPhase) * 0.78f;
         const float oppositeStride = std::sin(m_walkPhase + 3.1415926f) * 0.78f;
         m_legPivots[0]->rotationEuler.x = stride;
         m_legPivots[3]->rotationEuler.x = stride;
         m_legPivots[1]->rotationEuler.x = oppositeStride;
         m_legPivots[2]->rotationEuler.x = oppositeStride;
+        // Los brazos se mueven menos que las patas para que no atraviesen el cuerpo.
         const float armSwing = std::sin(m_walkPhase) * 0.18f;
         const float oppositeArmSwing =
             std::sin(m_walkPhase + 3.1415926f) * 0.18f;
@@ -384,6 +387,7 @@ void Avatar::update(float dt, const glm::vec3& direction, float speed)
     }
     else
     {
+        // Al parar dejamos las piezas en su posicion base, sin conservar el ultimo paso.
         m_walkPhase = 0.0f;
         for (SceneNode* leg : m_legPivots)
             leg->rotationEuler = glm::vec3(0.0f);

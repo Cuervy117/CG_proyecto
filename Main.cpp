@@ -9,7 +9,9 @@ Este main sigue la misma estructura de las prácticas (P5, P8, P9, P09-1 y P09-2
     dentro del while se reciben las teclas, se actualizan las animaciones y se dibuja todo con
     model = glm::translate(model, ...), UseTexture(), UseMaterial() y RenderModel().
 Las teclas se asignan en Window.cpp (ManejaTeclado), igual que en las prácticas.
-Todo lo que NO viene en las prácticas está marcado con "NUEVO" y explicado en su comentario.
+Programa comun del equipo: A trabaja motor, camaras y luces; B, mundos e infraestructura;
+C (320324187), Rek'Sai, entrada, experiencias e HUD. Aqui se conectan esas partes.
+Los comentarios explican las decisiones del codigo y las diferencias con la base de practicas.
 
 Teclas:
  W A S D + mouse	mover el avatar (o la cámara libre)
@@ -790,7 +792,7 @@ void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmisio
 
 int main(int argc, char** argv)
 {
-	// Localizar recursos desde el ejecutable, incluso al abrirlo desde otra carpeta.
+	// Buscamos los recursos desde el EXE para que abrirlo desde otra carpeta no rompa las rutas.
 	wchar_t rutaEjecutable[32768] = {};
 	const DWORD longitudRuta = GetModuleFileNameW(nullptr, rutaEjecutable, 32768);
 	if (longitudRuta > 0 && longitudRuta < 32768) {
@@ -1198,7 +1200,7 @@ int main(int argc, char** argv)
 		// la vista de su rig de observación aunque la cámara libre esté activa.
 		const glm::mat4 vistaNormal = ((camaraLibre || director.mode() == CameraMode::Planeta) && !enR4)
 			? camera.calculateViewMatrix() : director.view();
-		// Encuadre fijo exclusivo de QA para ver la separacion completa del cohete.
+		// Solo en la prueba dejamos esta vista fija para ver como se separa el cohete completo.
 		const glm::mat4 vista = pruebaAnimaciones && frameAnimaciones < 1680
 			? glm::lookAt(glm::vec3(60, 38, 65), glm::vec3(22, 20, 14), glm::vec3(0, 1, 0))
 			: vistaNormal;

@@ -26,7 +26,7 @@ degeneradas ni ausencia universal de intersecciones. Se redujeron texturas
 y modelos de copias; los originales se mantienen fuera de la entrega.
 
 DOCUMENTACION
-Ocho PDF: manual tecnico (9 paginas por idioma), usuario (3), bitacora (2)
+Ocho PDF: manual tecnico (10 paginas por idioma), usuario (4), bitacora (2)
 y propuesta actualizada (2), ES/EN. Se revisaron las paginas renderizadas,
 controles, contenido y metadatos. No se detectaron nombres personales de
 integrantes o docente en los PDF finales. Autor y creador: 320324187.

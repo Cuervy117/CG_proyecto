@@ -22,6 +22,7 @@ bool InputFrame::wasPressed(int key) const
 
 ControlFrame mapControls(const InputFrame& input)
 {
+    // Aqui juntamos las teclas por accion; el main decide que hacen en cada modo.
     ControlFrame controls;
     controls.movementXZ.x = (input.isDown(GLFW_KEY_D) ? 1.0f : 0.0f)
         - (input.isDown(GLFW_KEY_A) ? 1.0f : 0.0f);
@@ -76,6 +77,7 @@ const InputFrame& InputCapture::update(float dt)
     {
         const bool isDown = keys[key];
         m_frame.down[key] = isDown;
+        // Si se pulsa y suelta entre dos frames, guardamos el toque para no perderlo.
         const bool eventPressed = m_window.consumePressed(static_cast<int>(key));
         m_frame.pressed[key] = eventPressed || (isDown && !m_previous[key]);
         m_previous[key] = isDown;

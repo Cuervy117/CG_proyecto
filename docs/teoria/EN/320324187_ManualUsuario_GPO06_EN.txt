@@ -400,3 +400,123 @@ Figure 2. Hangar viewed in F4.
 Troubleshooting
 
 If no window appears, check the complete DLL and asset set and inspect the --probar-release log; a dependency failure can terminate before any text appears. Use F9 if the pointer is captured. If lost, use F8 or F6/F1. If a key is pressed during loading, wait and press it again. The first visit may load models. Hardware without OpenGL 4.3 is not supported.
+
+Teamwork and my contribution
+
+This project was developed as a team during the laboratory course. Each member worked on a different part, and we then integrated those parts into one application. This documentation is my individual Theory submission, identified by 320324187 and GPO06.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Member'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Member', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'_width_max': 32.593017578125
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(53.406982421875, ['Member'])], link=[], rise=0, text='Member', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Project contribution'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Project contribution', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'_width_max': 80.75000000000001
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(284.25, ['Project', 'contribution'])], link=[], rise=0, text='Project contribution', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'A'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='A', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(80.33056640625, ['A'])], link=[], rise=0, text='A', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Engine, scene, cameras, lighting, compilation, merges and Release preparation.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Engine, scene, cameras, lighting, compilation, merges and Release preparation.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(63.552978515625, ['Engine, scene, cameras, lighting, compilation, merges and Release preparation.'])], link=[], rise=0, text='Engine, scene, cameras, lighting, compilation, merges and Release preparation.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'B'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='B', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(80.33056640625, ['B'])], link=[], rise=0, text='B', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Worlds, infrastructure, resource loading and animation of environmental objects.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Worlds, infrastructure, resource loading and animation of environmental objects.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(64.042724609375, ['Worlds, infrastructure, resource loading and animation of environmental objects.'])], link=[], rise=0, text='Worlds, infrastructure, resource loading and animation of environmental objects.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'C - 320324187'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='C - 320324187', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(29.76220703125, ['C - 320324187'])], link=[], rise=0, text='C - 320324187', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rek’Sai, avatar movement and animation, input and experiences, integration with the shared application, HUD and tests of my contribution.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rek’Sai, avatar movement and animation, input and experiences, integration with the shared application, HUD and tests of my contribution.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(14.88134765625, ['Rek’Sai, avatar movement and animation, input and experiences, integration with the shared']), (192.555419921875, ['application, HUD and tests of my contribution.'])], link=[], rise=0, text='Rek’Sai, avatar movement and animation, input and experiences, integration with the shared application, HUD and tests of my contribution.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+What I worked on
+
+My main contribution was Rek’Sai: preparing the parts and pivots, adjusting the gait and connecting movement to the controls. I also worked on keyboard and mouse input and the HUD, which displays the mode, zone and player state. During integration, I checked that my contribution worked with the team’s cameras and environments.
+
+This contribution can be followed in src/game/avatar/Avatar.cpp, Input.cpp and src/ui/Hud.cpp, together with their integration in Main.cpp. The history also records the later integration of TARS in the ocean. Engine and world modules retain the work of A and B. Submission preparation changes and automated tests were completed with Codex assistance, as recorded in the work log.

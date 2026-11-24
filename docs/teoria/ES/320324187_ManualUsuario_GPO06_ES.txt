@@ -400,3 +400,123 @@ Figura 2. Hangar observado desde F4.
 Si algo falla
 
 Si no aparece ventana, comprueba las DLL y recursos completos y consulta el registro de --probar-release; un fallo de dependencias puede cerrar el EXE antes de mostrar texto. Si no ves el cursor, usa F9. Si te pierdes, usa F8 o F6/F1. Si una tecla no responde durante una carga, espera y vuelve a pulsarla. La primera visita puede cargar modelos. No se garantiza compatibilidad con equipos sin OpenGL 4.3.
+
+Trabajo en equipo y mi aportación
+
+Este proyecto se desarrolló en equipo durante el laboratorio. Cada integrante se encargó de una parte y después juntamos el trabajo en un mismo programa. Esta documentación es mi entrega individual de Teoría, identificada con 320324187 y GPO06.
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Integrante'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Integrante', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'_width_max': 41.0888671875
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(44.9111328125, ['Integrante'])], link=[], rise=0, text='Integrante', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Parte del proyecto'
+'frags': [ParaFrag(__tag__='para', bold=1, fontName='ArialB', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Parte del proyecto', textColor=Color(1,1,1,1), us_lines=[])]
+'style': <ParagraphStyle 'CellH'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'_width_max': 74.163330078125
+'height': 11
+'_splitLongWordCount': 0
+'_hyphenations': 0
+'blPara': ParaFrag(__tag__='para', ascent=6.188232421875001, bold=1, descent=-1.7888183593750002, fontName='ArialB', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(290.836669921875, ['Parte', 'del', 'proyecto'])], link=[], rise=0, text='Parte del proyecto', textColor=Color(1,1,1,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'A'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='A', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(80.33056640625, ['A'])], link=[], rise=0, text='A', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Motor, escena, cámaras, iluminación, compilación, merges y preparación del Release.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Motor, escena, cámaras, iluminación, compilación, merges y preparación del Release.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(40.43115234375, ['Motor, escena, cámaras, iluminación, compilación, merges y preparación del Release.'])], link=[], rise=0, text='Motor, escena, cámaras, iluminación, compilación, merges y preparación del Release.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'B'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='B', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(80.33056640625, ['B'])], link=[], rise=0, text='B', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Mundos, infraestructura, carga de recursos y animaciones de los elementos del entorno.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Mundos, infraestructura, carga de recursos y animaciones de los elementos del entorno.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(32.37939453125, ['Mundos, infraestructura, carga de recursos y animaciones de los elementos del entorno.'])], link=[], rise=0, text='Mundos, infraestructura, carga de recursos y animaciones de los elementos del entorno.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+(Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'C - 320324187'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='C - 320324187', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 86
+'_wrapWidths': [86, 86]
+'height': 11
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(29.76220703125, ['C - 320324187'])], link=[], rise=0, text='C - 320324187', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,) | (Paragraph(
+'caseSensitive': 1
+'encoding': 'utf8'
+'text': 'Rek’Sai, movimiento y animación del avatar, entrada y experiencias, integración con el programa común, HUD y pruebas de mi parte.'
+'frags': [ParaFrag(__tag__='para', bold=0, fontName='Arial', fontSize=8.5, greek=0, italic=1, link=[], rise=0, text='Rek’Sai, movimiento y animación del avatar, entrada y experiencias, integración con el programa común, HUD y pruebas de mi parte.', textColor=Color(0,0,0,1), us_lines=[])]
+'style': <ParagraphStyle 'CellX'>
+'bulletText': None
+'debug': 0
+'width': 365
+'_wrapWidths': [365, 365]
+'height': 22
+'blPara': ParaFrag(__tag__='para', ascent=8.5, bold=0, descent=-1.7000000000000002, fontName='Arial', fontSize=8.5, greek=0, italic=1, kind=0, lines=[(36.16455078125, ['Rek’Sai, movimiento y animación del avatar, entrada y experiencias, integración con el']), (190.67529296875, ['programa común, HUD y pruebas de mi parte.'])], link=[], rise=0, text='Rek’Sai, movimiento y animación del avatar, entrada y experiencias, integración con el programa común, HUD y pruebas de mi parte.', textColor=Color(0,0,0,1), us_lines=[])
+) #Paragraph,)
+
+Qué hice yo
+
+Mi parte principal fue trabajar con Rek’Sai: preparar sus piezas y puntos de giro, ajustar la caminata y conectar su movimiento con los controles. También trabajé en la entrada de teclado y mouse y en el HUD, para mostrar el modo, la zona y el estado del jugador. Al integrar mi parte revisé que funcionara con las cámaras y los escenarios del equipo.
+
+En el código, esta parte se puede seguir en src/game/avatar/Avatar.cpp, Input.cpp y src/ui/Hud.cpp, además de su conexión en Main.cpp. El historial también registra la integración posterior de TARS en el océano. Los módulos del motor y del mundo conservan el trabajo de A y B. Las correcciones de preparación de entrega y las pruebas automatizadas se realizaron con apoyo de Codex, como se registra en la bitácora.
