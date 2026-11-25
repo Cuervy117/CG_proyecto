@@ -36,6 +36,8 @@ Dependencias/
 # Capturas de trabajo y bundle de traspaso
 capturas_*/
 artefactos/
+/audio/
+/pruebas_audio/
 /RekSai OpenGL - Animacion/
 
 # Herramientas / editor
