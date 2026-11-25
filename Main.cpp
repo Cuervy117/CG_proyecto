@@ -823,6 +823,12 @@ int main(int argc, char** argv)
 		const bool independiente = coheteJona.Altura() == 0.0f && coheteDavid.Fase() >= 1;
 		printf("[David-QA] Independencia: Jona altura=%.3f David=%s\n", coheteJona.Altura(), coheteDavid.TextoEstado());
 
+		const int faseReentrada = coheteDavid.Fase();
+		const float tiempoReentrada = coheteDavid.Tiempo();
+		coheteDavid.Cargar();
+		const bool reentrada = coheteDavid.Fase() == faseReentrada && coheteDavid.Tiempo() == tiempoReentrada;
+		printf("[David-QA] Reentrada: %s\n", reentrada ? "conserva el estado" : "reinicio inesperado");
+
 		coheteDavid.Actualizar(dt, false, true);
 		const bool reinicioVuelo = coheteDavid.Fase() == 0;
 		printf("[David-QA] Reinicio en vuelo: %s\n", coheteDavid.TextoEstado());
@@ -851,7 +857,7 @@ int main(int argc, char** argv)
 		printf("[David-QA] Reinicio en orbita: %s\n", coheteDavid.TextoEstado());
 
 		fflush(stdout);
-		return (paralelo && independiente && reinicioVuelo && llegoOrbita && dosVueltas &&
+		return (paralelo && independiente && reentrada && reinicioVuelo && llegoOrbita && dosVueltas &&
 			toberaFinita && reinicioOrbita) ? 0 : 3;
 	}
 
