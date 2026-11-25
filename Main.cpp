@@ -66,11 +66,13 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include "src/audio/SonidoCohetes.h"
 #include "src/audio/MusicaZonas.h"
 #include "src/audio/EfectosAmbiente.h"
+#include "src/audio/AmbienteZonas.h"
 CoheteKeyframes coheteJona;
 CoheteDavid coheteDavid;
 SonidoCohetes audio;
 MusicaZonas musica;
 EfectosAmbiente efectos;
+AmbienteZonas ambienteZonas;
 
 // NUEVO: módulos del escenario (cada .h explica qué hace y por qué existe)
 #include "Superficie.h"		// superficie de los planetas rocoso y selvático
@@ -801,6 +803,7 @@ int main(int argc, char** argv)
 	const bool pruebaAudio = argc == 2 && strcmp(argv[1], "--probar-audio") == 0;
 	const bool pruebaMusica = argc == 2 && strcmp(argv[1], "--probar-musica") == 0;
 	const bool pruebaEfectos = argc == 2 && strcmp(argv[1], "--probar-efectos") == 0;
+	const bool pruebaAmbiente = argc == 2 && strcmp(argv[1], "--probar-ambiente") == 0;
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -815,6 +818,36 @@ int main(int argc, char** argv)
 
 	CreateObjects();
 	CreateShaders();
+
+	if (pruebaAmbiente)
+	{
+		if (!ambienteZonas.Inicializar()) return 3;
+		struct CasoAmbiente { int zona; const char* esperada; };
+		const CasoAmbiente casosAmbiente[] = {
+			{2, "a_pajaros"},
+			{1, "a_insectos"},
+			{3, "a_olas"}
+		};
+		int correctosAmbiente = 0;
+		for (const CasoAmbiente& c : casosAmbiente)
+		{
+			ambienteZonas.ActualizarZona(c.zona);
+			const bool ok = strcmp(ambienteZonas.ZonaActual(), c.esperada) == 0 && ambienteZonas.ReproduciendoZona();
+			printf("[Ambiente-QA] esperada=%s reproducida=%s %s\n",
+				c.esperada, ambienteZonas.ZonaActual(), ok ? "OK" : "FALLO");
+			if (ok) ++correctosAmbiente;
+		}
+		ambienteZonas.ActualizarZona(0);
+		const bool silencio = !ambienteZonas.ReproduciendoZona() && strcmp(ambienteZonas.ZonaActual(), "silencio") == 0;
+		ambienteZonas.ActualizarReksai(15.0f, true);
+		const bool reksai = ambienteZonas.ReproduciendoReksai();
+		printf("[Ambiente-QA] zonas=%d/3 silencio=%d reksai=%d %s\n",
+			correctosAmbiente, silencio ? 1 : 0, reksai ? 1 : 0,
+			(correctosAmbiente == 3 && silencio && reksai) ? "OK" : "FALLO");
+		ambienteZonas.Detener();
+		fflush(stdout);
+		return (correctosAmbiente == 3 && silencio && reksai) ? 0 : 3;
+	}
 
 	if (pruebaEfectos)
 	{
@@ -966,6 +999,7 @@ int main(int argc, char** argv)
 		audio.Inicializar();
 		musica.Inicializar();
 		efectos.Inicializar();
+		ambienteZonas.Inicializar();
 	}
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
@@ -1421,6 +1455,12 @@ int main(int argc, char** argv)
 			efectos.ActualizarMotorRival(0, enCarrera && lugarVisible(lugarRival), posRival);
 			jugador.EstadoRival(RivalCarrera::Segundo, tiempoAnimacion, lugarRival, posRival, frenteRival, arribaRival);
 			efectos.ActualizarMotorRival(1, enCarrera && lugarVisible(lugarRival), posRival);
+		}
+		if (ambienteZonas.Cargado())
+		{
+			ambienteZonas.ActualizarZona((int)zonaVista);
+			const bool reksaiAvatar = !enR4 && !jugador.JugadorEnNave() && zonaVista == zonaActual;
+			ambienteZonas.ActualizarReksai(deltaTime, reksaiAvatar);
 		}
 		Fondo fondo = Fondo::Espacio;
 		if (zonaVista == ZONA_PLANETA_ROCOSO) fondo = Fondo::Roca;
