@@ -34,7 +34,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Verify-Release.ps1
 | F / L / K | Linterna / faro de la nave / foco de la base |
 | C / F9 / Esc | Cámara libre / liberar cursor / salir |
 
-En F4, Tab lleva al hangar: allí `4` inicia el vuelo del Fighter y `5` abre o cierra la puerta cuando está estacionado. En Rek’Sai (F6), el cohete de Jona está a la derecha del punto de llegada y el de David en el claro de (-47,7), al oeste.
+En F4, Tab lleva al hangar: allí `4` inicia el vuelo del Fighter y `5` abre o cierra la puerta cuando está estacionado. En Rek’Sai (F6), el cohete de Jona está a la derecha del punto de llegada y el de David en el claro de (-47,7), al oeste. La música cambia con la zona: espacio, Rek'Sai, Shinobi y océano; durante la carrera suena la pista de carrera y en F4 prevalece la zona observada.
 
 ## Compilar desde `main`
 
@@ -60,6 +60,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Verify-Project-Ass
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Build.ps1
 Copy-Item .\glew32.dll,.\glfw3.dll,.\assimp-vc143-mt.dll,.\sfml-audio-3.dll,.\sfml-system-3.dll .\x64\Release\
 .\x64\Release\LabCGeIHC.exe --probar-audio
+.\x64\Release\LabCGeIHC.exe --probar-musica
 .\x64\Release\LabCGeIHC.exe --probar-release
 ```
 

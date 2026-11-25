@@ -64,9 +64,11 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include "src/game/anim/CoheteKeyframes.h"
 #include "src/game/anim/CoheteDavid.h"
 #include "src/audio/SonidoCohetes.h"
+#include "src/audio/MusicaZonas.h"
 CoheteKeyframes coheteJona;
 CoheteDavid coheteDavid;
 SonidoCohetes audio;
+MusicaZonas musica;
 
 // NUEVO: módulos del escenario (cada .h explica qué hace y por qué existe)
 #include "Superficie.h"		// superficie de los planetas rocoso y selvático
@@ -785,6 +787,7 @@ int main(int argc, char** argv)
 	const bool pruebaCoheteDavid = argc == 2 && strcmp(argv[1], "--probar-cohete-david") == 0;
 	const bool capturarDavid = argc == 2 && strcmp(argv[1], "--capturar-david") == 0;
 	const bool pruebaAudio = argc == 2 && strcmp(argv[1], "--probar-audio") == 0;
+	const bool pruebaMusica = argc == 2 && strcmp(argv[1], "--probar-musica") == 0;
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -799,6 +802,32 @@ int main(int argc, char** argv)
 
 	CreateObjects();
 	CreateShaders();
+
+	if (pruebaMusica)
+	{
+		if (!musica.Inicializar()) return 3;
+		struct Caso { int zona; bool carrera; const char* esperada; };
+		const Caso casos[] = {
+			{0, false, "audio/st_espacio.mp3"},
+			{1, false, "audio/st_reksai.mp3"},
+			{2, false, "audio/st_shinobi.mp3"},
+			{3, false, "audio/st_agua.mp3"},
+			{0, true, "audio/st_carrera.mp3"},
+			{2, false, "audio/st_shinobi.mp3"}
+		};
+		int correctos = 0;
+		for (const Caso& c : casos)
+		{
+			musica.Actualizar(c.zona, c.carrera);
+			const bool ok = musica.PistaActual() == c.esperada && musica.Reproduciendo();
+			printf("[Musica-QA] esperada=%s reproducida=%s %s\n",
+				c.esperada, musica.PistaActual().c_str(), ok ? "OK" : "FALLO");
+			if (ok) ++correctos;
+		}
+		musica.Detener();
+		fflush(stdout);
+		return correctos == (int)(sizeof(casos) / sizeof(casos[0])) ? 0 : 3;
+	}
 
 	if (pruebaAudio)
 	{
@@ -890,7 +919,10 @@ int main(int argc, char** argv)
 	}
 
 	if (!pruebaRelease && !capturarDavid)
+	{
 		audio.Inicializar();
+		musica.Inicializar();
+	}
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
 
@@ -1313,6 +1345,12 @@ int main(int argc, char** argv)
 				coheteJona.PosicionSonido());
 			audio.Actualizar(3, zonaVista == ZONA_PLANETA_ROCOSO && coheteDavid.Encendido(),
 				coheteDavid.PosicionTobera());
+		}
+		if (musica.Cargado())
+		{
+			const bool enCarrera = !enR4 && jugador.CarreraIniciada() &&
+				director.mode() == CameraMode::Carrera;
+			musica.Actualizar((int)zonaVista, enCarrera);
 		}
 		Fondo fondo = Fondo::Espacio;
 		if (zonaVista == ZONA_PLANETA_ROCOSO) fondo = Fondo::Roca;
