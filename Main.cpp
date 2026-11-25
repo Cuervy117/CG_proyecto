@@ -840,6 +840,7 @@ int main(int argc, char** argv)
 	if (pruebaMusica)
 	{
 		if (!musica.Inicializar()) return 3;
+		const bool uniforme = musica.NoEspacializada() && musica.RelativaAlOyente();
 		struct Caso { int zona; bool carrera; const char* esperada; };
 		const Caso casos[] = {
 			{0, false, "audio/st_espacio.mp3"},
@@ -858,9 +859,11 @@ int main(int argc, char** argv)
 				c.esperada, musica.PistaActual().c_str(), ok ? "OK" : "FALLO");
 			if (ok) ++correctos;
 		}
+		printf("[Musica-QA] uniforme=%d relativa=%d volumen=%.0f\n",
+			musica.NoEspacializada() ? 1 : 0, musica.RelativaAlOyente() ? 1 : 0, musica.Volumen());
 		musica.Detener();
 		fflush(stdout);
-		return correctos == (int)(sizeof(casos) / sizeof(casos[0])) ? 0 : 3;
+		return (correctos == (int)(sizeof(casos) / sizeof(casos[0])) && uniforme) ? 0 : 3;
 	}
 
 	if (pruebaAudio)
@@ -1191,14 +1194,13 @@ int main(int argc, char** argv)
 			destino = ZONA_ESPACIO;
 		}
 		if (control.observationMode) director.setMode(CameraMode::Observacion);
+		const bool saltoZona = entrada.wasPressed(GLFW_KEY_F5) || entrada.wasPressed(GLFW_KEY_F6) ||
+			entrada.wasPressed(GLFW_KEY_F7) || entrada.wasPressed(GLFW_KEY_F8);
 		if (entrada.wasPressed(GLFW_KEY_F5)) destino = ZONA_PLANETA_SELVATICO;
 		if (entrada.wasPressed(GLFW_KEY_F6)) destino = ZONA_PLANETA_ROCOSO;
 		if (entrada.wasPressed(GLFW_KEY_F7)) destino = ZONA_PLANETA_OCEANO;
 		if (entrada.wasPressed(GLFW_KEY_F8)) destino = ZONA_ESPACIO;
-		if (director.mode() == CameraMode::Observacion &&
-			(entrada.wasPressed(GLFW_KEY_F5) || entrada.wasPressed(GLFW_KEY_F6) ||
-			 entrada.wasPressed(GLFW_KEY_F7) || entrada.wasPressed(GLFW_KEY_F8)))
-			director.setMode(CameraMode::Planeta);
+		if (saltoZona) director.setMode(CameraMode::Planeta);
 		if (destino != zonaActual) {
 			if (destino == ZONA_ESPACIO) SalirAlEspacio();
 			else {
@@ -1385,7 +1387,8 @@ int main(int argc, char** argv)
 		}
 		if (musica.Cargado())
 		{
-			const bool enCarrera = !enR4 && jugador.CarreraIniciada() &&
+			const bool enCarrera = !enR4 && jugador.JugadorEnNave() &&
+				jugador.CarreraIniciada() &&
 				director.mode() == CameraMode::Carrera;
 			musica.Actualizar((int)zonaVista, enCarrera);
 		}

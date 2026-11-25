@@ -13,6 +13,9 @@ public:
     bool Reproduciendo() const {
         return musica.getStatus() == sf::SoundSource::Status::Playing;
     }
+    bool NoEspacializada() const { return !musica.isSpatializationEnabled(); }
+    bool RelativaAlOyente() const { return musica.isRelativeToListener(); }
+    float Volumen() const { return musica.getVolume(); }
     void Detener() { musica.stop(); }
 
     static const char* PistaParaZona(int zona, bool carrera) {
@@ -36,8 +39,11 @@ private:
 inline bool MusicaZonas::Inicializar() {
     if (intentado) return cargado;
     intentado = true;
+    musica.setSpatializationEnabled(false);
+    musica.setRelativeToListener(true);
+    musica.setVolume(65.0f);
     cargado = true;
-    printf("[Musica] Pistas por zona listas\n");
+    printf("[Musica] Pistas por zona listas | no espacializada | volumen 65\n");
     fflush(stdout);
     return true;
 }
@@ -58,7 +64,9 @@ inline void MusicaZonas::Actualizar(int zona, bool carrera) {
         return;
     }
     musica.setLooping(true);
-    musica.setVolume(55.0f);
+    musica.setSpatializationEnabled(false);
+    musica.setRelativeToListener(true);
+    musica.setVolume(65.0f);
     musica.play();
     actual = deseada;
     printf("[Musica] %s\n", actual.c_str());
