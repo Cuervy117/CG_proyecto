@@ -23,6 +23,9 @@ public:
 
     bool Cargado() const { return cargado; }
     bool Encendido() const { return cargado && (fase == 1 || fase == 2); }
+    int Fase() const { return fase; }
+    float Tiempo() const { return tiempo; }
+    int Vueltas() const { return vueltas; }
     glm::vec3 Posicion() const { return origen; }
     glm::vec3 PosicionTobera() const;
     const char* TextoEstado() const;
@@ -40,6 +43,7 @@ private:
     float tiempo = 0.0f;
     float reloj = 0.0f;
     int fase = 0;
+    int vueltas = 0;
     bool reproduciendo = false;
     bool cargado = false;
     bool intentado = false;
@@ -211,6 +215,7 @@ inline void CoheteDavid::Actualizar(float dt, bool iniciar, bool reiniciar) {
     if (reiniciar) {
         fase = 0;
         tiempo = 0.0f;
+        vueltas = 0;
         reproduciendo = false;
         pose = {};
         return;
@@ -218,6 +223,7 @@ inline void CoheteDavid::Actualizar(float dt, bool iniciar, bool reiniciar) {
     if (iniciar && !reproduciendo && fase == 0) {
         fase = 1;
         tiempo = 0.0f;
+        vueltas = 0;
         reproduciendo = true;
     }
     if (!reproduciendo) {
@@ -238,7 +244,10 @@ inline void CoheteDavid::Actualizar(float dt, bool iniciar, bool reiniciar) {
         }
         const float duracion = tramo.back().t;
         if (fase == 5) {
-            if (duracion > 0.0f) tiempo = std::fmod(tiempo, duracion);
+            if (duracion > 0.0f && tiempo >= duracion) {
+                vueltas += static_cast<int>(tiempo / duracion);
+                tiempo = std::fmod(tiempo, duracion);
+            }
             break;
         }
         if (tiempo < duracion) break;

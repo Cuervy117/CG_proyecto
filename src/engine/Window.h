@@ -30,6 +30,7 @@ public:
 	//Cámara del avatar o cámara libre
 	bool getCamaraLibre() { return camaraLibre; }			// tecla C
 	void SalirDeCamaraLibre() { camaraLibre = false; }
+	void EntrarACamaraLibre() { camaraLibre = true; }
 
 	// NUEVO (no viene en las prácticas): acciones de UN solo pulso.
 	// E y K no prenden ni apagan algo, disparan una acción una sola vez (entrar o salir de un planeta,

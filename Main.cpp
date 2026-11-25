@@ -781,6 +781,7 @@ int main(int argc, char** argv)
 {
 	const bool pruebaRelease = argc == 2 && strcmp(argv[1], "--probar-release") == 0;
 	const bool pruebaCoheteDavid = argc == 2 && strcmp(argv[1], "--probar-cohete-david") == 0;
+	const bool capturarDavid = argc == 2 && strcmp(argv[1], "--capturar-david") == 0;
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -798,30 +799,60 @@ int main(int argc, char** argv)
 
 	if (pruebaCoheteDavid)
 	{
+		coheteJona.Cargar();
 		coheteDavid.Cargar();
-		if (!coheteDavid.Cargado()) return 3;
-		printf("[David-QA] Inicio: %s\n", coheteDavid.TextoEstado());
-		coheteDavid.Actualizar(1.0f / 60.0f, true, false);
-		const char* anterior = nullptr;
-		float acumulado = 0.0f;
-		for (int i = 0; i < 60 * 160; ++i)
+		if (!coheteJona.Cargado() || !coheteDavid.Cargado()) return 3;
+		const float dt = 1.0f / 60.0f;
+
+		coheteDavid.Actualizar(dt, true, false);
+		coheteJona.Actualizar(dt, true, false);
+		for (int i = 0; i < 120; ++i)
 		{
-			coheteDavid.Actualizar(1.0f / 60.0f, false, false);
-			acumulado += 1.0f / 60.0f;
-			const char* actual = coheteDavid.TextoEstado();
-			if (anterior == nullptr || strcmp(anterior, actual) != 0)
-			{
-				printf("[David-QA] t=%.2f %s\n", acumulado, actual);
-				anterior = actual;
-			}
+			coheteDavid.Actualizar(dt, false, false);
+			coheteJona.Actualizar(dt, false, false);
 		}
+		const bool paralelo = coheteJona.Altura() > 1.0f && coheteDavid.Fase() >= 1;
+		printf("[David-QA] Paralelo: Jona altura=%.3f David=%s\n", coheteJona.Altura(), coheteDavid.TextoEstado());
+
+		coheteJona.Actualizar(dt, false, true);
+		for (int i = 0; i < 2; ++i)
+		{
+			coheteDavid.Actualizar(dt, false, false);
+			coheteJona.Actualizar(dt, false, false);
+		}
+		const bool independiente = coheteJona.Altura() == 0.0f && coheteDavid.Fase() >= 1;
+		printf("[David-QA] Independencia: Jona altura=%.3f David=%s\n", coheteJona.Altura(), coheteDavid.TextoEstado());
+
+		coheteDavid.Actualizar(dt, false, true);
+		const bool reinicioVuelo = coheteDavid.Fase() == 0;
+		printf("[David-QA] Reinicio en vuelo: %s\n", coheteDavid.TextoEstado());
+
+		coheteDavid.Actualizar(dt, true, false);
+		int pasos = 0;
+		while (coheteDavid.Fase() < 5 && pasos < 60 * 120)
+		{
+			coheteDavid.Actualizar(dt, false, false);
+			++pasos;
+		}
+		const bool llegoOrbita = coheteDavid.Fase() == 5;
+		printf("[David-QA] Orbita: %s t=%.2f\n", coheteDavid.TextoEstado(), coheteDavid.Tiempo());
+
+		for (int i = 0; i < 60 * 17; ++i)
+			coheteDavid.Actualizar(dt, false, false);
+		const bool dosVueltas = coheteDavid.Fase() == 5 && coheteDavid.Vueltas() >= 2;
+		printf("[David-QA] Vueltas=%d t=%.2f\n", coheteDavid.Vueltas(), coheteDavid.Tiempo());
+
 		const glm::vec3 tobera = coheteDavid.PosicionTobera();
 		const bool toberaFinita = std::isfinite(tobera.x) && std::isfinite(tobera.y) && std::isfinite(tobera.z);
 		printf("[David-QA] Tobera: %.3f, %.3f, %.3f\n", tobera.x, tobera.y, tobera.z);
-		coheteDavid.Actualizar(1.0f / 60.0f, false, true);
-		printf("[David-QA] Reinicio: %s\n", coheteDavid.TextoEstado());
+
+		coheteDavid.Actualizar(dt, false, true);
+		const bool reinicioOrbita = coheteDavid.Fase() == 0 && coheteDavid.Vueltas() == 0;
+		printf("[David-QA] Reinicio en orbita: %s\n", coheteDavid.TextoEstado());
+
 		fflush(stdout);
-		return toberaFinita && strcmp(coheteDavid.TextoEstado(), "DAVID LISTO") == 0 ? 0 : 3;
+		return (paralelo && independiente && reinicioVuelo && llegoOrbita && dosVueltas &&
+			toberaFinita && reinicioOrbita) ? 0 : 3;
 	}
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
@@ -968,6 +999,49 @@ int main(int argc, char** argv)
 	sp.init();
 	sp.load();
 
+	int faseCamara = -1;
+	auto ajustarCamara = [&](int f) {
+		const bool amplia = f >= 3;
+		const glm::vec3 camPos = amplia ? glm::vec3(-28.0f, 14.0f, 38.0f) : glm::vec3(-30.0f, 10.0f, 25.0f);
+		const glm::vec3 objetivo = amplia ? glm::vec3(-48.8f, 9.0f, 7.0f) : glm::vec3(-47.0f, 4.0f, 7.0f);
+		const glm::vec3 dir = glm::normalize(objetivo - camPos);
+		const float yaw = glm::degrees(std::atan2(dir.z, dir.x));
+		const float pitch = glm::degrees(std::asin(dir.y));
+		ReiniciarCamara(camPos, yaw, pitch);
+	};
+
+	if (capturarDavid)
+	{
+		zonaActual = ZONA_PLANETA_ROCOSO;
+		ultimoPlaneta = ZONA_PLANETA_ROCOSO;
+		PrepararRecursosSuperficie(ZONA_PLANETA_ROCOSO);
+		mainWindow.EntrarACamaraLibre();
+		camaraLibre = true;
+		ajustarCamara(0);
+		faseCamara = 0;
+	}
+
+	const std::string carpetaCaptura = "C:/UNAM/CGICH/tmp/captura-david/";
+	auto capturarCuadro = [&](const char* nombre) {
+		const int w = mainWindow.getBufferWidth();
+		const int hpx = mainWindow.getBufferHeight();
+		std::vector<unsigned char> rgb((size_t)w * (size_t)hpx * 3u);
+		glReadBuffer(GL_BACK);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glReadPixels(0, 0, w, hpx, GL_RGB, GL_UNSIGNED_BYTE, rgb.data());
+		std::string archivo = carpetaCaptura + nombre + ".ppm";
+		std::ofstream f(archivo, std::ios::binary);
+		f << "P6\n" << w << " " << hpx << "\n255\n";
+		for (int y = hpx - 1; y >= 0; --y)
+			f.write(reinterpret_cast<const char*>(&rgb[(size_t)y * (size_t)w * 3u]), w * 3);
+		printf("[Captura] %s (%dx%d)\n", archivo.c_str(), w, hpx);
+		fflush(stdout);
+	};
+	int frameCaptura = 0;
+	bool capturaCompleta = false;
+	bool capListo = false, capDespegue = false, capSeparacion1 = false, capSeparacion2 = false;
+	bool capCofias = false, capOrbita1 = false, capOrbita2 = false;
+
 	lastTime = (GLfloat)glfwGetTime();
 
 	////Loop mientras no se cierra la ventana
@@ -983,12 +1057,16 @@ int main(int argc, char** argv)
 			deltaTime = 0.05f;
 		if (deltaTime < 0.0f)
 			deltaTime = 0.0f;
+		if (capturarDavid)
+			deltaTime = 0.05f;
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		auto entrada = captura.update(deltaTime);
 		if (pruebaRelease && pasosRelease[pasoPrueba].tecla)
 			entrada.pressed[pasosRelease[pasoPrueba].tecla] = true;
+		if (capturarDavid && frameCaptura == 5)
+			entrada.pressed[GLFW_KEY_8] = true;
 		const auto control = cgame::mapControls(entrada);
 		const glm::vec3 anterior = jugador.PosicionJugador();
 		const auto zonaAnterior = zonaActual;
@@ -1090,12 +1168,18 @@ int main(int argc, char** argv)
 
 		// animaciones
 		tiempoAnimacion += deltaTime;
+		if (capturarDavid) tiempoAnimacion = 0.25f * duracionCicloDiaNoche;
 		espacio.ActualizarCohetes(deltaTime);
 		AnimarSatelite(deltaTime);
 		if (zonaVista == ZONA_PLANETA_ROCOSO)
 		{
 			coheteJona.Actualizar(deltaTime, entrada.wasPressed(GLFW_KEY_6), entrada.wasPressed(GLFW_KEY_7));
 			coheteDavid.Actualizar(deltaTime, entrada.wasPressed(GLFW_KEY_8), entrada.wasPressed(GLFW_KEY_9));
+		}
+		if (capturarDavid && coheteDavid.Fase() != faseCamara)
+		{
+			faseCamara = coheteDavid.Fase();
+			ajustarCamara(faseCamara);
 		}
 		ActualizarFighter(deltaTime, entrada.wasPressed(GLFW_KEY_4), entrada.wasPressed(GLFW_KEY_5));
 		AnimarCapsula(deltaTime);
@@ -1563,6 +1647,48 @@ int main(int argc, char** argv)
 		hud.draw(mainWindow.getBufferWidth(), mainWindow.getBufferHeight(), camaraLibre && !enR4 ? "LIBRE" : modos[static_cast<int>(director.mode())], zonas[zonaVista], estadoHud);
 		if (!enR4) reloj.DibujarReloj((int)mainWindow.getBufferWidth(), (int)mainWindow.getBufferHeight(), horaDelDia, dia, clima);
 
+		if (capturarDavid && !capturaCompleta)
+		{
+			const int f = coheteDavid.Fase();
+			const float t = coheteDavid.Tiempo();
+			if (!capListo && frameCaptura >= 2)
+			{
+				capturarCuadro("00_listo");
+				capListo = true;
+			}
+			else if (!capDespegue && f == 1 && t >= 1.5f)
+			{
+				capturarCuadro("01_despegue");
+				capDespegue = true;
+			}
+			else if (!capSeparacion1 && f == 2 && t >= 1.5f)
+			{
+				capturarCuadro("02_separacion1");
+				capSeparacion1 = true;
+			}
+			else if (!capSeparacion2 && f == 3 && t >= 1.5f)
+			{
+				capturarCuadro("03_separacion2");
+				capSeparacion2 = true;
+			}
+			else if (!capCofias && f == 4 && t >= 1.5f)
+			{
+				capturarCuadro("04_cofias");
+				capCofias = true;
+			}
+			else if (!capOrbita1 && f == 5 && t >= 2.0f)
+			{
+				capturarCuadro("05_orbita");
+				capOrbita1 = true;
+			}
+			else if (!capOrbita2 && f == 5 && coheteDavid.Vueltas() >= 1 && t >= 6.0f)
+			{
+				capturarCuadro("06_orbita2");
+				capOrbita2 = true;
+				capturaCompleta = true;
+			}
+		}
+
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
@@ -1579,6 +1705,11 @@ int main(int argc, char** argv)
 				puts("[Release] OK: espacio, roca, selva, oceano, R2, lanzamiento y hangar.");
 				break;
 			}
+		}
+		if (capturarDavid)
+		{
+			++frameCaptura;
+			if (capturaCompleta) break;
 		}
 	}
 
