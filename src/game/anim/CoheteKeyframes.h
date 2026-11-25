@@ -20,6 +20,11 @@ public:
     float Altura() const {return v[0];}
     bool Reproduciendo() const {return reproduciendo;}
     float Tiempo() const {return tiempo;}
+    bool Encendido() const {return v[2] > 0.01f || v[15] > 0.01f;}
+    glm::vec3 PosicionSonido() const {
+        const float llama = (v[15] > 0.01f) ? 47.6f : (7.1f - 2.7f * v[2]);
+        return glm::vec3(22.0f, 0.3f * (v[0] + llama), 14.0f);
+    }
 
     void Cargar() {
         if (intentado) return;

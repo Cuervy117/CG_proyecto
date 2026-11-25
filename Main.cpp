@@ -63,8 +63,10 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include "Load.hpp"
 #include "src/game/anim/CoheteKeyframes.h"
 #include "src/game/anim/CoheteDavid.h"
+#include "src/audio/SonidoCohetes.h"
 CoheteKeyframes coheteJona;
 CoheteDavid coheteDavid;
+SonidoCohetes audio;
 
 // NUEVO: módulos del escenario (cada .h explica qué hace y por qué existe)
 #include "Superficie.h"		// superficie de los planetas rocoso y selvático
@@ -782,6 +784,7 @@ int main(int argc, char** argv)
 	const bool pruebaRelease = argc == 2 && strcmp(argv[1], "--probar-release") == 0;
 	const bool pruebaCoheteDavid = argc == 2 && strcmp(argv[1], "--probar-cohete-david") == 0;
 	const bool capturarDavid = argc == 2 && strcmp(argv[1], "--capturar-david") == 0;
+	const bool pruebaAudio = argc == 2 && strcmp(argv[1], "--probar-audio") == 0;
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -796,6 +799,31 @@ int main(int argc, char** argv)
 
 	CreateObjects();
 	CreateShaders();
+
+	if (pruebaAudio)
+	{
+		if (!audio.Inicializar()) return 3;
+		audio.ActualizarListener(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f));
+		audio.Actualizar(0, true, glm::vec3(-10.0f, 1.0f, 12.0f));
+		audio.Actualizar(1, true, glm::vec3(10.0f, 1.0f, 12.0f));
+		audio.Actualizar(2, true, glm::vec3(0.0f, 1.0f, 12.0f));
+		audio.Actualizar(3, true, glm::vec3(0.0f, 1.0f, 100.0f));
+		int reproduciendo = 0;
+		for (int i = 0; i < SonidoCohetes::EMISORES; ++i)
+			if (audio.Reproduciendo(i)) ++reproduciendo;
+		printf("[Audio-QA] Emisores simultaneos: %d/%d (izquierda, derecha, centro, lejos)\n",
+			reproduciendo, SonidoCohetes::EMISORES);
+		audio.Actualizar(0, false, glm::vec3(-10.0f, 1.0f, 12.0f));
+		const bool independiente = !audio.Reproduciendo(0) && audio.Reproduciendo(1) &&
+			audio.Reproduciendo(2) && audio.Reproduciendo(3);
+		printf("[Audio-QA] Independencia: %s\n", independiente ? "los otros siguen" : "fallo");
+		audio.ActualizarListener(glm::vec3(0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f));
+		audio.DetenerTodo();
+		fflush(stdout);
+		return (reproduciendo == SonidoCohetes::EMISORES && independiente) ? 0 : 3;
+	}
 
 	if (pruebaCoheteDavid)
 	{
@@ -860,6 +888,9 @@ int main(int argc, char** argv)
 		return (paralelo && independiente && reentrada && reinicioVuelo && llegoOrbita && dosVueltas &&
 			toberaFinita && reinicioOrbita) ? 0 : 3;
 	}
+
+	if (!pruebaRelease && !capturarDavid)
+		audio.Inicializar();
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
 
@@ -1271,6 +1302,18 @@ int main(int argc, char** argv)
 		}
 		const glm::mat4 inversa = glm::inverse(vista);
 		const glm::vec3 ojo(inversa[3]), mirada(-glm::vec3(inversa[2]));
+		if (audio.Cargado())
+		{
+			audio.ActualizarListener(ojo, mirada, glm::vec3(0.0f, 1.0f, 0.0f));
+			audio.Actualizar(0, zonaVista == ZONA_ESPACIO && espacio.CoheteEncendido(COHETE_BASE),
+				espacio.PosicionLlama(COHETE_BASE));
+			audio.Actualizar(1, zonaVista == ZONA_PLANETA_SELVATICO && espacio.CoheteEncendido(COHETE_SHINOBI),
+				espacio.PosicionLlama(COHETE_SHINOBI));
+			audio.Actualizar(2, zonaVista == ZONA_PLANETA_ROCOSO && coheteJona.Encendido(),
+				coheteJona.PosicionSonido());
+			audio.Actualizar(3, zonaVista == ZONA_PLANETA_ROCOSO && coheteDavid.Encendido(),
+				coheteDavid.PosicionTobera());
+		}
 		Fondo fondo = Fondo::Espacio;
 		if (zonaVista == ZONA_PLANETA_ROCOSO) fondo = Fondo::Roca;
 		if (zonaVista == ZONA_PLANETA_SELVATICO) fondo = Fondo::Selva;

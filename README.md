@@ -30,10 +30,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Verify-Release.ps1
 | 1 / 2 / 3 | Lanzar cohete / puerta de cápsula / paneles del satélite |
 | 4 / 5 | Salida y regreso de Fighter_02 / puerta del hangar |
 | 6 / 7 | En Rek’Sai: reproducir / reiniciar el cohete de Jona por keyframes |
+| 8 / 9 | En Rek’Sai: reproducir / reiniciar el cohete de David por keyframes |
 | F / L / K | Linterna / faro de la nave / foco de la base |
 | C / F9 / Esc | Cámara libre / liberar cursor / salir |
 
-En F4, Tab lleva al hangar: allí `4` inicia el vuelo del Fighter y `5` abre o cierra la puerta cuando está estacionado. En Rek’Sai (F6), el cohete de Jona está a la derecha del punto de llegada.
+En F4, Tab lleva al hangar: allí `4` inicia el vuelo del Fighter y `5` abre o cierra la puerta cuando está estacionado. En Rek’Sai (F6), el cohete de Jona está a la derecha del punto de llegada y el de David en el claro de (-47,7), al oeste.
 
 ## Compilar desde `main`
 
@@ -54,9 +55,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Verify-Dependencie
 Después superpone `Models/` y `Textures/` del ZIP Release actual en la raíz; el paquete base no contiene los modelos añadidos después. Copia también los shaders del Release si hace falta. Compila y ejecuta desde la raíz:
 
 ```powershell
+# Audio: el paquete de dependencias debe incluir include/SFML, lib/sfml-audio.lib y lib/sfml-system.lib.
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Verify-Project-Assets.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Build.ps1
-Copy-Item .\glew32.dll,.\glfw3.dll,.\assimp-vc143-mt.dll .\x64\Release\
+Copy-Item .\glew32.dll,.\glfw3.dll,.\assimp-vc143-mt.dll,.\sfml-audio-3.dll,.\sfml-system-3.dll .\x64\Release\
+.\x64\Release\LabCGeIHC.exe --probar-audio
 .\x64\Release\LabCGeIHC.exe --probar-release
 ```
 
