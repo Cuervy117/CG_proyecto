@@ -15,12 +15,15 @@ public:
     void ActualizarListener(const glm::vec3& pos, const glm::vec3& forward, const glm::vec3& up);
     void ActualizarMotorNave(bool activo, const glm::vec3& pos);
     void ActualizarMotorMain(bool activo, const glm::vec3& pos);
+    void ActualizarMotorRival(int i, bool activo, const glm::vec3& pos);
     void ReproducirPuerta(const glm::vec3& pos);
     void ReproducirPortal(const glm::vec3& pos);
     void ReproducirLlegada(const glm::vec3& pos);
 
     bool ReproduciendoMotorNave() const { return Reproduciendo(motorNave); }
     bool ReproduciendoMotorMain() const { return Reproduciendo(motorMain); }
+    bool ReproduciendoMotorRival1() const { return Reproduciendo(motorRival1); }
+    bool ReproduciendoMotorRival2() const { return Reproduciendo(motorRival2); }
     bool ReproduciendoPuerta() const { return Reproduciendo(puerta); }
     bool ReproduciendoPortal() const { return Reproduciendo(portal); }
     bool ReproduciendoLlegada() const { return Reproduciendo(llegada); }
@@ -46,6 +49,8 @@ private:
     sf::SoundBuffer bufLlegada;
     std::unique_ptr<sf::Sound> motorNave;
     std::unique_ptr<sf::Sound> motorMain;
+    std::unique_ptr<sf::Sound> motorRival1;
+    std::unique_ptr<sf::Sound> motorRival2;
     std::unique_ptr<sf::Sound> puerta;
     std::unique_ptr<sf::Sound> portal;
     std::unique_ptr<sf::Sound> llegada;
@@ -92,13 +97,17 @@ inline bool EfectosAmbiente::Inicializar() {
         Cargar(bufLlegada, "audio/reksai_mono.wav");
     if (!ok) return false;
 
-    motorNave = std::make_unique<sf::Sound>(bufMotorNave);
-    motorMain = std::make_unique<sf::Sound>(bufMotorMain);
+    motorNave = std::make_unique<sf::Sound>(bufMotorMain);
+    motorMain = std::make_unique<sf::Sound>(bufMotorNave);
+    motorRival1 = std::make_unique<sf::Sound>(bufMotorNave);
+    motorRival2 = std::make_unique<sf::Sound>(bufMotorNave);
     puerta = std::make_unique<sf::Sound>(bufPuerta);
     portal = std::make_unique<sf::Sound>(bufPortal);
     llegada = std::make_unique<sf::Sound>(bufLlegada);
     ConfigurarLoop(*motorNave, 70.0f);
     ConfigurarLoop(*motorMain, 70.0f);
+    ConfigurarLoop(*motorRival1, 70.0f);
+    ConfigurarLoop(*motorRival2, 70.0f);
     ConfigurarUnaVez(*puerta, 100.0f);
     ConfigurarUnaVez(*portal, 100.0f);
     ConfigurarUnaVez(*llegada, 100.0f);
@@ -109,7 +118,7 @@ inline bool EfectosAmbiente::Inicializar() {
     sf::Listener::setVelocity(ASfml(glm::vec3(0.0f)));
 
     cargado = true;
-    printf("[Efectos] Motores de nave y efectos de ambiente listos\n");
+    printf("[Efectos] Motores de nave y efectos de ambiente listos | Jugador=e_motor_nave_main | Fighter y rivales=e_motor_nave\n");
     fflush(stdout);
     return true;
 }
@@ -144,6 +153,12 @@ inline void EfectosAmbiente::ActualizarMotorMain(bool activo, const glm::vec3& p
     ActualizarLoop(motorMain, activo, pos);
 }
 
+inline void EfectosAmbiente::ActualizarMotorRival(int i, bool activo, const glm::vec3& pos) {
+    if (!cargado) return;
+    if (i == 0) ActualizarLoop(motorRival1, activo, pos);
+    else if (i == 1) ActualizarLoop(motorRival2, activo, pos);
+}
+
 inline void EfectosAmbiente::Disparar(std::unique_ptr<sf::Sound>& sonido, const glm::vec3& pos,
     const char* nombre) {
     if (!sonido) return;
@@ -170,6 +185,6 @@ inline void EfectosAmbiente::ReproducirLlegada(const glm::vec3& pos) {
 }
 
 inline void EfectosAmbiente::DetenerTodo() {
-    for (auto* sonido : { &motorNave, &motorMain, &puerta, &portal, &llegada })
+    for (auto* sonido : { &motorNave, &motorMain, &motorRival1, &motorRival2, &puerta, &portal, &llegada })
         if (*sonido) (*sonido)->stop();
 }

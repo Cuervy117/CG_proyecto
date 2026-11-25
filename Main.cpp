@@ -823,13 +823,19 @@ int main(int argc, char** argv)
 			glm::vec3(0.0f, 1.0f, 0.0f));
 		efectos.ActualizarMotorNave(true, glm::vec3(-6.0f, 1.0f, 10.0f));
 		efectos.ActualizarMotorMain(true, glm::vec3(6.0f, 1.0f, 10.0f));
+		efectos.ActualizarMotorRival(0, true, glm::vec3(-12.0f, 1.0f, 10.0f));
+		efectos.ActualizarMotorRival(1, true, glm::vec3(12.0f, 1.0f, 10.0f));
 		efectos.ReproducirPuerta(glm::vec3(0.0f, 1.0f, 4.0f));
 		efectos.ReproducirPortal(glm::vec3(0.0f, 1.0f, 6.0f));
 		efectos.ReproducirLlegada(glm::vec3(0.0f, 1.0f, 8.0f));
-		const bool ok = efectos.ReproduciendoMotorNave() && efectos.ReproduciendoMotorMain() &&
+		const int motores = (efectos.ReproduciendoMotorNave() ? 1 : 0) +
+			(efectos.ReproduciendoMotorMain() ? 1 : 0) +
+			(efectos.ReproduciendoMotorRival1() ? 1 : 0) +
+			(efectos.ReproduciendoMotorRival2() ? 1 : 0);
+		const bool ok = motores == 4 &&
 			efectos.ReproduciendoPuerta() && efectos.ReproduciendoPortal() && efectos.ReproduciendoLlegada();
-		printf("[Efectos-QA] motores=%d/%d puerta=%d portal=%d llegada=%d %s\n",
-			efectos.ReproduciendoMotorNave() ? 1 : 0, efectos.ReproduciendoMotorMain() ? 1 : 0,
+		printf("[Efectos-QA] motores=%d/4 puerta=%d portal=%d llegada=%d %s\n",
+			motores,
 			efectos.ReproduciendoPuerta() ? 1 : 0, efectos.ReproduciendoPortal() ? 1 : 0,
 			efectos.ReproduciendoLlegada() ? 1 : 0, ok ? "OK" : "FALLO");
 		efectos.DetenerTodo();
@@ -859,7 +865,7 @@ int main(int argc, char** argv)
 				c.esperada, musica.PistaActual().c_str(), ok ? "OK" : "FALLO");
 			if (ok) ++correctos;
 		}
-		printf("[Musica-QA] uniforme=%d relativa=%d volumen=%.0f\n",
+		printf("[Musica-QA] uniforme=%d relativa=%d volumen=%.1f\n",
 			musica.NoEspacializada() ? 1 : 0, musica.RelativaAlOyente() ? 1 : 0, musica.Volumen());
 		musica.Detener();
 		fflush(stdout);
@@ -1385,13 +1391,11 @@ int main(int argc, char** argv)
 			audio.Actualizar(3, zonaVista == ZONA_PLANETA_ROCOSO && coheteDavid.Encendido(),
 				coheteDavid.PosicionTobera());
 		}
+		const bool enCarrera = !enR4 && jugador.JugadorEnNave() &&
+			jugador.CarreraIniciada() &&
+			director.mode() == CameraMode::Carrera;
 		if (musica.Cargado())
-		{
-			const bool enCarrera = !enR4 && jugador.JugadorEnNave() &&
-				jugador.CarreraIniciada() &&
-				director.mode() == CameraMode::Carrera;
 			musica.Actualizar((int)zonaVista, enCarrera);
-		}
 		if (efectos.Cargado())
 		{
 			efectos.ActualizarListener(ojo, mirada, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1401,6 +1405,22 @@ int main(int argc, char** argv)
 				(estadoFighter == EstadoFighter::Saliendo || estadoFighter == EstadoFighter::Paseo ||
 				 estadoFighter == EstadoFighter::Regresando || estadoFighter == EstadoFighter::Aterrizando);
 			efectos.ActualizarMotorMain(fighterActivo, centroHangar + posicionFighter);
+
+			auto lugarVisible = [&](LugarJugador lugar) {
+				switch (lugar) {
+				case LUGAR_ESPACIO: return zonaVista == ZONA_ESPACIO;
+				case LUGAR_ROCOSO: return zonaVista == ZONA_PLANETA_ROCOSO;
+				case LUGAR_SELVATICO: return zonaVista == ZONA_PLANETA_SELVATICO;
+				case LUGAR_OCEANO: return zonaVista == ZONA_PLANETA_OCEANO;
+				}
+				return false;
+			};
+			LugarJugador lugarRival;
+			glm::vec3 posRival, frenteRival, arribaRival;
+			jugador.EstadoRival(RivalCarrera::Primero, tiempoAnimacion, lugarRival, posRival, frenteRival, arribaRival);
+			efectos.ActualizarMotorRival(0, enCarrera && lugarVisible(lugarRival), posRival);
+			jugador.EstadoRival(RivalCarrera::Segundo, tiempoAnimacion, lugarRival, posRival, frenteRival, arribaRival);
+			efectos.ActualizarMotorRival(1, enCarrera && lugarVisible(lugarRival), posRival);
 		}
 		Fondo fondo = Fondo::Espacio;
 		if (zonaVista == ZONA_PLANETA_ROCOSO) fondo = Fondo::Roca;

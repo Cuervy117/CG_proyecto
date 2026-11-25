@@ -41,9 +41,9 @@ inline bool MusicaZonas::Inicializar() {
     intentado = true;
     musica.setSpatializationEnabled(false);
     musica.setRelativeToListener(true);
-    musica.setVolume(65.0f);
+    musica.setVolume(32.5f);
     cargado = true;
-    printf("[Musica] Pistas por zona listas | no espacializada | volumen 65\n");
+    printf("[Musica] Pistas por zona listas | no espacializada | volumen 32.5\n");
     fflush(stdout);
     return true;
 }
@@ -66,7 +66,7 @@ inline void MusicaZonas::Actualizar(int zona, bool carrera) {
     musica.setLooping(true);
     musica.setSpatializationEnabled(false);
     musica.setRelativeToListener(true);
-    musica.setVolume(65.0f);
+    musica.setVolume(32.5f);
     musica.play();
     actual = deseada;
     printf("[Musica] %s\n", actual.c_str());
