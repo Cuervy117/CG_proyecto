@@ -24,6 +24,19 @@ DIRECT_TEXTURES = """
 arbolTexture asteroideTexture baseTexture fuego hud_reloj hud_digitos hud_iconos humo
 L1_Bake1_PBR_Diffuse pistaTexture planetaOceanoTexture planetaRocaTexture planetaSelvaTexture plain reksai sueloRocoso sueloSelva
 """.split()
+ROCKET_PARTS = """
+primera_etapa anillo_separacion segunda_etapa cofia_izquierda cofia_derecha capsula
+""".split()
+AUDIO = """
+LEEME-AUDIO.txt
+a_pajaros.wav a_insectos.wav a_olas.wav a_reksai.wav
+e_cohete_mono.wav e_motor_nave_mono.wav e_motor_nave_main_mono.wav
+e_puerta_estacion_mono.wav e_portal_mono.wav reksai_mono.wav
+st_espacio.mp3 st_reksai.mp3 st_shinobi.mp3 st_agua.mp3 st_carrera.mp3
+""".split()
+RUNTIME_DLLS = """
+glew32.dll glfw3.dll assimp-vc143-mt.dll sfml-audio-3.dll sfml-system-3.dll
+""".split()
 
 
 def add_model(files, name):
@@ -72,6 +85,13 @@ def runtime_files():
     for part in ("base", "panel_der", "panel_izq", "aspa_g"):
         path = f"Models/satelite/satelite_{part}.fbx"
         files[path] = ROOT / path
+    # Cohete de David: seis piezas jerárquicas y sus dos secuencias de keyframes.
+    for part in ROCKET_PARTS:
+        path = f"Models/rocket/piezas/{part}.obj"
+        files[path] = ROOT / path
+    for name in ("keyframes_rocket_etapas.txt", "keyframes_cohete_etapas.txt"):
+        path = f"Models/rocket/{name}"
+        files[path] = ROOT / path
     for name in DIRECT_TEXTURES:
         path = f"Textures/{name}.png"
         files[path] = ROOT / path
@@ -88,8 +108,11 @@ def runtime_files():
         for ext in ("vert", "frag"):
             path = f"shaders/{shader}.{ext}"
             files[path] = ROOT / path
+    for name in AUDIO:
+        path = f"audio/{name}"
+        files[path] = ROOT / path
     files["LabCGeIHC.exe"] = ROOT / "x64/Release/LabCGeIHC.exe"
-    for dll in ("glew32.dll", "assimp-vc143-mt.dll"):
+    for dll in RUNTIME_DLLS:
         files[dll] = ROOT / dll
     vswhere = Path(os.environ["ProgramFiles(x86)"], "Microsoft Visual Studio/Installer/vswhere.exe")
     vs = subprocess.check_output([vswhere, "-latest", "-products", "*", "-requires",
@@ -103,12 +126,14 @@ def runtime_files():
         files[name] = crt / name
     files["Verify-Release.ps1"] = ROOT / "scripts/Verify-Release.ps1"
     files["LEEME.txt"] = (
-        "CGICH - candidato Windows x64. Se necesita un controlador con OpenGL 3.3.\r\n"
+        "CGICH - proyecto final Windows x64. Se necesita un controlador con OpenGL 3.3.\r\n"
         "Extrae el ZIP completo antes de jugar. Desde esta carpeta ejecuta:\r\n"
         "  powershell -NoProfile -ExecutionPolicy Bypass -File .\\Verify-Release.ps1\r\n"
         "  Jugar.cmd --probar-release\r\n"
         "La prueba recorre las zonas y devuelve 0 al terminar correctamente.\r\n"
         "Para jugar, abre Jugar.cmd. F1-F4 cambian de recorrido. Esc sale.\r\n"
+        "El audio de la carpeta audio/ incluye la musica, los motores, los efectos\r\n"
+        "y los ambientes. Conserva audio/LEEME-AUDIO.txt con sus atribuciones.\r\n"
         "Para reportar la prueba externa, indica el commit de release.json, Windows, GPU y resultado.\r\n"
     ).encode("utf-8")
     files["Jugar.cmd"] = b'@echo off\r\ncd /d "%~dp0"\r\nLabCGeIHC.exe %*\r\nexit /b %errorlevel%\r\n'
@@ -132,8 +157,13 @@ def main():
     checksum = out.with_suffix(".zip.sha256")
     if out.exists() or checksum.exists():
         raise FileExistsError("Ya existe esa versión.")
-    if subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT).strip():
-        raise RuntimeError("Empaquetar desde un checkout limpio para identificar el código.")
+    status = subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True)
+    ignorable = {"?? PLAN_ACCION_TEORIA.md"}
+    unexpected = [line for line in status.splitlines()
+                  if line.strip() and line.strip() not in ignorable]
+    if unexpected:
+        raise RuntimeError("Empaquetar desde un checkout limpio para identificar el código:\n" +
+                           "\n".join(unexpected))
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     # Windows PowerShell debe resolver sus propios módulos aun si Python se inició desde pwsh.
     ps_env = {k: v for k, v in os.environ.items() if k.upper() != "PSMODULEPATH"}

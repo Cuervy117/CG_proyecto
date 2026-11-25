@@ -4,10 +4,10 @@ Juego de exploración y carrera espacial en Windows x64. La versión integrada e
 
 ## Jugar sin compilar
 
-Obtener `CGICH-v0.4.0-rc.2-win64.zip` y `CGICH-v0.4.0-rc.2-win64.zip.sha256`. El ZIP probado corresponde al commit `ef80c32` y su SHA-256 es `5a6d8bd9c0034b992488968de4c30f59e41cadd3c50165beeaddb15ca3e62ee1`. No está almacenado en GitHub. Requiere Windows x64 y un controlador compatible con OpenGL 3.3.
+Obtener `CGICH-v0.6.0-rc.1-win64.zip` y `CGICH-v0.6.0-rc.1-win64.zip.sha256`. El ZIP probado corresponde al commit `f9e9d6a` y su SHA-256 es `b1091da317eccfc0a7227fd00bd67011845c2bdc1e232dec28a56daa710c23d9`. No está almacenado en GitHub. Requiere Windows x64 y un controlador compatible con OpenGL 3.3.
 
-1. Antes de extraer, puedes comprobar el ZIP desde la carpeta que lo contiene con `Get-FileHash .\CGICH-v0.4.0-rc.2-win64.zip -Algorithm SHA256` y comparar el resultado con el hash anterior.
-2. Extrae el ZIP completo en una carpeta propia. Conserva `Models/`, `Textures/`, `shaders/`, las DLL y el EXE juntos.
+1. Antes de extraer, puedes comprobar el ZIP desde la carpeta que lo contiene con `Get-FileHash .\CGICH-v0.6.0-rc.1-win64.zip -Algorithm SHA256` y comparar el resultado con el hash anterior.
+2. Extrae el ZIP completo en una carpeta propia. Conserva `Models/`, `Textures/`, `shaders/`, `audio/`, las DLL y el EXE juntos.
 3. Abre PowerShell en la carpeta extraída y ejecuta:
 
 ```powershell
@@ -63,9 +63,10 @@ Copy-Item .\glew32.dll,.\glfw3.dll,.\assimp-vc143-mt.dll,.\sfml-audio-3.dll,.\sf
 .\x64\Release\LabCGeIHC.exe --probar-musica
 .\x64\Release\LabCGeIHC.exe --probar-ambiente
 .\x64\Release\LabCGeIHC.exe --probar-efectos
+.\x64\Release\LabCGeIHC.exe --probar-cohete-david
 .\x64\Release\LabCGeIHC.exe --probar-release
 ```
 
-La verificación de dependencias se hace **antes** de superponer modelos y texturas nuevos, porque el manifiesto del paquete base describe la versión original. Si modificas los recursos, vuelve a generar un ZIP Release con `python scripts/Package-Release.py <version-nueva>` desde un checkout limpio. El empaquetador incluye los modelos, texturas, keyframes, shaders y DLL necesarios y crea un archivo `.sha256` junto al ZIP.
+La verificación de dependencias se hace **antes** de superponer modelos y texturas nuevos, porque el manifiesto del paquete base describe la versión original. Si modificas los recursos, vuelve a generar un ZIP Release con `python scripts/Package-Release.py <version-nueva>` desde un checkout limpio. El empaquetador incluye los modelos, texturas, keyframes, shaders, audio (con `audio/LEEME-AUDIO.txt`) y DLL necesarios, y crea un archivo `.sha256` junto al ZIP.
 
 Los [manuales de usuario y técnico](docs/manuales/) amplían los recorridos y la implementación. Los [lineamientos](<docs/Lineamientos del proyecto final laboratorio de Computación Gráfica e IHC grupos 2 y 3 2027-1 - Lineamientos del proyecto final laboratorio de Computación Gráfica e IHC grupos 2 y 3 2027-1.pdf>) son la referencia de la rúbrica.
