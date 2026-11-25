@@ -65,10 +65,12 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include "src/game/anim/CoheteDavid.h"
 #include "src/audio/SonidoCohetes.h"
 #include "src/audio/MusicaZonas.h"
+#include "src/audio/EfectosAmbiente.h"
 CoheteKeyframes coheteJona;
 CoheteDavid coheteDavid;
 SonidoCohetes audio;
 MusicaZonas musica;
+EfectosAmbiente efectos;
 
 // NUEVO: módulos del escenario (cada .h explica qué hace y por qué existe)
 #include "Superficie.h"		// superficie de los planetas rocoso y selvático
@@ -539,6 +541,7 @@ void ActualizarZona()
 			glm::vec3 inicio = superficie.PosicionInicio(SUPERFICIE_ROCOSA);
 			float yaw = jugador.ColocarJugadorEnPlaneta(LUGAR_ROCOSO, inicio, superficie.YawInicio(SUPERFICIE_ROCOSA));   // sigue en su nave
 			ReiniciarCamara(glm::vec3(inicio.x, alturaCamaraSuperficie, inicio.z), yaw, camaraLibre ? 0.0f : -12.0f);
+			efectos.ReproducirLlegada(jugador.PosicionJugador());
 		}
 		else if (distSelvatico < atmosferaSelvatico || (pulsoE && distSelvatico < atmosferaSelvatico * 1.6f))
 		{
@@ -565,8 +568,12 @@ void ActualizarZona()
 	{
 		// en un planeta: E o cruzar el portal del final del camino regresan al espacio
 		TipoSuperficie tipo = (zonaActual == ZONA_PLANETA_ROCOSO) ? SUPERFICIE_ROCOSA : SUPERFICIE_SELVATICA;
-		if (pulsoE || (jugador.JugadorEnNave() && superficie.CruzandoPortal(tipo, camPos)))   // el portal se cruza en la nave
+		const bool cruzaPortal = jugador.JugadorEnNave() && superficie.CruzandoPortal(tipo, camPos);
+		if (pulsoE || cruzaPortal)
+		{
+			if (cruzaPortal) efectos.ReproducirPortal(camPos);
 			SalirAlEspacio();
+		}
 	}
 }
 
@@ -660,10 +667,15 @@ EstadoPuertaHangar estadoPuertaHangar = EstadoPuertaHangar::Cerrada;
 float aperturaPuertaHangar = 0.0f;
 void OrdenarPuertaHangar(bool abrir)
 {
+	const bool quieta = estadoPuertaHangar == EstadoPuertaHangar::Cerrada ||
+		estadoPuertaHangar == EstadoPuertaHangar::Abierta;
 	if (abrir && estadoPuertaHangar != EstadoPuertaHangar::Abierta)
 		estadoPuertaHangar = EstadoPuertaHangar::Abriendo;
 	else if (!abrir && estadoPuertaHangar != EstadoPuertaHangar::Cerrada)
 		estadoPuertaHangar = EstadoPuertaHangar::Cerrando;
+	if (quieta && estadoPuertaHangar != EstadoPuertaHangar::Cerrada &&
+		estadoPuertaHangar != EstadoPuertaHangar::Abierta)
+		efectos.ReproducirPuerta(centroHangar);
 }
 void ActualizarPuertaHangar(float dt)
 {
@@ -788,6 +800,7 @@ int main(int argc, char** argv)
 	const bool capturarDavid = argc == 2 && strcmp(argv[1], "--capturar-david") == 0;
 	const bool pruebaAudio = argc == 2 && strcmp(argv[1], "--probar-audio") == 0;
 	const bool pruebaMusica = argc == 2 && strcmp(argv[1], "--probar-musica") == 0;
+	const bool pruebaEfectos = argc == 2 && strcmp(argv[1], "--probar-efectos") == 0;
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -802,6 +815,27 @@ int main(int argc, char** argv)
 
 	CreateObjects();
 	CreateShaders();
+
+	if (pruebaEfectos)
+	{
+		if (!efectos.Inicializar()) return 3;
+		efectos.ActualizarListener(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f));
+		efectos.ActualizarMotorNave(true, glm::vec3(-6.0f, 1.0f, 10.0f));
+		efectos.ActualizarMotorMain(true, glm::vec3(6.0f, 1.0f, 10.0f));
+		efectos.ReproducirPuerta(glm::vec3(0.0f, 1.0f, 4.0f));
+		efectos.ReproducirPortal(glm::vec3(0.0f, 1.0f, 6.0f));
+		efectos.ReproducirLlegada(glm::vec3(0.0f, 1.0f, 8.0f));
+		const bool ok = efectos.ReproduciendoMotorNave() && efectos.ReproduciendoMotorMain() &&
+			efectos.ReproduciendoPuerta() && efectos.ReproduciendoPortal() && efectos.ReproduciendoLlegada();
+		printf("[Efectos-QA] motores=%d/%d puerta=%d portal=%d llegada=%d %s\n",
+			efectos.ReproduciendoMotorNave() ? 1 : 0, efectos.ReproduciendoMotorMain() ? 1 : 0,
+			efectos.ReproduciendoPuerta() ? 1 : 0, efectos.ReproduciendoPortal() ? 1 : 0,
+			efectos.ReproduciendoLlegada() ? 1 : 0, ok ? "OK" : "FALLO");
+		efectos.DetenerTodo();
+		fflush(stdout);
+		return ok ? 0 : 3;
+	}
 
 	if (pruebaMusica)
 	{
@@ -922,6 +956,7 @@ int main(int argc, char** argv)
 	{
 		audio.Inicializar();
 		musica.Inicializar();
+		efectos.Inicializar();
 	}
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
@@ -1173,6 +1208,8 @@ int main(int argc, char** argv)
 				float yaw = destino == ZONA_PLANETA_OCEANO ? jugador.ColocarJugadorEnOceano()
 					: jugador.ColocarJugadorEnPlaneta(LugarDelJugador(), superficie.PosicionInicio(tipo), superficie.YawInicio(tipo));
 				ReiniciarCamara(jugador.PosicionJugador() + glm::vec3(0,4,0), yaw, -10);
+				if (destino == ZONA_PLANETA_ROCOSO)
+					efectos.ReproducirLlegada(jugador.PosicionJugador());
 			}
 		}
 		if (control.planetMode && jugador.JugadorEnNave() && (zonaActual == ZONA_PLANETA_ROCOSO || zonaActual == ZONA_PLANETA_SELVATICO))
@@ -1351,6 +1388,16 @@ int main(int argc, char** argv)
 			const bool enCarrera = !enR4 && jugador.CarreraIniciada() &&
 				director.mode() == CameraMode::Carrera;
 			musica.Actualizar((int)zonaVista, enCarrera);
+		}
+		if (efectos.Cargado())
+		{
+			efectos.ActualizarListener(ojo, mirada, glm::vec3(0.0f, 1.0f, 0.0f));
+			const bool naveActiva = jugador.JugadorEnNave() && zonaVista == zonaActual;
+			efectos.ActualizarMotorNave(naveActiva, jugador.PosicionJugador());
+			const bool fighterActivo = zonaVista == ZONA_ESPACIO &&
+				(estadoFighter == EstadoFighter::Saliendo || estadoFighter == EstadoFighter::Paseo ||
+				 estadoFighter == EstadoFighter::Regresando || estadoFighter == EstadoFighter::Aterrizando);
+			efectos.ActualizarMotorMain(fighterActivo, centroHangar + posicionFighter);
 		}
 		Fondo fondo = Fondo::Espacio;
 		if (zonaVista == ZONA_PLANETA_ROCOSO) fondo = Fondo::Roca;
