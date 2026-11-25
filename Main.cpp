@@ -2,15 +2,6 @@
 Proyecto final de Computación Gráfica e Interacción Humano-Computadora (2027-1)
 Temáticas: "Viajes espaciales" y "Evolución de especies intergalácticas"
 
-Este main sigue la misma estructura de las prácticas (P5, P8, P9, P09-1 y P09-2):
- 1) Variables globales: ventana, cámara, texturas, modelos, skybox, materiales y luces.
- 2) CreateObjects() (en Create.cpp) y CreateShaders().
- 3) main(): se cargan las texturas, los modelos y el skybox (en Load.cpp), se declaran las luces y
-    dentro del while se reciben las teclas, se actualizan las animaciones y se dibuja todo con
-    model = glm::translate(model, ...), UseTexture(), UseMaterial() y RenderModel().
-Las teclas se asignan en Window.cpp (ManejaTeclado), igual que en las prácticas.
-Todo lo que NO viene en las prácticas está marcado con "NUEVO" y explicado en su comentario.
-
 Teclas:
  W A S D + mouse	mover el avatar (o la cámara libre)
  C					cámara del avatar <-> cámara libre
@@ -71,7 +62,9 @@ bool VerificarEscenaIntegrada(const SceneNode&, SceneNode&);
 #include "Create.hpp"
 #include "Load.hpp"
 #include "src/game/anim/CoheteKeyframes.h"
+#include "src/game/anim/CoheteDavid.h"
 CoheteKeyframes coheteJona;
+CoheteDavid coheteDavid;
 
 // NUEVO: módulos del escenario (cada .h explica qué hace y por qué existe)
 #include "Superficie.h"		// superficie de los planetas rocoso y selvático
@@ -276,7 +269,7 @@ void PrepararRecursosSuperficie(ZonaActiva destino)
 	LoadCapsulaModels();
 	CalcularPuntosCapsula();
 	if (tipo == SUPERFICIE_SELVATICA) LoadPlanetaSelvatico();
-	else { LoadPlanetaRocoso(); coheteJona.Cargar(); }
+	else { LoadPlanetaRocoso(); coheteJona.Cargar(); coheteDavid.Cargar(); }
 	superficie.PrepararModelosSuperficie(tipo);
 
 	const bool planetaCargado = (tipo == SUPERFICIE_SELVATICA)
@@ -787,6 +780,7 @@ void DibujarHangar(Sphere& esfera, GLuint uModelo, GLuint uColor, GLuint uEmisio
 int main(int argc, char** argv)
 {
 	const bool pruebaRelease = argc == 2 && strcmp(argv[1], "--probar-release") == 0;
+	const bool pruebaCoheteDavid = argc == 2 && strcmp(argv[1], "--probar-cohete-david") == 0;
 	struct PasoRelease { int tecla; ZonaActiva zonaVista; };
 	const PasoRelease pasosRelease[] = {{0, ZONA_ESPACIO}, {GLFW_KEY_F6, ZONA_PLANETA_ROCOSO},
 		{GLFW_KEY_F5, ZONA_PLANETA_SELVATICO}, {GLFW_KEY_F7, ZONA_PLANETA_OCEANO}, {GLFW_KEY_F8, ZONA_ESPACIO},
@@ -801,6 +795,34 @@ int main(int argc, char** argv)
 
 	CreateObjects();
 	CreateShaders();
+
+	if (pruebaCoheteDavid)
+	{
+		coheteDavid.Cargar();
+		if (!coheteDavid.Cargado()) return 3;
+		printf("[David-QA] Inicio: %s\n", coheteDavid.TextoEstado());
+		coheteDavid.Actualizar(1.0f / 60.0f, true, false);
+		const char* anterior = nullptr;
+		float acumulado = 0.0f;
+		for (int i = 0; i < 60 * 160; ++i)
+		{
+			coheteDavid.Actualizar(1.0f / 60.0f, false, false);
+			acumulado += 1.0f / 60.0f;
+			const char* actual = coheteDavid.TextoEstado();
+			if (anterior == nullptr || strcmp(anterior, actual) != 0)
+			{
+				printf("[David-QA] t=%.2f %s\n", acumulado, actual);
+				anterior = actual;
+			}
+		}
+		const glm::vec3 tobera = coheteDavid.PosicionTobera();
+		const bool toberaFinita = std::isfinite(tobera.x) && std::isfinite(tobera.y) && std::isfinite(tobera.z);
+		printf("[David-QA] Tobera: %.3f, %.3f, %.3f\n", tobera.x, tobera.y, tobera.z);
+		coheteDavid.Actualizar(1.0f / 60.0f, false, true);
+		printf("[David-QA] Reinicio: %s\n", coheteDavid.TextoEstado());
+		fflush(stdout);
+		return toberaFinita && strcmp(coheteDavid.TextoEstado(), "DAVID LISTO") == 0 ? 0 : 3;
+	}
 
 	camera = Camera(glm::vec3(0.0f, 30.0f, -85.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, -8.0f, 20.0f, 0.25f);
 
@@ -1071,7 +1093,10 @@ int main(int argc, char** argv)
 		espacio.ActualizarCohetes(deltaTime);
 		AnimarSatelite(deltaTime);
 		if (zonaVista == ZONA_PLANETA_ROCOSO)
+		{
 			coheteJona.Actualizar(deltaTime, entrada.wasPressed(GLFW_KEY_6), entrada.wasPressed(GLFW_KEY_7));
+			coheteDavid.Actualizar(deltaTime, entrada.wasPressed(GLFW_KEY_8), entrada.wasPressed(GLFW_KEY_9));
+		}
 		ActualizarFighter(deltaTime, entrada.wasPressed(GLFW_KEY_4), entrada.wasPressed(GLFW_KEY_5));
 		AnimarCapsula(deltaTime);
 
@@ -1457,6 +1482,7 @@ int main(int argc, char** argv)
 			if (tipoSuperficie == SUPERFICIE_ROCOSA) {
 				Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 				coheteJona.Dibujar(uniformModel, uniformColor, uniformEmision, meshListModel[1], llamaTexture);
+				coheteDavid.Dibujar(uniformModel, uniformColor, uniformEmision, meshListModel[1], llamaTexture);
 			}
 
 			// Cápsula de regreso (jerarquía): la puerta hereda la matriz del cuerpo y gira sobre su bisagra.
@@ -1527,6 +1553,8 @@ int main(int argc, char** argv)
 			estadoCohete = espacio.TextoEstadoCohete(COHETE_BASE);
 		else if (zonaVista == ZONA_PLANETA_SELVATICO)
 			estadoCohete = espacio.TextoEstadoCohete(COHETE_SHINOBI);
+		else if (zonaVista == ZONA_PLANETA_ROCOSO)
+			estadoCohete = coheteDavid.TextoEstado();
 		const char* estadoAvatar = enR4 ? encuadres[observado].nombre : (jugador.JugadorEnNave() ? "NAVE" : "REKSAI");
 		if (estadoCohete[0] != '\0')
 			snprintf(estadoHud, sizeof(estadoHud), "%s  %s", estadoAvatar, estadoCohete);

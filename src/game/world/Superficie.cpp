@@ -708,6 +708,7 @@ void Superficie::GenerarDesierto(Mundo& m)
 	// Claro y colisión de la plataforma del cohete animado de Jona.
 	m.claros.push_back({ glm::vec2(22.0f,14.0f), 7.0f });
 	m.obstaculos.push_back({ glm::vec2(22.0f,14.0f), 3.0f });
+	m.claros.push_back({ glm::vec2(-47.0f, 7.0f), 18.0f });
 
 	// --- NPCs: cerca uno del otro, alternando lado, sin pisar el camino ---
 	//          modelo              animación       s     lado  altura radio  a     b     h     omega alturaBase fase
@@ -830,6 +831,18 @@ void Superficie::GenerarDesierto(Mundo& m)
 		glm::vec3 semiejes(rnd.rango(55.0f, 100.0f), rnd.rango(28.0f, 70.0f), rnd.rango(55.0f, 100.0f));
 		AgregarRoca(m, rnd, OBJ_MONTANA, q, semiejes, 0.35f, COLOR_ROCA * rnd.rango(0.65f, 0.85f), 4.0f);
 	}
+
+	const glm::vec2 centroDavid(-47.0f, 7.0f);
+	int objetosClaro = 0;
+	int obstaculosClaro = 0;
+	for (const Objeto& o : m.objetos)
+		if (glm::length(o.posicion - centroDavid) < 18.0f + o.radio) ++objetosClaro;
+	for (const Obstaculo& o : m.obstaculos)
+		if (glm::length(o.centro - centroDavid) < 18.0f + o.radio) ++obstaculosClaro;
+	const float margenCamino = DistanciaAlCamino(m, centroDavid) - 18.0f - m.anchoCamino * 1.19f;
+	printf("[QA] Claro David: %d objetos y %d obstaculos dentro del radio 18; margen al camino %.2f\n",
+		objetosClaro, obstaculosClaro, margenCamino);
+	m.obstaculos.push_back({ centroDavid, 2.0f });
 
 	m.mosaicoPiso = 9.0f;
 	m.texturaPiso = &pizarraTexture;
